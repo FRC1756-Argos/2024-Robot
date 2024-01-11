@@ -19,7 +19,7 @@ jobs:
         with:
           python-version: '3.8'
       - name: Install wpiformat
-        run: pip3 install wpiformat==2024.30
+        run: pip3 install wpiformat==2023.36
       - name: Create main branch
         # This is only necessary because wpiformat refuses to run without a main branch
         if: ${{ github.ref != 'refs/heads/main' }}
