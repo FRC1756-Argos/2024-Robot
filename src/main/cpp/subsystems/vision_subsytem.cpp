@@ -26,8 +26,6 @@ void VisionSubsystem::Periodic() {
     // m_pDriveSubsystem->GetPoseEstimate(targetValues.robotPoseWPI.ToPose2d(), targetValues.totalLatency);
   }
 
-  GetDistanceToPoleTape();
-
   if (targetValues.hasTargets) {
     frc::SmartDashboard::PutBoolean("(Vision - Periodic) Is Target Present?", targetValues.hasTargets);
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Pitch", targetValues.m_pitch.to<double>());
@@ -62,11 +60,6 @@ void VisionSubsystem::SetReflectiveVisionMode(bool mode) {
   frc::SmartDashboard::PutNumber("(SetReflectiveVisionMode) Pipeline", requestedPipeline);
 
   table->PutNumber("pipeline", requestedPipeline);
-}
-
-/// @todo deprecate?
-bool VisionSubsystem::AimToPlaceCone() {
-  return true;
 }
 
 void VisionSubsystem::RequestFilterReset() {

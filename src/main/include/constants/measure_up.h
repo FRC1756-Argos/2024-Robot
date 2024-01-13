@@ -11,8 +11,6 @@
 
 #include <array>
 
-#include "utils/path_planning/types.h"
-
 namespace measure_up {
   constexpr auto bumperExtension = 3_in;  ///< Distance from frame to outer edge of bumpers
   namespace chassis {

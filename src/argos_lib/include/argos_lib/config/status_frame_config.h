@@ -4,7 +4,9 @@
 
 #pragma once
 
-#include "ctre/Phoenix.h"
+#include <ctre/phoenix6/core/CoreTalonFX.hpp>
+
+using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
 
 namespace argos_lib {
   namespace status_frame_config {

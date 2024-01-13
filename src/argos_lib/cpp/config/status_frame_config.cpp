@@ -59,20 +59,23 @@ void argos_lib::status_frame_config::SetMotorStatusFrameRates(
       break;
   }
 
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_1_General, generalStatusPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_2_Feedback0, feedback0Period);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_3_Quadrature, quadraturePeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_4_AinTempVbat, ainTempVBatPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_6_Misc, miscPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_7_CommStatus, commStatusPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_8_PulseWidth, pulseWidthPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_9_MotProfBuffer, motionProfBufferPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_10_Targets, motionProfTargetPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_11_UartGadgeteer, gadgeteerPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_12_Feedback1, feedback1Period);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_13_Base_PIDF0, primaryPIDFPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_14_Turn_PIDF1, auxPIDFPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_15_FirmwareApiStatus, firmwareAPIStatusPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_17_Targets1, auxMotionProfTargetPeriod);
-  motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_Brushless_Current, brushlessStatusPeriod);
+  /// @todo Update for Phoenix 6 frames
+  ///       https://pro.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/status-signals-guide.html#changing-update-frequency-status-frame-period
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_1_General, generalStatusPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_2_Feedback0, feedback0Period);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_3_Quadrature, quadraturePeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_4_AinTempVbat, ainTempVBatPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_6_Misc, miscPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_7_CommStatus, commStatusPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_8_PulseWidth, pulseWidthPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_9_MotProfBuffer, motionProfBufferPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_10_Targets, motionProfTargetPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_11_UartGadgeteer, gadgeteerPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_12_Feedback1, feedback1Period);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_13_Base_PIDF0, primaryPIDFPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_14_Turn_PIDF1, auxPIDFPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_15_FirmwareApiStatus, firmwareAPIStatusPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_17_Targets1, auxMotionProfTargetPeriod);
+  // motor.SetStatusFramePeriod(phoenix::motorcontrol::Status_Brushless_Current, brushlessStatusPeriod);
+  // motor.OptimizeBusUtilizationForAll();
 }

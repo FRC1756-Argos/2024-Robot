@@ -87,10 +87,10 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
                                          controlLoop::practice_bot::drive::rotational_follower::angularVelocity,
                                          controlLoop::practice_bot::drive::rotational_follower::angularAcceleration)}
     , m_linearPID(instance == argos_lib::RobotInstance::Competition ?
-                      frc2::PIDController{controlLoop::comp_bot::drive::linear_follower::kP,
+                      frc::PIDController{controlLoop::comp_bot::drive::linear_follower::kP,
                                           controlLoop::comp_bot::drive::linear_follower::kI,
                                           controlLoop::comp_bot::drive::linear_follower::kD} :
-                      frc2::PIDController{controlLoop::practice_bot::drive::linear_follower::kP,
+                      frc::PIDController{controlLoop::practice_bot::drive::linear_follower::kP,
                                           controlLoop::practice_bot::drive::linear_follower::kI,
                                           controlLoop::practice_bot::drive::linear_follower::kD})
     , m_followerController{m_linearPID,
@@ -808,12 +808,12 @@ bool SwerveDriveSubsystem::IsFollowingProfile() const {
   return m_followingProfile;
 }
 
-units::degree_t SwerveDriveSubsystem::GetIMUYaw() const {
-  return -units::degree_t{m_pigeonIMU.GetYaw()};
+units::degree_t SwerveDriveSubsystem::GetIMUYaw() {
+  return -m_pigeonIMU.GetYaw().GetValue();
 }
 
 void SwerveDriveSubsystem::ResetIMUYaw() {
-  m_pigeonIMU.SetYaw(0);
+  m_pigeonIMU.SetYaw(0_deg);
 }
 
 frc::ChassisSpeeds SwerveDriveSubsystem::GetChassisVelocity() {

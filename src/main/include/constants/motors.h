@@ -7,7 +7,8 @@
 #include "addresses.h"
 #include "argos_lib/config/status_frame_config.h"
 #include "control_loops.h"
-#include "ctre/Phoenix.h"
+#include <ctre/phoenix6/CANCoder.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
 #include "units/current.h"
 #include "units/time.h"
 #include "units/voltage.h"
@@ -27,13 +28,13 @@ namespace motorConfig {
   namespace comp_bot {
     namespace drive {
       struct genericDrive {
-        constexpr static auto inverted = ctre::phoenix::motorcontrol::InvertType::InvertMotorOutput;
+        constexpr static auto inverted = true;
         constexpr static bool sensorPhase = false;
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
-        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Brake;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto voltCompSat = motorConfig::common::voltCompSat;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
-        constexpr static auto pid0_selectedSensor = ctre::phoenix::motorcontrol::FeedbackDevice::IntegratedSensor;
+        constexpr static auto pid0_selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::drive::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::drive::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::drive::drive::kD;
@@ -42,16 +43,16 @@ namespace motorConfig {
         constexpr static auto pid0_allowableError = controlLoop::comp_bot::drive::drive::allowableError;
       };
       struct frontLeftTurn {
-        constexpr static auto inverted = ctre::phoenix::motorcontrol::InvertType::InvertMotorOutput;
+        constexpr static auto inverted = true;
         constexpr static bool sensorPhase = true;
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
-        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Brake;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto voltCompSat = motorConfig::common::voltCompSat;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
         constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::frontLeftEncoder;
         constexpr static auto remoteFilter0_type =
-            ctre::phoenix::motorcontrol::RemoteSensorSource::RemoteSensorSource_CANCoder;
-        constexpr static auto pid0_selectedSensor = ctre::phoenix::motorcontrol::FeedbackDevice::RemoteSensor0;
+            ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto pid0_selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::drive::rotate::kD;
@@ -60,16 +61,16 @@ namespace motorConfig {
         constexpr static auto pid0_allowableError = controlLoop::comp_bot::drive::rotate::allowableError;
       };
       struct frontRightTurn {
-        constexpr static auto inverted = ctre::phoenix::motorcontrol::InvertType::InvertMotorOutput;
+        constexpr static auto inverted = true;
         constexpr static bool sensorPhase = true;
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
-        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Brake;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto voltCompSat = motorConfig::common::voltCompSat;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
         constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::frontRightEncoder;
         constexpr static auto remoteFilter0_type =
-            ctre::phoenix::motorcontrol::RemoteSensorSource::RemoteSensorSource_CANCoder;
-        constexpr static auto pid0_selectedSensor = ctre::phoenix::motorcontrol::FeedbackDevice::RemoteSensor0;
+            ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto pid0_selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::drive::rotate::kD;
@@ -78,16 +79,16 @@ namespace motorConfig {
         constexpr static auto pid0_allowableError = controlLoop::comp_bot::drive::rotate::allowableError;
       };
       struct backRightTurn {
-        constexpr static auto inverted = ctre::phoenix::motorcontrol::InvertType::InvertMotorOutput;
+        constexpr static auto inverted = true;
         constexpr static bool sensorPhase = true;
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
-        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Brake;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto voltCompSat = motorConfig::common::voltCompSat;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
         constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::backRightEncoder;
         constexpr static auto remoteFilter0_type =
-            ctre::phoenix::motorcontrol::RemoteSensorSource::RemoteSensorSource_CANCoder;
-        constexpr static auto pid0_selectedSensor = ctre::phoenix::motorcontrol::FeedbackDevice::RemoteSensor0;
+            ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto pid0_selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::drive::rotate::kD;
@@ -96,16 +97,16 @@ namespace motorConfig {
         constexpr static auto pid0_allowableError = controlLoop::comp_bot::drive::rotate::allowableError;
       };
       struct backLeftTurn {
-        constexpr static auto inverted = ctre::phoenix::motorcontrol::InvertType::InvertMotorOutput;
+        constexpr static auto inverted = true;
         constexpr static bool sensorPhase = true;
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
-        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Brake;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto voltCompSat = motorConfig::common::voltCompSat;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
         constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::backLeftEncoder;
         constexpr static auto remoteFilter0_type =
-            ctre::phoenix::motorcontrol::RemoteSensorSource::RemoteSensorSource_CANCoder;
-        constexpr static auto pid0_selectedSensor = ctre::phoenix::motorcontrol::FeedbackDevice::RemoteSensor0;
+            ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto pid0_selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::drive::rotate::kD;

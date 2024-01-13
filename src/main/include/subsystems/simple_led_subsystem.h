@@ -6,9 +6,8 @@
 
 #include <argos_lib/general/log.h>
 
-// Include GamePiece enum
 #include <constants/field_points.h>
-#include <ctre/Phoenix.h>
+#include <ctre/phoenix/led/CANdle.h>
 #include <frc/util/Color.h>
 #include <frc2/command/SubsystemBase.h>
 
@@ -17,6 +16,8 @@
 
 #include <chrono>
 #include <functional>
+
+using CANdle = ctre::phoenix::led::CANdle;
 
 enum class LedGroup { SIDES, BACK, FRONT };
 enum class LedStrip { FrontLeft, FrontRight, SideFront, SideBack, BackRight, BackLeft };
@@ -42,12 +43,10 @@ class SimpleLedSubsystem : public frc2::SubsystemBase {
   /// @brief Sets all led groups to a given color
   /// @param color an ArgosColor to set the LEDs too
   void SetAllGroupsColor(argos_lib::ArgosColor color,
-                         bool restorable = true,
-                         std::optional<std::function<GamePiece()>> tipColor = std::nullopt);
+                         bool restorable = true);
 
   void SetAllGroupsFade(argos_lib::ArgosColor color,
-                        bool restorable = true,
-                        std::optional<std::function<GamePiece()>> tipColor = std::nullopt);
+                        bool restorable = true);
 
   void SetAllGroupsFlash(argos_lib::ArgosColor color, bool restorable = true);
 
@@ -59,13 +58,9 @@ class SimpleLedSubsystem : public frc2::SubsystemBase {
 
   /// @brief Set all groups of LEDs to the alliance color
   void SetAllGroupsAllianceColor(bool fade,
-                                 bool restorable = true,
-                                 std::optional<std::function<GamePiece()>> tipColor = std::nullopt);
+                                 bool restorable = true);
 
   void StopAllAnimations(bool restorable = true);
-
-  /// @brief Set all groups to color of given game piece
-  void SetAllGroupsGamePieceColor(GamePiece gp, bool restorable = true);
 
   /// @brief Turn off all LEDs
   void SetAllGroupsOff(bool restorable = true);
@@ -94,8 +89,6 @@ class SimpleLedSubsystem : public frc2::SubsystemBase {
   std::optional<std::function<void(void)>> m_restoreAnimationFunction;
   std::chrono::time_point<std::chrono::steady_clock> m_startTime;
   units::millisecond_t m_temporaryDuration;
-
-  constexpr static argos_lib::ArgosColor GetGamePieceColor(GamePiece gp, bool gammaCorrect = true);
 
   constexpr static int startIndex_frontLeft = 8;     ///< Address of first LED in strip
   constexpr static int length_frontLeft = 29;        ///< Number of LEDs in strip

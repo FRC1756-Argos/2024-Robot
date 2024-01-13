@@ -7,13 +7,12 @@
 #include <units/time.h>
 
 #include "compile_time_member_check.h"
-#include "ctre/Phoenix.h"
+#include <ctre/phoenix6/CANcoder.hpp>
 
 namespace argos_lib {
   namespace cancoder_config {
 
     HAS_MEMBER(direction)
-    HAS_MEMBER(initMode)
     HAS_MEMBER(magOffset)
     HAS_MEMBER(range)
 
@@ -23,7 +22,6 @@ namespace argos_lib {
      *
      * @tparam T Structure containing any combination of the following members:
      *           - direction
-     *           - initMode
      *           - magOffset
      *           - range
      * @param encoder CANCoder object to configure
@@ -33,24 +31,19 @@ namespace argos_lib {
      */
     template <typename T>
     bool CanCoderConfig(CANCoder& encoder, units::millisecond_t configTimeout) {
-      ctre::phoenix::sensors::CANCoderConfiguration config;
-      auto timeout = configTimeout.to<int>();
+      ctre::phoenix6::configs::CANcoderConfiguration config;
 
       if constexpr (has_direction<T>{}) {
-        config.sensorDirection = T::direction;
-      }
-      if constexpr (has_initMode<T>{}) {
-        config.initializationStrategy = T::initMode;
+        config.MagnetSensor.SensorDirection = T::direction;
       }
       if constexpr (has_range<T>{}) {
-        config.absoluteSensorRange = T::range;
+        config.MagnetSensor.AbsoluteSensorRange = T::range;
       }
       if constexpr (has_magOffset<T>{}) {
-        config.magnetOffsetDegrees = T::magOffset;
+        config.MagnetSensor.WithMagnetOffset = T::magOffset;
       }
 
-      encoder.ConfigFactoryDefault(timeout);
-      return ErrorCode::OKAY == encoder.ConfigAllSettings(config, timeout);
+      return ctre::phoenix::StatusCode::OK == encoder.GetConfigurator().Apply(config, configTimeout);
     }
 
     /**

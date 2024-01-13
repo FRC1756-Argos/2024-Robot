@@ -13,7 +13,9 @@
 #include <vector>
 
 #include "argos_lib/general/nt_subscriber.h"
-#include "ctre/Phoenix.h"
+#include <ctre/phoenix6/core/CoreTalonFX.hpp>
+
+using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
 
 namespace argos_lib {
 
@@ -56,7 +58,7 @@ namespace argos_lib {
      * @param sensorConversions Sensor conversion factors to make status values human readable
      */
     NTMotorPIDTuner(const std::string& tableName,
-                    std::initializer_list<ctre::phoenix::motorcontrol::can::BaseTalon*> motors,
+                    std::initializer_list<BaseTalon*> motors,
                     unsigned pidSlot,
                     ClosedLoopSensorConversions sensorConversions = {});
 
@@ -68,7 +70,7 @@ namespace argos_lib {
    private:
     argos_lib::NTSubscriber
         m_updateSubscriber;  ///< Subscriber to manage all updates from user inputs through network tables
-    const std::vector<ctre::phoenix::motorcontrol::can::BaseTalon*>
+    const std::vector<BaseTalon*>
         m_pMotors;                                 ///< Motors being configured and monitored
     const unsigned m_pidSlot;                      ///< PID slot index actively used on motors
     std::shared_ptr<nt::NetworkTable> m_pntTable;  ///< Network table containing status and tuning keys

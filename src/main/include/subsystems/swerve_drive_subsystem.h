@@ -13,6 +13,8 @@
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc/controller/PIDController.h>
+#include <frc/controller/ProfiledPIDController.h>
 
 #include <memory>
 
@@ -20,17 +22,23 @@
 #include "argos_lib/general/nt_motor_pid_tuner.h"
 #include "argos_lib/general/nt_subscriber.h"
 #include "argos_lib/homing/fs_homing.h"
-#include "ctre/Phoenix.h"
+#include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/Pigeon2.hpp>
 #include "frc/StateSpaceUtil.h"
 #include "frc/estimator/SwerveDrivePoseEstimator.h"
 #include "utils/swerve_trapezoidal_profile.h"
 #include "utils/swerve_trapezoidal_spline.h"
 
+using TalonFX = ctre::phoenix6::hardware::TalonFX;
+using CANCoder = ctre::phoenix6::hardware::CANcoder;
+using Pigeon2 = ctre::phoenix6::hardware::Pigeon2;
+
 class SwerveModule {
  public:
   // MOTORS
-  WPI_TalonFX m_drive;
-  WPI_TalonFX m_turn;
+  TalonFX m_drive;
+  TalonFX m_turn;
   // ENCODER
   CANCoder m_encoder;
 
@@ -233,7 +241,7 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
    *
    * @return pitch in unit degrees
    */
-  units::degree_t GetRobotPitch() const { return units::degree_t{m_pigeonIMU.GetRoll()}; }
+  units::degree_t GetRobotPitch() { return m_pigeonIMU.GetRoll().GetValue(); }
 
   /**
    * @brief Get the rate of robot pitch
@@ -286,7 +294,7 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   std::unique_ptr<SwerveTrapezoidalSpline> m_pActiveSwerveSplineProfile;        ///< Profile to execute
   std::chrono::time_point<std::chrono::steady_clock> m_swerveProfileStartTime;  ///< Time when active profile began
   frc::ProfiledPIDController<units::radians>::Constraints m_rotationalPIDConstraints;
-  frc2::PIDController m_linearPID;  ///< Correction parameters for x/y error when following drive profile
+  frc::PIDController m_linearPID;  ///< Correction parameters for x/y error when following drive profile
   frc::HolonomicDriveController m_followerController;  ///< Controller to follow drive profile
 
   argos_lib::NTMotorPIDTuner m_driveMotorPIDTuner;  ///< Utility to tune drive motors
@@ -335,6 +343,6 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
    */
   void InitializeMotorsFromFS();
 
-  units::degree_t GetIMUYaw() const;
+  units::degree_t GetIMUYaw();
   void ResetIMUYaw();
 };

@@ -34,7 +34,6 @@
 #include "Constants.h"
 #include "argos_lib/subsystems/led_subsystem.h"
 #include "commands/drive_to_position.h"
-#include "commands/set_arm_pose_command.h"
 #include "utils/custom_units.h"
 
 RobotContainer::RobotContainer()
@@ -44,6 +43,7 @@ RobotContainer::RobotContainer()
     , m_controllers(address::comp_bot::controllers::driver, address::comp_bot::controllers::secondary)
     , m_swerveDrive(m_instance)
     , m_ledSubSystem(m_instance)
+    , m_visionSubSystem(m_instance, &m_swerveDrive)
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing},
                      &m_autoNothing}
@@ -140,8 +140,6 @@ void RobotContainer::ConfigureBindings() {
   // SWAP CONTROLLERS TRIGGER ACTIVATION
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
       .WhileTrue(argos_lib::SwapControllersCommand(&m_controllers).ToPtr());
-
-  startupExtensionHomeTrigger.OnTrue(&m_homeArmExtensionCommand);
 }
 
 void RobotContainer::Disable() {
@@ -155,7 +153,7 @@ void RobotContainer::Enable() {
 
 void RobotContainer::AllianceChanged() {
   // If disabled, set alliance colors
-  m_ledSubSystem.SetAllGroupsAllianceColor(true, true, [this]() { return m_buttonBox.GetGamePiece(); });
+  m_ledSubSystem.SetAllGroupsAllianceColor(true, true);
   m_ledSubSystem.SetDisableAnimation([this]() { m_ledSubSystem.SetAllGroupsAllianceColor(false, false); });
 }
 
