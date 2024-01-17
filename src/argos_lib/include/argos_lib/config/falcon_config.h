@@ -182,7 +182,7 @@ namespace argos_lib {
         if constexpr (has_supplyCurrentThresholdTime<T>{}) {
           constexpr units::second_t currentThresholdTime = T::supplyCurrentThresholdTime;
           static_assert(currentThresholdTime.to<double>() >= 0, "Supply current threshold time must be non-negative");
-          static_assert(currentDuration.to<double>() <= 1.275, "Current duration must be less than 1.275");
+          static_assert(currentThresholdTime.to<double>() <= 1.275, "Current duration must be less than 1.275");
           config.CurrentLimits.SupplyTimeThreshold = currentThresholdTime.to<double>();
         }
       }
@@ -203,25 +203,25 @@ namespace argos_lib {
           if constexpr (source != ctre::phoenix6::signals::ForwardLimitSourceValue::Disabled) {
             static_assert(has_forwardLimit_normalState<T>{},
                           "Forward limit switch configuration requires both source and normal state");
-            config.HardwareLimitSwitchConfigs.ForwardLimitEnable = true;
+            config.HardwareLimitSwitch.ForwardLimitEnable = true;
           }
-          config.HardwareLimitSwitchConfigs.ForwardLimitSource = T::forwardLimit_source;
+          config.HardwareLimitSwitch.ForwardLimitSource = T::forwardLimit_source;
         }
         if constexpr (has_forwardLimit_deviceID<T>{}) {
           static_assert(has_forwardLimit_source<T>{} &&
                             T::forwardLimit_source != ctre::phoenix6::signals::ForwardLimitSourceValue::Disabled &&
                             T::forwardLimit_source != ctre::phoenix6::signals::ForwardLimitSourceValue::LimitSwitchPin,
                         "Forward limit switch device ID has no effect when limit source is not remote");
-          config.HardwareLimitSwitchConfigs.ForwardLimitRemoteSensorID = T::forwardLimit_deviceID;
+          config.HardwareLimitSwitch.ForwardLimitRemoteSensorID = T::forwardLimit_deviceID;
         }
         if constexpr (has_forwardLimit_normalState<T>{}) {
           if constexpr (T::forwardLimit_normalState != ctre::phoenix6::signals::ForwardLimitSourceValue::Disabled) {
             static_assert(has_forwardLimit_source<T>{}, "Forward limit switch source required");
           }
-          config.HardwareLimitSwitchConfigs.ForwardLimitType = T::forwardLimit_normalState;
+          config.HardwareLimitSwitch.ForwardLimitType = T::forwardLimit_normalState;
         }
       } else {
-        config.HardwareLimitSwitchConfigs.ForwardLimitEnable = false;
+        config.HardwareLimitSwitch.ForwardLimitEnable = false;
       }
       if constexpr (has_reverseLimit_source<T>{} || has_reverseLimit_deviceID<T>{} ||
                     has_reverseLimit_normalState<T>{}) {
@@ -234,25 +234,25 @@ namespace argos_lib {
           if constexpr (source != ctre::phoenix6::signals::ReverseLimitSourceValue::Disabled) {
             static_assert(has_reverseLimit_normalState<T>{},
                           "Reverse limit switch configuration requires both source and normal state");
-            config.HardwareLimitSwitchConfigs.ReverseLimitEnable = true;
+            config.HardwareLimitSwitch.ReverseLimitEnable = true;
           }
-          config.HardwareLimitSwitchConfigs.ReverseLimitSource = T::reverseLimit_source;
+          config.HardwareLimitSwitch.ReverseLimitSource = T::reverseLimit_source;
         }
         if constexpr (has_reverseLimit_deviceID<T>{}) {
           static_assert(has_reverseLimit_source<T>{} &&
                             T::reverseLimit_source != ctre::phoenix6::signals::ReverseLimitSourceValue::Disabled &&
                             T::reverseLimit_source != ctre::phoenix6::signals::ReverseLimitSourceValue::LimitSwitchPin,
                         "Reverse limit switch device ID has no effect when limit source is not remote");
-          config.HardwareLimitSwitchConfigs.ReverseLimitRemoteSensorID = T::reverseLimit_deviceID;
+          config.HardwareLimitSwitch.ReverseLimitRemoteSensorID = T::reverseLimit_deviceID;
         }
         if constexpr (has_reverseLimit_normalState<T>{}) {
           if constexpr (T::reverseLimit_normalState != ctre::phoenix6::signals::ReverseLimitSourceValue::Disabled) {
             static_assert(has_reverseLimit_source<T>{}, "Reverse limit switch source required");
           }
-          config.HardwareLimitSwitchConfigs.ReverseLimitType = T::reverseLimit_normalState;
+          config.HardwareLimitSwitch.ReverseLimitType = T::reverseLimit_normalState;
         }
       } else {
-        config.HardwareLimitSwitchConfigs.ReverseLimitEnable = false;
+        config.HardwareLimitSwitch.ReverseLimitEnable = false;
       }
       if constexpr (has_neutralDeadband<T>{}) {
         static_assert(T::neutralDeadband >= 0.001, "Neutral deadband must be greater than 0.001 (0.1%)");

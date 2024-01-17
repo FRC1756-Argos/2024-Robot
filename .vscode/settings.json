@@ -20,6 +20,8 @@
     "deque": "cpp",
     "string": "cpp",
     "vector": "cpp",
-    "cmath": "cpp"
+    "cmath": "cpp",
+    "array": "cpp",
+    "string_view": "cpp"
   }
 }

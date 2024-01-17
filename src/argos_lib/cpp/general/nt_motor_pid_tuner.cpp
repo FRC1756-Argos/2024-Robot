@@ -38,7 +38,7 @@ NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
           motor->GetConfigurator().Apply(m_activeConfigs, 50_ms);
         }
       },
-      m_activeConfigs.kP;)
+      m_activeConfigs.kP);
   m_updateSubscriber.AddMonitor(
       "tunes/kI",
       [this](double newVal) {
@@ -47,7 +47,7 @@ NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
           motor->GetConfigurator().Apply(m_activeConfigs, 50_ms);
         }
       },
-      m_activeConfigs.kI;)
+      m_activeConfigs.kI);
   m_updateSubscriber.AddMonitor(
       "tunes/kD",
       [this](double newVal) {
@@ -56,7 +56,7 @@ NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
           motor->GetConfigurator().Apply(m_activeConfigs, 50_ms);
         }
       },
-      m_activeConfigs.kD;)
+      m_activeConfigs.kD);
   m_updateSubscriber.AddMonitor(
       "tunes/kV",
       [this](double newVal) {
@@ -65,7 +65,7 @@ NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
           motor->GetConfigurator().Apply(m_activeConfigs, 50_ms);
         }
       },
-      m_activeConfigs.kV;)
+      m_activeConfigs.kV);
   m_updateSubscriber.AddMonitor(
       "tunes/kA",
       [this](double newVal) {
@@ -74,7 +74,7 @@ NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
           motor->GetConfigurator().Apply(m_activeConfigs, 50_ms);
         }
       },
-      m_activeConfigs.kA;)
+      m_activeConfigs.kA);
   m_updateSubscriber.AddMonitor(
       "tunes/kS",
       [this](double newVal) {
@@ -83,7 +83,7 @@ NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
           motor->GetConfigurator().Apply(m_activeConfigs, 50_ms);
         }
       },
-      m_activeConfigs.kS;)
+      m_activeConfigs.kS);
   m_updateSubscriber.AddMonitor(
       "tunes/kG",
       [this](double newVal) {
@@ -92,7 +92,7 @@ NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
           motor->GetConfigurator().Apply(m_activeConfigs, 50_ms);
         }
       },
-      m_activeConfigs.kG;)
+      m_activeConfigs.kG);
   m_updateSubscriber.AddMonitor(
       "tunes/GArm",
       [this](double newVal) {
@@ -102,7 +102,7 @@ NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
           motor->GetConfigurator().Apply(m_activeConfigs, 50_ms);
         }
       },
-      m_activeConfigs.GravityType == ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;)
+      m_activeConfigs.GravityType == ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine);
 }
 
 NTMotorPIDTuner::~NTMotorPIDTuner() {
@@ -164,15 +164,15 @@ void NTMotorPIDTuner::UpdateClosedLoopMonitoringThread() {
           case:ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoVoltageFOC:
           case:ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoTorqueCurrentFOC:
             setpoints.push_back(motor->GetClosedLoopReference().GetValue() * m_sensorConversions.setpoint);
-            errors.push_back(motor->GetClosedLoopError().GetValue() * m_sensorConversions.setpoint);
+            errors.push_back(motor->GetClosedLoopError().GetValue * m_sensorConversions.setpoint);
             break;
           default:
             setpoints.push_back(NAN);
             errors.push_back(NAN);
         }
-        positions.push_back(motor->GetPosition().GetValue().toDouble() * m_sensorConversions.position);
-        velocities.push_back(motor->GetVelocity().GetValue().toDouble() * m_sensorConversions.velocity);
-        outputs.push_back(motor->GetDutyCycle().GetValue().toDouble());
+        positions.push_back(motor->GetPosition().GetValue().to<double>() * m_sensorConversions.position);
+        velocities.push_back(motor->GetVelocity().GetValue().to<double>() * m_sensorConversions.velocity);
+        outputs.push_back(motor->GetDutyCycle().GetValue().to<double>());
       }
       m_pntTable->PutNumberArray("status/setpoints", setpoints);
       m_pntTable->PutNumberArray("status/positions", positions);

@@ -24,7 +24,6 @@ namespace controlLoop {
         constexpr static double kP = 0.1022;
         constexpr static double kI = 0.0;
         constexpr static double kD = 0.0;
-        constexpr static double kV = 0.01;
         constexpr static double kS = 0.0;
         constexpr static double kV = 0.0;
         constexpr static double kA = 0.0;
