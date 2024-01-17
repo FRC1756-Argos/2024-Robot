@@ -16,8 +16,6 @@
 
 namespace argos_lib {
   namespace talonsrx_config {
-    using ctre::phoenix::motorcontrol::can::WPI_TalonSRX;
-
     HAS_MEMBER(inverted)
     HAS_MEMBER(neutralMode)
     HAS_MEMBER(pid0_allowableError)
@@ -67,7 +65,7 @@ namespace argos_lib {
      * @return false Configuration failed
      */
     template <typename T>
-    bool TalonSRXConfig(WPI_TalonSRX& motorController, units::millisecond_t configTimeout) {
+    bool TalonSRXConfig(ctre::phoenix::motorcontrol::can::WPI_TalonSRX& motorController, units::millisecond_t configTimeout) {
       TalonSRXConfiguration config;
       auto timeout = configTimeout.to<int>();
 
@@ -167,7 +165,7 @@ namespace argos_lib {
      * @return false Configuration failed
      */
     template <typename CompetitionConfig, typename PracticeConfig>
-    bool TalonSRXConfig(WPI_TalonSRX& motorController,
+    bool TalonSRXConfig(ctre::phoenix::motorcontrol::can::WPI_TalonSRX& motorController,
                         units::millisecond_t configTimeout,
                         argos_lib::RobotInstance instance) {
       switch (instance) {

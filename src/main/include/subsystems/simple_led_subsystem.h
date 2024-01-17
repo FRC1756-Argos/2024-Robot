@@ -10,6 +10,7 @@
 #include <ctre/phoenix/led/CANdle.h>
 #include <frc/util/Color.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc/DriverStation.h>
 
 #include "argos_lib/config/config_types.h"
 #include "argos_lib/general/color.h"
@@ -23,7 +24,6 @@ enum class LedStrip { FrontLeft, FrontRight, SideFront, SideBack, BackRight, Bac
 enum class AlignLedStatus { NoTarget, FlashLeft, FlashRight, Aligned };
 
 class SimpleLedSubsystem : public frc2::SubsystemBase {
-  using ctre::phoenix::led::CANdle;
  public:
   explicit SimpleLedSubsystem(argos_lib::RobotInstance instance);
 
@@ -79,7 +79,7 @@ class SimpleLedSubsystem : public frc2::SubsystemBase {
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
-  std::optional<CANdle> m_CANdle;
+  std::optional<ctre::phoenix::led::CANdle> m_CANdle;
   argos_lib::ArgosLogger m_log;
   bool m_enabled;
   bool m_hasBeenConnected;

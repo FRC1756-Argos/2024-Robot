@@ -31,14 +31,12 @@
 #include "utils/swerve_trapezoidal_spline.h"
 
 class SwerveModule {
-using ctre::phoenix6::hardware::TalonFX;
-using ctre::phoenix6::hardware::CANcoder;
  public:
   // MOTORS
-  TalonFX m_drive;
-  TalonFX m_turn;
+  ctre::phoenix6::hardware::TalonFX m_drive;
+  ctre::phoenix6::hardware::TalonFX m_turn;
   // ENCODER
-  CANcoder m_encoder;
+  ctre::phoenix6::hardware::CANcoder m_encoder;
 
   /**
    * @brief Construct a new Swerve Module object
@@ -260,7 +258,7 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
   // GYROSCOPIC SENSORS
   frc::ADIS16448_IMU m_imu;
-  Pigeon2 m_pigeonIMU;
+  ctre::phoenix6::hardware::Pigeon2 m_pigeonIMU;
 
   units::degree_t m_fieldHomeOffset;  ///< Offset from IMU angle to 0 field angle (intake away from driver station)
 

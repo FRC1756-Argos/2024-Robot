@@ -24,9 +24,8 @@ jobs:
         run: pip3 install wpiformat==2022.21 clang-format==15.0.7 # todo: update everything to clang-format v16
       - name: Create main branch
         # This is only necessary because wpiformat refuses to run without a main branch
-        run: |
-          git checkout -b wpiformat/auto_format_changes/${{ github.run_number }}
-          git branch -f main origin/main
+        if: ${{ github.ref != 'refs/heads/main' }}
+        run: git branch main
       - name: Run
         run: wpiformat
       - name: Check for modified files
