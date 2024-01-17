@@ -26,7 +26,7 @@ void Robot::RobotPeriodic() {
 
   // Check to see if alliance has changed
   auto curAlliance = frc::DriverStation::GetAlliance();
-  if (m_lastAlliance != curAlliance) {
+  if (curAlliance && (!m_lastAlliance || m_lastAlliance.value() != curAlliance.value())) {
     m_container.AllianceChanged();
     m_lastAlliance = frc::DriverStation::GetAlliance();
   }

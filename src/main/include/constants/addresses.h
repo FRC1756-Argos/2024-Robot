@@ -19,7 +19,7 @@ namespace address {
       constexpr static argos_lib::CANAddress backRightTurn{6, "drive"};
       constexpr static argos_lib::CANAddress backLeftDrive{7, "drive"};
       constexpr static argos_lib::CANAddress backLeftTurn{8, "drive"};
-    };                     // oui_oui_placer
+    };  // oui_oui_placer
     struct encoders {
       constexpr static argos_lib::CANAddress frontLeftEncoder{1, "drive"};
       constexpr static argos_lib::CANAddress frontRightEncoder{2, "drive"};

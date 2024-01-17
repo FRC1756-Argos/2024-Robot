@@ -5,19 +5,17 @@
 #pragma once
 
 #include <argos_lib/general/log.h>
-
 #include <constants/field_points.h>
 #include <ctre/phoenix/led/CANdle.h>
+#include <frc/DriverStation.h>
 #include <frc/util/Color.h>
 #include <frc2/command/SubsystemBase.h>
-
-#include "argos_lib/config/config_types.h"
-#include "argos_lib/general/color.h"
 
 #include <chrono>
 #include <functional>
 
-using CANdle = ctre::phoenix::led::CANdle;
+#include "argos_lib/config/config_types.h"
+#include "argos_lib/general/color.h"
 
 enum class LedGroup { SIDES, BACK, FRONT };
 enum class LedStrip { FrontLeft, FrontRight, SideFront, SideBack, BackRight, BackLeft };
@@ -42,11 +40,9 @@ class SimpleLedSubsystem : public frc2::SubsystemBase {
 
   /// @brief Sets all led groups to a given color
   /// @param color an ArgosColor to set the LEDs too
-  void SetAllGroupsColor(argos_lib::ArgosColor color,
-                         bool restorable = true);
+  void SetAllGroupsColor(argos_lib::ArgosColor color, bool restorable = true);
 
-  void SetAllGroupsFade(argos_lib::ArgosColor color,
-                        bool restorable = true);
+  void SetAllGroupsFade(argos_lib::ArgosColor color, bool restorable = true);
 
   void SetAllGroupsFlash(argos_lib::ArgosColor color, bool restorable = true);
 
@@ -57,8 +53,7 @@ class SimpleLedSubsystem : public frc2::SubsystemBase {
   argos_lib::ArgosColor GetAllianceColor();
 
   /// @brief Set all groups of LEDs to the alliance color
-  void SetAllGroupsAllianceColor(bool fade,
-                                 bool restorable = true);
+  void SetAllGroupsAllianceColor(bool fade, bool restorable = true);
 
   void StopAllAnimations(bool restorable = true);
 
@@ -79,7 +74,7 @@ class SimpleLedSubsystem : public frc2::SubsystemBase {
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
-  std::optional<CANdle> m_CANdle;
+  std::optional<ctre::phoenix::led::CANdle> m_CANdle;
   argos_lib::ArgosLogger m_log;
   bool m_enabled;
   bool m_hasBeenConnected;
@@ -89,6 +84,8 @@ class SimpleLedSubsystem : public frc2::SubsystemBase {
   std::optional<std::function<void(void)>> m_restoreAnimationFunction;
   std::chrono::time_point<std::chrono::steady_clock> m_startTime;
   units::millisecond_t m_temporaryDuration;
+
+  frc::DriverStation::Alliance m_latestAlliance;
 
   constexpr static int startIndex_frontLeft = 8;     ///< Address of first LED in strip
   constexpr static int length_frontLeft = 29;        ///< Number of LEDs in strip

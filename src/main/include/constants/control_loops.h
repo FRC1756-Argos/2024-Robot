@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ctre/phoenix6/signals/SpnEnums.hpp>
+
 #include "units/angular_acceleration.h"
 #include "units/angular_velocity.h"
 
@@ -11,20 +13,24 @@ namespace controlLoop {
   namespace comp_bot {
     namespace drive {
       struct rotate {
-        constexpr static double kP = 1.4;
-        constexpr static double kI = 0.0005;
+        constexpr static double kP = 2.8;
+        constexpr static double kI = 1;
         constexpr static double kD = 0.0;
-        constexpr static double kF = 0.0;
-        constexpr static double iZone = 500.0;
-        constexpr static double allowableError = 0.0;
+        constexpr static double kS = 0.0;
+        constexpr static double kV = 0.0;
+        constexpr static double kA = 0.0;
+        constexpr static double kG = 0.0;
+        constexpr static int gravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
       };  // namespace rotate
       struct drive {
-        constexpr static double kP = 0.11;
+        constexpr static double kP = 0.1022;
         constexpr static double kI = 0.0;
         constexpr static double kD = 0.0;
-        constexpr static double kF = 0.05;
-        constexpr static double iZone = 500.0;
-        constexpr static double allowableError = 0.0;
+        constexpr static double kS = 0.0;
+        constexpr static double kV = 0.0;
+        constexpr static double kA = 0.0;
+        constexpr static double kG = 0.0;
+        constexpr static int gravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
       };  // namespace drive
       struct linear_follower {
         constexpr static double kP = 5.5;
@@ -39,7 +45,7 @@ namespace controlLoop {
         constexpr static auto angularAcceleration = units::degrees_per_second_squared_t{360};
       };  // namespace rotational_follower
     }     // namespace drive
-  }    // namespace comp_bot
+  }       // namespace comp_bot
   namespace practice_bot {
     namespace drive {
       using rotate = controlLoop::comp_bot::drive::rotate;

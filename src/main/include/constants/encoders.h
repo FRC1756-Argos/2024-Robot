@@ -3,13 +3,11 @@
 ///            the license file in the root directory of this project.
 
 #pragma once
-#include <ctre/phoenix/sensors/CANCoder.h>
+#include <ctre/phoenix/sensors/CANcoder.h>
 
 namespace encoder_conf {
-  namespace comp_bot {
-  }  // namespace comp_bot
+  namespace comp_bot {}  // namespace comp_bot
 
-  namespace practice_bot {
-  }  // namespace practice_bot
+  namespace practice_bot {}  // namespace practice_bot
 
 }  // namespace encoder_conf

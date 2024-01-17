@@ -17,6 +17,7 @@
 #include "constants/addresses.h"
 
 using namespace std::chrono_literals;
+using ctre::phoenix::led::CANdle;
 
 SimpleLedSubsystem::SimpleLedSubsystem(argos_lib::RobotInstance instance)
     : m_CANdle{instance == argos_lib::RobotInstance::Competition ?
@@ -176,8 +177,7 @@ void SimpleLedSubsystem::SetLedStripColor(LedStrip strip, argos_lib::ArgosColor 
   }
 }
 
-void SimpleLedSubsystem::SetAllGroupsColor(argos_lib::ArgosColor color,
-                                           bool restorable) {
+void SimpleLedSubsystem::SetAllGroupsColor(argos_lib::ArgosColor color, bool restorable) {
   if (!m_CANdle) {
     return;  // No CANdle, so do nothing
   }
@@ -196,8 +196,7 @@ void SimpleLedSubsystem::SetAllGroupsColor(argos_lib::ArgosColor color,
   }
 }
 
-void SimpleLedSubsystem::SetAllGroupsFade(argos_lib::ArgosColor color,
-                                          bool restorable) {
+void SimpleLedSubsystem::SetAllGroupsFade(argos_lib::ArgosColor color, bool restorable) {
   if (!m_CANdle) {
     return;  // No CANdle, so do nothing
   }
@@ -335,15 +334,19 @@ void SimpleLedSubsystem::SetAllGroupsLarson(argos_lib::ArgosColor color, bool re
 argos_lib::ArgosColor SimpleLedSubsystem::GetAllianceColor() {
   if (!m_hasBeenConnected) {
     return argos_lib::gamma_corrected_colors::kCatYellow;
-  } else if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
+  }
+  auto alliance = frc::DriverStation::GetAlliance();
+  if (alliance) {
+    m_latestAlliance = alliance.value();
+  }
+  if (m_latestAlliance == frc::DriverStation::Alliance::kBlue) {
     return argos_lib::colors::kReallyBlue;
   } else {
     return argos_lib::colors::kReallyRed;
   }
 }
 
-void SimpleLedSubsystem::SetAllGroupsAllianceColor(bool fade,
-                                                   bool restorable) {
+void SimpleLedSubsystem::SetAllGroupsAllianceColor(bool fade, bool restorable) {
   if (restorable) {
     m_ledUpdateFunction = [this, fade]() { this->SetAllGroupsAllianceColor(fade, false); };
   }

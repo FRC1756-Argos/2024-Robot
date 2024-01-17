@@ -6,10 +6,9 @@
 
 #include <ctre/phoenix6/core/CoreTalonFX.hpp>
 
-using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
-
 namespace argos_lib {
   namespace status_frame_config {
+    using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
     /**
      * @brief Motor mode used for setting status frame update periods
      */

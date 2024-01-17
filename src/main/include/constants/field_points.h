@@ -64,14 +64,12 @@ namespace utils {
 namespace field_points {
   namespace blue_alliance {
     // Reference game_piece_positions in Docs directory for conventions
-    namespace game_pieces {
-    }  // namespace game_pieces
+    namespace game_pieces {}  // namespace game_pieces
 
-  }    // namespace blue_alliance
+  }  // namespace blue_alliance
 
   namespace red_alliance {
-    namespace game_pieces {
-    }  // namespace game_pieces
+    namespace game_pieces {}  // namespace game_pieces
 
   }  // namespace red_alliance
 }  // namespace field_points
