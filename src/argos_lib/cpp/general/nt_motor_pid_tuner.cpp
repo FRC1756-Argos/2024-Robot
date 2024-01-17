@@ -27,7 +27,9 @@ NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
     , m_threadStopCv()
     , m_statusUpdateThread{[this]() { UpdateClosedLoopMonitoringThread(); }} {
   m_activeConfigs.SlotNumber = m_pidSlot;
-  motors.begin()->GetConfigurator().Refresh(m_activeConfigs);
+  if(!motors.empty()) {
+    *(motors.begin())->GetConfigurator().Refresh(m_activeConfigs);
+  }
 
   m_updateSubscriber.AddMonitor(
       "tunes/kP",
