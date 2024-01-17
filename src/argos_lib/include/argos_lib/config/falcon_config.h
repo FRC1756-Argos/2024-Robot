@@ -102,7 +102,7 @@ namespace argos_lib {
      * @return false Configuration failed
      */
     template <typename T>
-    bool FalconConfig(TalonFX& motorController, units::millisecond_t configTimeout) {
+    bool FalconConfig(ctre::phoenix6::hardware::TalonFX& motorController, units::millisecond_t configTimeout) {
       ctre::phoenix6::configs::TalonFXConfiguration config;
 
       if constexpr (has_inverted<T>{}) {
@@ -280,7 +280,7 @@ namespace argos_lib {
      * @return false Configuration failed
      */
     template <typename CompetitionConfig, typename PracticeConfig>
-    bool FalconConfig(TalonFX& motorController, units::millisecond_t configTimeout, argos_lib::RobotInstance instance) {
+    bool FalconConfig(ctre::phoenix6::hardware::TalonFX& motorController, units::millisecond_t configTimeout, argos_lib::RobotInstance instance) {
       switch (instance) {
         case argos_lib::RobotInstance::Competition:
           return FalconConfig<CompetitionConfig>(motorController, configTimeout);

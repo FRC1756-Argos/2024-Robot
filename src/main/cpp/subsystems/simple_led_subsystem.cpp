@@ -17,6 +17,7 @@
 #include "constants/addresses.h"
 
 using namespace std::chrono_literals;
+using ctre::phoenix::led::CANdle;
 
 SimpleLedSubsystem::SimpleLedSubsystem(argos_lib::RobotInstance instance)
     : m_CANdle{instance == argos_lib::RobotInstance::Competition ?
