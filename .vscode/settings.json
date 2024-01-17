@@ -22,6 +22,7 @@
     "vector": "cpp",
     "cmath": "cpp",
     "array": "cpp",
-    "string_view": "cpp"
+    "string_view": "cpp",
+    "memory": "cpp"
   }
 }

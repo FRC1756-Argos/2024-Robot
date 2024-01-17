@@ -105,10 +105,10 @@ namespace argos_lib {
       ctre::phoenix6::configs::TalonFXConfiguration config;
 
       if constexpr (has_inverted<T>{}) {
-        motorController.SetInverted(T::inverted);
+        config.MotorOutput.Inverted = T::inverted;
       }
       if constexpr (has_neutralMode<T>{}) {
-        config.MotorOutput.NeutralMode(T::neutralMode);
+        config.MotorOutput.NeutralMode = T::neutralMode;
       }
       if constexpr (has_remoteFilter0_addr<T>{} && has_remoteFilter0_type<T>{}) {
         config.Feedback.FeedbackRemoteSensorID = T::remoteFilter0_addr.address;

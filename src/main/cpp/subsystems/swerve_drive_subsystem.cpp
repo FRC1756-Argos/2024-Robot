@@ -22,6 +22,9 @@ using argos_lib::angle::ConstrainAngle;
 using ctre::phoenix6::controls::DutyCycleOut;
 using ctre::phoenix6::controls::PositionVoltage;
 using ctre::phoenix6::controls::VelocityVoltage;
+using ctre::phoenix6::hardware::TalonFX;
+using ctre::phoenix6::hardware::CANcoder;
+using ctre::phoenix6::hardware::Pigeon2;
 
 SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instance)
     : m_instance(instance)
@@ -551,9 +554,7 @@ void SwerveDriveSubsystem::Home(const units::degree_t& angle) {
 }
 
 units::degrees_per_second_t SwerveDriveSubsystem::GetRobotPitchRate() {
-  double xyz_dps[] = {0.0, 0.0, 0.0};
-  m_pigeonIMU.GetRawGyro(xyz_dps);
-  return units::degrees_per_second_t{xyz_dps[0]};
+  m_pigeonIMU.GetAngularVelocityXDevice().GetValue();
 }
 
 void SwerveDriveSubsystem::LockWheels() {

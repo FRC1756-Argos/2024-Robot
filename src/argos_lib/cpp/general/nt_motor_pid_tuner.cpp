@@ -137,34 +137,34 @@ void NTMotorPIDTuner::UpdateClosedLoopMonitoringThread() {
       errors.clear();
       for (auto motor : m_pMotors) {
         const auto controlMode = motor->GetControlMode().GetValue();
-        switch(controlMode){
-          case:ctre::phoenix6::signals::ControlModeValue::PositionDutyCycle:
-          case:ctre::phoenix6::signals::ControlModeValue::VelocityDutyCycle:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicDutyCycle:
-          case:ctre::phoenix6::signals::ControlModeValue::PositionDutyCycleFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::VelocityDutyCycleFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicDutyCycleFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::PositionVoltage:
-          case:ctre::phoenix6::signals::ControlModeValue::VelocityVoltage:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicVoltage:
-          case:ctre::phoenix6::signals::ControlModeValue::PositionVoltageFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::VelocityVoltageFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicVoltageFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::PositionTorqueCurrentFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::VelocityTorqueCurrentFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicTorqueCurrentFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicVelocityDutyCycle:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicVelocityDutyCycleFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicVelocityVoltage:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicVelocityVoltageFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicVelocityTorqueCurrentFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoDutyCycle:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoDutyCycleFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoVoltage:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoVoltageFOC:
-          case:ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoTorqueCurrentFOC:
+        switch(controlMode.value){
+          case ctre::phoenix6::signals::ControlModeValue::PositionDutyCycle:
+          case ctre::phoenix6::signals::ControlModeValue::VelocityDutyCycle:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicDutyCycle:
+          case ctre::phoenix6::signals::ControlModeValue::PositionDutyCycleFOC:
+          case ctre::phoenix6::signals::ControlModeValue::VelocityDutyCycleFOC:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicDutyCycleFOC:
+          case ctre::phoenix6::signals::ControlModeValue::PositionVoltage:
+          case ctre::phoenix6::signals::ControlModeValue::VelocityVoltage:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicVoltage:
+          case ctre::phoenix6::signals::ControlModeValue::PositionVoltageFOC:
+          case ctre::phoenix6::signals::ControlModeValue::VelocityVoltageFOC:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicVoltageFOC:
+          case ctre::phoenix6::signals::ControlModeValue::PositionTorqueCurrentFOC:
+          case ctre::phoenix6::signals::ControlModeValue::VelocityTorqueCurrentFOC:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicTorqueCurrentFOC:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicVelocityDutyCycle:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicVelocityDutyCycleFOC:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicVelocityVoltage:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicVelocityVoltageFOC:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicVelocityTorqueCurrentFOC:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoDutyCycle:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoDutyCycleFOC:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoVoltage:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoVoltageFOC:
+          case ctre::phoenix6::signals::ControlModeValue::MotionMagicExpoTorqueCurrentFOC:
             setpoints.push_back(motor->GetClosedLoopReference().GetValue() * m_sensorConversions.setpoint);
-            errors.push_back(motor->GetClosedLoopError().GetValue * m_sensorConversions.setpoint);
+            errors.push_back(motor->GetClosedLoopError().GetValue() * m_sensorConversions.setpoint);
             break;
           default:
             setpoints.push_back(NAN);

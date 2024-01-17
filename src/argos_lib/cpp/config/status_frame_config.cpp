@@ -4,6 +4,8 @@
 
 #include "argos_lib/config/status_frame_config.h"
 
+using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
+
 void argos_lib::status_frame_config::SetMotorStatusFrameRates(
     BaseTalon& motor, argos_lib::status_frame_config::MotorPresetMode motorMode) {
   uint8_t generalStatusPeriod = 30;         // Status 1

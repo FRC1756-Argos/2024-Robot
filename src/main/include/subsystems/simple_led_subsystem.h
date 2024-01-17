@@ -17,13 +17,13 @@
 #include <chrono>
 #include <functional>
 
-using CANdle = ctre::phoenix::led::CANdle;
 
 enum class LedGroup { SIDES, BACK, FRONT };
 enum class LedStrip { FrontLeft, FrontRight, SideFront, SideBack, BackRight, BackLeft };
 enum class AlignLedStatus { NoTarget, FlashLeft, FlashRight, Aligned };
 
 class SimpleLedSubsystem : public frc2::SubsystemBase {
+  using ctre::phoenix::led::CANdle;
  public:
   explicit SimpleLedSubsystem(argos_lib::RobotInstance instance);
 
@@ -89,6 +89,8 @@ class SimpleLedSubsystem : public frc2::SubsystemBase {
   std::optional<std::function<void(void)>> m_restoreAnimationFunction;
   std::chrono::time_point<std::chrono::steady_clock> m_startTime;
   units::millisecond_t m_temporaryDuration;
+
+  frc::DriverStation::Alliance m_latestAlliance;
 
   constexpr static int startIndex_frontLeft = 8;     ///< Address of first LED in strip
   constexpr static int length_frontLeft = 29;        ///< Number of LEDs in strip

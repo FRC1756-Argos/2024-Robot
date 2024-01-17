@@ -9,10 +9,9 @@
 #include "compile_time_member_check.h"
 #include <ctre/phoenix6/CANcoder.hpp>
 
-using CANcoder = ctre::phoenix6::hardware::CANcoder;
-
 namespace argos_lib {
   namespace cancoder_config {
+    using CANcoder = ctre::phoenix6::hardware::CANcoder;
 
     HAS_MEMBER(direction)
     HAS_MEMBER(magOffset)

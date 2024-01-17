@@ -335,7 +335,12 @@ void SimpleLedSubsystem::SetAllGroupsLarson(argos_lib::ArgosColor color, bool re
 argos_lib::ArgosColor SimpleLedSubsystem::GetAllianceColor() {
   if (!m_hasBeenConnected) {
     return argos_lib::gamma_corrected_colors::kCatYellow;
-  } else if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
+  }
+  auto alliance = frc::DriverStation::GetAlliance();
+  if(alliance) {
+    m_latestAlliance = alliance.value();
+  }
+  if (m_latestAlliance == frc::DriverStation::Alliance::kBlue) {
     return argos_lib::colors::kReallyBlue;
   } else {
     return argos_lib::colors::kReallyRed;

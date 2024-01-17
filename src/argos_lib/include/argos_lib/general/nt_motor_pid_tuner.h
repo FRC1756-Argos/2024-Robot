@@ -15,8 +15,6 @@
 #include "argos_lib/general/nt_subscriber.h"
 #include <ctre/phoenix6/core/CoreTalonFX.hpp>
 
-using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
-
 namespace argos_lib {
 
   /**
@@ -60,6 +58,7 @@ namespace argos_lib {
    * @note This runs a background thread to read statuses of motors without calling repeatedly
    */
   class NTMotorPIDTuner {
+using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
    public:
     /**
      * @brief Construct a new NTMotorPIDTuner object

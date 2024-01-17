@@ -6,6 +6,7 @@
 
 #include "units/angular_acceleration.h"
 #include "units/angular_velocity.h"
+#include <ctre/phoenix6/signals/SpnEnums.hpp>
 
 namespace controlLoop {
   namespace comp_bot {

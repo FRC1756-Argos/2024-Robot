@@ -22,7 +22,7 @@ namespace sensor_conversions {
         return degrees / sensorConversionFactor;
       }
       constexpr units::degree_t ToAngle(const units::angle::turn_t sensorunit) {
-        return units::make_unit<units::degree_t>(sensorunit * sensorConversionFactor);
+        return sensorunit * sensorConversionFactor;
       }
     }  // namespace turn
     namespace drive {

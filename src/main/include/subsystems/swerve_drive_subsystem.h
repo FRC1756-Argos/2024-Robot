@@ -30,11 +30,9 @@
 #include "utils/swerve_trapezoidal_profile.h"
 #include "utils/swerve_trapezoidal_spline.h"
 
-using TalonFX = ctre::phoenix6::hardware::TalonFX;
-using CANcoder = ctre::phoenix6::hardware::CANcoder;
-using Pigeon2 = ctre::phoenix6::hardware::Pigeon2;
-
 class SwerveModule {
+using ctre::phoenix6::hardware::TalonFX;
+using ctre::phoenix6::hardware::CANcoder;
  public:
   // MOTORS
   TalonFX m_drive;

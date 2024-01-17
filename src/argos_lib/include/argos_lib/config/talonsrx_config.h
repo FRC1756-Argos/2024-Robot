@@ -13,10 +13,10 @@
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 #include "status_frame_config.h"
 
-using WPI_TalonSRX = ctre::phoenix::motorcontrol::can::WPI_TalonSRX;
 
 namespace argos_lib {
   namespace talonsrx_config {
+    using ctre::phoenix::motorcontrol::can::WPI_TalonSRX;
 
     HAS_MEMBER(inverted)
     HAS_MEMBER(neutralMode)
