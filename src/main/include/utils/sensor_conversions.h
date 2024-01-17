@@ -21,7 +21,7 @@ namespace sensor_conversions {
       constexpr units::angle::turn_t ToSensorUnit(const units::degree_t degrees) {
         return degrees / sensorConversionFactor;
       }
-      constexpr units::degree_t ToAngle(const double sensorunit) {
+      constexpr units::degree_t ToAngle(const units::angle::turn_t sensorunit) {
         return units::make_unit<units::degree_t>(sensorunit * sensorConversionFactor);
       }
     }  // namespace turn

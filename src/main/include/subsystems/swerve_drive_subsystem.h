@@ -143,7 +143,7 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
    * @return Field-centric angle of the robot where 0 degrees is intake oriented toward
    *         opposing alliance operator station positive CCW.
    */
-  units::degree_t GetFieldCentricAngle() const;
+  units::degree_t GetFieldCentricAngle();
 
   /**
    * @brief Get the latest pose estimate

@@ -647,7 +647,7 @@ frc::Pose2d SwerveDriveSubsystem::UpdateEstimatedPose() {
   return frc::Pose2d{newEstPose.Translation(), continuousEstPoseAngle};
 }
 
-units::degree_t SwerveDriveSubsystem::GetFieldCentricAngle() const {
+units::degree_t SwerveDriveSubsystem::GetFieldCentricAngle() {
   return -GetIMUYaw() - m_fieldHomeOffset;
 }
 
@@ -722,10 +722,10 @@ void SwerveDriveSubsystem::InitializeMotorsFromFS() {
   const units::degree_t backLeftCalibrated = backLeft_current - homes.value().RearLeft;
 
   // ASSIGN DIFFERENCE TO CURRENT MOTOR RELATIVE POSITION
-  m_frontLeft.m_encoder.SetPosition(frontLeftCalibrated.to<double>(), 50);
-  m_frontRight.m_encoder.SetPosition(frontRightCalibrated.to<double>(), 50);
-  m_backRight.m_encoder.SetPosition(backRightCalibrated.to<double>(), 50);
-  m_backLeft.m_encoder.SetPosition(backLeftCalibrated.to<double>(), 50);
+  m_frontLeft.m_encoder.SetPosition(frontLeftCalibrated, 50_ms);
+  m_frontRight.m_encoder.SetPosition(frontRightCalibrated, 50_ms);
+  m_backRight.m_encoder.SetPosition(backRightCalibrated, 50_ms);
+  m_backLeft.m_encoder.SetPosition(backLeftCalibrated, 50_ms);
 }
 
 // SWERVE MODULE SUBSYSTEM FUNCTIONS
