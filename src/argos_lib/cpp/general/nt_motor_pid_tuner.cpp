@@ -15,7 +15,7 @@ using argos_lib::ClosedLoopSensorConversions;
 using argos_lib::NTMotorPIDTuner;
 
 NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
-                                 std::initializer_list<ctre::phoenix::motorcontrol::can::BaseTalon*> motors,
+                                 std::initializer_list<BaseTalon*> motors,
                                  unsigned pidSlot,
                                  ClosedLoopSensorConversions sensorConversions)
     : m_updateSubscriber{tableName}

@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - fix-build
   pull_request:
     branches:
       - main
