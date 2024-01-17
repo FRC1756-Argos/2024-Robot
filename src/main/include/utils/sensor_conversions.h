@@ -77,9 +77,9 @@ namespace sensor_conversions {
 
       // * David I'm sorry in advance for this math
 
-      /// @brief Find the travel of the extension given a rotation "angle" of the CANCoder
-      /// @param angle Rotation of the CANCoder
-      /// @return The travel of extension given a rotation of geared CANCoder
+      /// @brief Find the travel of the extension given a rotation "angle" of the CANcoder
+      /// @param angle Rotation of the CANcoder
+      /// @return The travel of extension given a rotation of geared CANcoder
       constexpr units::inch_t ExtensionFromRotation(const units::degree_t angle) {
         return extensionPerEncoderRevolution *
                units::make_unit<units::dimensionless::scalar_t>((angle.to<double>() / 360.0));

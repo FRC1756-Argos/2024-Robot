@@ -80,6 +80,8 @@ namespace argos_lib {
     std::mutex m_threadMutex;                ///< Lock to aid notifying thread of stop
     std::condition_variable m_threadStopCv;  ///< Used to notify thread to stop at shutdown
     std::thread m_statusUpdateThread;        ///< Thread monitoring motors
+    
+    ctre::phoenix6::configs::SlotConfigs m_activeConfigs;  ///< Current PID configurations
 
     /**
      * @brief Update statuses from all motors

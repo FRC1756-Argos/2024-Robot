@@ -31,7 +31,7 @@
 #include "utils/swerve_trapezoidal_spline.h"
 
 using TalonFX = ctre::phoenix6::hardware::TalonFX;
-using CANCoder = ctre::phoenix6::hardware::CANcoder;
+using CANcoder = ctre::phoenix6::hardware::CANcoder;
 using Pigeon2 = ctre::phoenix6::hardware::Pigeon2;
 
 class SwerveModule {
@@ -40,7 +40,7 @@ class SwerveModule {
   TalonFX m_drive;
   TalonFX m_turn;
   // ENCODER
-  CANCoder m_encoder;
+  CANcoder m_encoder;
 
   /**
    * @brief Construct a new Swerve Module object
