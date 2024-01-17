@@ -280,7 +280,9 @@ namespace argos_lib {
      * @return false Configuration failed
      */
     template <typename CompetitionConfig, typename PracticeConfig>
-    bool FalconConfig(ctre::phoenix6::hardware::TalonFX& motorController, units::millisecond_t configTimeout, argos_lib::RobotInstance instance) {
+    bool FalconConfig(ctre::phoenix6::hardware::TalonFX& motorController,
+                      units::millisecond_t configTimeout,
+                      argos_lib::RobotInstance instance) {
       switch (instance) {
         case argos_lib::RobotInstance::Competition:
           return FalconConfig<CompetitionConfig>(motorController, configTimeout);
