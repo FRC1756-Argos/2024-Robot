@@ -4,11 +4,12 @@
 
 #pragma once
 
+#include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
+
 #include "addresses.h"
 #include "argos_lib/config/status_frame_config.h"
 #include "control_loops.h"
-#include <ctre/phoenix6/CANcoder.hpp>
-#include <ctre/phoenix6/TalonFX.hpp>
 #include "units/current.h"
 #include "units/time.h"
 #include "units/voltage.h"
@@ -49,8 +50,7 @@ namespace motorConfig {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
         constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::frontLeftEncoder;
-        constexpr static auto remoteFilter0_type =
-            ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto remoteFilter0_type = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
@@ -68,8 +68,7 @@ namespace motorConfig {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
         constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::frontRightEncoder;
-        constexpr static auto remoteFilter0_type =
-            ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto remoteFilter0_type = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
@@ -87,8 +86,7 @@ namespace motorConfig {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
         constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::backRightEncoder;
-        constexpr static auto remoteFilter0_type =
-            ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto remoteFilter0_type = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
@@ -106,8 +104,7 @@ namespace motorConfig {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
         constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::backLeftEncoder;
-        constexpr static auto remoteFilter0_type =
-            ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto remoteFilter0_type = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
@@ -120,7 +117,7 @@ namespace motorConfig {
       };
 
     }  // namespace drive
-  }     // namespace comp_bot
+  }    // namespace comp_bot
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   /// @brief Motor configurations specific to practice robot
@@ -202,5 +199,5 @@ namespace motorConfig {
         constexpr static auto pid0_gravityType = motorConfig::comp_bot::drive::backLeftTurn::pid0_gravityType;
       };
     }  // namespace drive
-  }  // namespace practice_bot
+  }    // namespace practice_bot
 }  // namespace motorConfig

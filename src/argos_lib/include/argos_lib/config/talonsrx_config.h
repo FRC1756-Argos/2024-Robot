@@ -4,15 +4,14 @@
 
 #pragma once
 
+#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 #include <units/current.h>
 #include <units/time.h>
 #include <units/voltage.h>
 
 #include "argos_lib/config/config_types.h"
 #include "compile_time_member_check.h"
-#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 #include "status_frame_config.h"
-
 
 namespace argos_lib {
   namespace talonsrx_config {
@@ -65,7 +64,8 @@ namespace argos_lib {
      * @return false Configuration failed
      */
     template <typename T>
-    bool TalonSRXConfig(ctre::phoenix::motorcontrol::can::WPI_TalonSRX& motorController, units::millisecond_t configTimeout) {
+    bool TalonSRXConfig(ctre::phoenix::motorcontrol::can::WPI_TalonSRX& motorController,
+                        units::millisecond_t configTimeout) {
       TalonSRXConfiguration config;
       auto timeout = configTimeout.to<int>();
 

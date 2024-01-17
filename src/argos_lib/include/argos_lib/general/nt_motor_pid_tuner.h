@@ -12,8 +12,9 @@
 #include <thread>
 #include <vector>
 
-#include "argos_lib/general/nt_subscriber.h"
 #include <ctre/phoenix6/core/CoreTalonFX.hpp>
+
+#include "argos_lib/general/nt_subscriber.h"
 
 namespace argos_lib {
 
@@ -38,7 +39,7 @@ namespace argos_lib {
    */
   template <class Callable>
   constexpr double GetVelocityConversionFactor(Callable toPhysicalUnitsFunction) {
-    return toPhysicalUnitsFunction(units::angle::turn_t{1.0}/units::time::second_t{1.0}).template to<double>();
+    return toPhysicalUnitsFunction(units::angle::turn_t{1.0} / units::time::second_t{1.0}).template to<double>();
   }
 
   /**
@@ -58,7 +59,8 @@ namespace argos_lib {
    * @note This runs a background thread to read statuses of motors without calling repeatedly
    */
   class NTMotorPIDTuner {
-using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
+    using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
+
    public:
     /**
      * @brief Construct a new NTMotorPIDTuner object
@@ -81,8 +83,7 @@ using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
    private:
     argos_lib::NTSubscriber
         m_updateSubscriber;  ///< Subscriber to manage all updates from user inputs through network tables
-    const std::vector<BaseTalon*>
-        m_pMotors;                                 ///< Motors being configured and monitored
+    const std::vector<BaseTalon*> m_pMotors;       ///< Motors being configured and monitored
     const unsigned m_pidSlot;                      ///< PID slot index actively used on motors
     std::shared_ptr<nt::NetworkTable> m_pntTable;  ///< Network table containing status and tuning keys
     ClosedLoopSensorConversions
@@ -91,7 +92,7 @@ using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
     std::mutex m_threadMutex;                ///< Lock to aid notifying thread of stop
     std::condition_variable m_threadStopCv;  ///< Used to notify thread to stop at shutdown
     std::thread m_statusUpdateThread;        ///< Thread monitoring motors
-    
+
     ctre::phoenix6::configs::SlotConfigs m_activeConfigs;  ///< Current PID configurations
 
     /**

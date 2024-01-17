@@ -26,7 +26,6 @@ NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
     , m_threadMutex()
     , m_threadStopCv()
     , m_statusUpdateThread{[this]() { UpdateClosedLoopMonitoringThread(); }} {
-  
   m_activeConfigs.SlotNumber = m_pidSlot;
   motors.begin().GetConfigurator().Refresh(m_activeConfigs);
 
@@ -97,8 +96,8 @@ NTMotorPIDTuner::NTMotorPIDTuner(const std::string& tableName,
       "tunes/GArm",
       [this](double newVal) {
         for (auto motor : m_pMotors) {
-          m_activeConfigs.GravityType = newVal == 0 ? ctre::phoenix6::signals::GravityTypeValue::Elevator_Static
-                                                    : ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
+          m_activeConfigs.GravityType = newVal == 0 ? ctre::phoenix6::signals::GravityTypeValue::Elevator_Static :
+                                                      ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
           motor->GetConfigurator().Apply(m_activeConfigs, 50_ms);
         }
       },
@@ -137,7 +136,7 @@ void NTMotorPIDTuner::UpdateClosedLoopMonitoringThread() {
       errors.clear();
       for (auto motor : m_pMotors) {
         const auto controlMode = motor->GetControlMode().GetValue();
-        switch(controlMode.value){
+        switch (controlMode.value) {
           case ctre::phoenix6::signals::ControlModeValue::PositionDutyCycle:
           case ctre::phoenix6::signals::ControlModeValue::VelocityDutyCycle:
           case ctre::phoenix6::signals::ControlModeValue::MotionMagicDutyCycle:

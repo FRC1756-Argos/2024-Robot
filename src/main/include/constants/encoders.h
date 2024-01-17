@@ -6,10 +6,8 @@
 #include <ctre/phoenix/sensors/CANcoder.h>
 
 namespace encoder_conf {
-  namespace comp_bot {
-  }  // namespace comp_bot
+  namespace comp_bot {}  // namespace comp_bot
 
-  namespace practice_bot {
-  }  // namespace practice_bot
+  namespace practice_bot {}  // namespace practice_bot
 
 }  // namespace encoder_conf

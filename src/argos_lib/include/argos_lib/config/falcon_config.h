@@ -9,9 +9,10 @@
 
 #include <iostream>
 
+#include <ctre/phoenix6/TalonFX.hpp>
+
 #include "argos_lib/config/config_types.h"
 #include "compile_time_member_check.h"
-#include <ctre/phoenix6/TalonFX.hpp>
 #include "status_frame_config.h"
 
 namespace argos_lib {
@@ -279,9 +280,7 @@ namespace argos_lib {
      * @return false Configuration failed
      */
     template <typename CompetitionConfig, typename PracticeConfig>
-    bool FalconConfig(TalonFX& motorController,
-                      units::millisecond_t configTimeout,
-                      argos_lib::RobotInstance instance) {
+    bool FalconConfig(TalonFX& motorController, units::millisecond_t configTimeout, argos_lib::RobotInstance instance) {
       switch (instance) {
         case argos_lib::RobotInstance::Competition:
           return FalconConfig<CompetitionConfig>(motorController, configTimeout);

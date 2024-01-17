@@ -37,10 +37,12 @@ namespace sensor_conversions {
         return (distance / wheelCircumference) * driveGearRatio;
       }
 
-      constexpr units::inches_per_second_t ToVelocity(const units::angular_velocity::revolutions_per_minute_t sensorVelocity) {
+      constexpr units::inches_per_second_t ToVelocity(
+          const units::angular_velocity::revolutions_per_minute_t sensorVelocity) {
         return ToDistance(sensorVelocity * units::second_t{1}) / units::second_t{1};
       }
-      constexpr units::angular_velocity::revolutions_per_minute_t ToSensorVelocity(const units::inches_per_second_t velocity) {
+      constexpr units::angular_velocity::revolutions_per_minute_t ToSensorVelocity(
+          const units::inches_per_second_t velocity) {
         return ToSensorPosition(velocity * units::second_t{1}) / units::second_t{1};
       }
     }  // namespace drive

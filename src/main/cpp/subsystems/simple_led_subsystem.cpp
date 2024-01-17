@@ -176,8 +176,7 @@ void SimpleLedSubsystem::SetLedStripColor(LedStrip strip, argos_lib::ArgosColor 
   }
 }
 
-void SimpleLedSubsystem::SetAllGroupsColor(argos_lib::ArgosColor color,
-                                           bool restorable) {
+void SimpleLedSubsystem::SetAllGroupsColor(argos_lib::ArgosColor color, bool restorable) {
   if (!m_CANdle) {
     return;  // No CANdle, so do nothing
   }
@@ -196,8 +195,7 @@ void SimpleLedSubsystem::SetAllGroupsColor(argos_lib::ArgosColor color,
   }
 }
 
-void SimpleLedSubsystem::SetAllGroupsFade(argos_lib::ArgosColor color,
-                                          bool restorable) {
+void SimpleLedSubsystem::SetAllGroupsFade(argos_lib::ArgosColor color, bool restorable) {
   if (!m_CANdle) {
     return;  // No CANdle, so do nothing
   }
@@ -337,7 +335,7 @@ argos_lib::ArgosColor SimpleLedSubsystem::GetAllianceColor() {
     return argos_lib::gamma_corrected_colors::kCatYellow;
   }
   auto alliance = frc::DriverStation::GetAlliance();
-  if(alliance) {
+  if (alliance) {
     m_latestAlliance = alliance.value();
   }
   if (m_latestAlliance == frc::DriverStation::Alliance::kBlue) {
@@ -347,8 +345,7 @@ argos_lib::ArgosColor SimpleLedSubsystem::GetAllianceColor() {
   }
 }
 
-void SimpleLedSubsystem::SetAllGroupsAllianceColor(bool fade,
-                                                   bool restorable) {
+void SimpleLedSubsystem::SetAllGroupsAllianceColor(bool fade, bool restorable) {
   if (restorable) {
     m_ledUpdateFunction = [this, fade]() { this->SetAllGroupsAllianceColor(fade, false); };
   }

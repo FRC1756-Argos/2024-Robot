@@ -4,9 +4,10 @@
 
 #pragma once
 
+#include <ctre/phoenix6/signals/SpnEnums.hpp>
+
 #include "units/angular_acceleration.h"
 #include "units/angular_velocity.h"
-#include <ctre/phoenix6/signals/SpnEnums.hpp>
 
 namespace controlLoop {
   namespace comp_bot {
@@ -44,7 +45,7 @@ namespace controlLoop {
         constexpr static auto angularAcceleration = units::degrees_per_second_squared_t{360};
       };  // namespace rotational_follower
     }     // namespace drive
-  }    // namespace comp_bot
+  }       // namespace comp_bot
   namespace practice_bot {
     namespace drive {
       using rotate = controlLoop::comp_bot::drive::rotate;

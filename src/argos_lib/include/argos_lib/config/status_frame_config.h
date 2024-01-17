@@ -6,7 +6,6 @@
 
 #include <ctre/phoenix6/core/CoreTalonFX.hpp>
 
-
 namespace argos_lib {
   namespace status_frame_config {
     using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;

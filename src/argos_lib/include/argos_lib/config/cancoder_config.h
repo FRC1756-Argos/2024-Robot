@@ -6,8 +6,9 @@
 
 #include <units/time.h>
 
-#include "compile_time_member_check.h"
 #include <ctre/phoenix6/CANcoder.hpp>
+
+#include "compile_time_member_check.h"
 
 namespace argos_lib {
   namespace cancoder_config {

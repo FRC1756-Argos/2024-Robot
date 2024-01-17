@@ -5,19 +5,17 @@
 #pragma once
 
 #include <argos_lib/general/log.h>
-
 #include <constants/field_points.h>
 #include <ctre/phoenix/led/CANdle.h>
+#include <frc/DriverStation.h>
 #include <frc/util/Color.h>
 #include <frc2/command/SubsystemBase.h>
-#include <frc/DriverStation.h>
-
-#include "argos_lib/config/config_types.h"
-#include "argos_lib/general/color.h"
 
 #include <chrono>
 #include <functional>
 
+#include "argos_lib/config/config_types.h"
+#include "argos_lib/general/color.h"
 
 enum class LedGroup { SIDES, BACK, FRONT };
 enum class LedStrip { FrontLeft, FrontRight, SideFront, SideBack, BackRight, BackLeft };
@@ -42,11 +40,9 @@ class SimpleLedSubsystem : public frc2::SubsystemBase {
 
   /// @brief Sets all led groups to a given color
   /// @param color an ArgosColor to set the LEDs too
-  void SetAllGroupsColor(argos_lib::ArgosColor color,
-                         bool restorable = true);
+  void SetAllGroupsColor(argos_lib::ArgosColor color, bool restorable = true);
 
-  void SetAllGroupsFade(argos_lib::ArgosColor color,
-                        bool restorable = true);
+  void SetAllGroupsFade(argos_lib::ArgosColor color, bool restorable = true);
 
   void SetAllGroupsFlash(argos_lib::ArgosColor color, bool restorable = true);
 
@@ -57,8 +53,7 @@ class SimpleLedSubsystem : public frc2::SubsystemBase {
   argos_lib::ArgosColor GetAllianceColor();
 
   /// @brief Set all groups of LEDs to the alliance color
-  void SetAllGroupsAllianceColor(bool fade,
-                                 bool restorable = true);
+  void SetAllGroupsAllianceColor(bool fade, bool restorable = true);
 
   void StopAllAnimations(bool restorable = true);
 

@@ -7,24 +7,25 @@
 #include <frc/ADIS16448_IMU.h>
 #include <frc/Timer.h>
 #include <frc/controller/HolonomicDriveController.h>
+#include <frc/controller/PIDController.h>
+#include <frc/controller/ProfiledPIDController.h>
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc2/command/SubsystemBase.h>
-#include <frc/controller/PIDController.h>
-#include <frc/controller/ProfiledPIDController.h>
 
 #include <memory>
+
+#include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/Pigeon2.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
 
 #include "argos_lib/config/config_types.h"
 #include "argos_lib/general/nt_motor_pid_tuner.h"
 #include "argos_lib/general/nt_subscriber.h"
 #include "argos_lib/homing/fs_homing.h"
-#include <ctre/phoenix6/TalonFX.hpp>
-#include <ctre/phoenix6/CANcoder.hpp>
-#include <ctre/phoenix6/Pigeon2.hpp>
 #include "frc/StateSpaceUtil.h"
 #include "frc/estimator/SwerveDrivePoseEstimator.h"
 #include "utils/swerve_trapezoidal_profile.h"
