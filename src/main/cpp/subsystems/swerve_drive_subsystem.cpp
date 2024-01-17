@@ -20,8 +20,8 @@
 using namespace argos_lib::swerve;
 using argos_lib::angle::ConstrainAngle;
 using ctre::phoenix6::controls::DutyCycleOut;
-ctre::phoenix6::controls::PositionVoltage;
-ctre::phoenix6::controls::VelocityVoltage;
+using ctre::phoenix6::controls::PositionVoltage;
+using ctre::phoenix6::controls::VelocityVoltage;
 
 SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instance)
     : m_instance(instance)
@@ -114,9 +114,9 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
           {&m_frontLeft.m_drive, &m_frontRight.m_drive, &m_backRight.m_drive, &m_backLeft.m_drive},
           0,
           argos_lib::ClosedLoopSensorConversions{
-              argos_lib::GetSensorConversionFactor(sensor_conversions::swerve_drive::drive::ToDistance),
-              argos_lib::GetSensorConversionFactor(sensor_conversions::swerve_drive::drive::ToVelocity),
-              argos_lib::GetSensorConversionFactor(sensor_conversions::swerve_drive::drive::ToVelocity)})
+              argos_lib::GetPositionConversionFactor(sensor_conversions::swerve_drive::drive::ToDistance),
+              argos_lib::GetVelocityConversionFactor(sensor_conversions::swerve_drive::drive::ToVelocity),
+              argos_lib::GetVelocityConversionFactor(sensor_conversions::swerve_drive::drive::ToVelocity)})
     , m_linearFollowerTuner_P{"argos/drive/linearFollower"}
     , m_linearFollowerTuner_I{"argos/drive/linearFollower"}
     , m_linearFollowerTuner_D{"argos/drive/linearFollower"}
@@ -393,25 +393,25 @@ void SwerveDriveSubsystem::SwerveDrive(const double fwVelocity, const double sid
 
   moduleStates.at(0) = argos_lib::swerve::Optimize(
       moduleStates.at(0),
-      sensor_conversions::swerve_drive::turn::ToAngle(m_frontLeft.m_turn.GetPosition()),
+      sensor_conversions::swerve_drive::turn::ToAngle(m_frontLeft.m_turn.GetPosition().GetValue()),
       0_rpm,
       0_fps,
       12_fps);
   moduleStates.at(1) = argos_lib::swerve::Optimize(
       moduleStates.at(1),
-      sensor_conversions::swerve_drive::turn::ToAngle(m_frontRight.m_turn.GetPosition()),
+      sensor_conversions::swerve_drive::turn::ToAngle(m_frontRight.m_turn.GetPosition().GetValue()),
       0_rpm,
       0_fps,
       12_fps);
   moduleStates.at(2) = argos_lib::swerve::Optimize(
       moduleStates.at(2),
-      sensor_conversions::swerve_drive::turn::ToAngle(m_backRight.m_turn.GetPosition()),
+      sensor_conversions::swerve_drive::turn::ToAngle(m_backRight.m_turn.GetPosition().GetValue()),
       0_rpm,
       0_fps,
       12_fps);
   moduleStates.at(3) = argos_lib::swerve::Optimize(
       moduleStates.at(3),
-      sensor_conversions::swerve_drive::turn::ToAngle(m_backLeft.m_turn.GetPosition()),
+      sensor_conversions::swerve_drive::turn::ToAngle(m_backLeft.m_turn.GetPosition().GetValue()),
       0_rpm,
       0_fps,
       12_fps);
@@ -544,10 +544,10 @@ void SwerveDriveSubsystem::Home(const units::degree_t& angle) {
   ResetIMUYaw();
 
   // SetPosition expects a value in degrees
-  m_frontLeft.m_encoder.SetPosition(angle, 50);
-  m_frontRight.m_encoder.SetPosition(angle, 50);
-  m_backRight.m_encoder.SetPosition(angle, 50);
-  m_backLeft.m_encoder.SetPosition(angle, 50);
+  m_frontLeft.m_encoder.SetPosition(angle, 50_ms);
+  m_frontRight.m_encoder.SetPosition(angle, 50_ms);
+  m_backRight.m_encoder.SetPosition(angle, 50_ms);
+  m_backLeft.m_encoder.SetPosition(angle, 50_ms);
 }
 
 units::degrees_per_second_t SwerveDriveSubsystem::GetRobotPitchRate() {
@@ -689,13 +689,13 @@ void SwerveDriveSubsystem::InitializeMotors() {
 void SwerveDriveSubsystem::HomeToFS(const units::degree_t& angle) {
   const argos_lib::swerve::SwerveModulePositions homes{
       ConstrainAngle(
-          m_frontLeft.m_encoder.GetAbsolutePosition() - angle, 0_deg, 360_deg),
+          m_frontLeft.m_encoder.GetAbsolutePosition().GetValue() - angle, 0_deg, 360_deg),
       ConstrainAngle(
-          m_frontRight.m_encoder.GetAbsolutePosition() - angle, 0_deg, 360_deg),
+          m_frontRight.m_encoder.GetAbsolutePosition().GetValue() - angle, 0_deg, 360_deg),
       ConstrainAngle(
-          m_backRight.m_encoder.GetAbsolutePosition() - angle, 0_deg, 360_deg),
+          m_backRight.m_encoder.GetAbsolutePosition().GetValue() - angle, 0_deg, 360_deg),
       ConstrainAngle(
-          m_backLeft.m_encoder.GetAbsolutePosition() - angle, 0_deg, 360_deg)};
+          m_backLeft.m_encoder.GetAbsolutePosition().GetValue() - angle, 0_deg, 360_deg)};
 
   m_fsStorage.Save(homes);
 }
@@ -710,10 +710,10 @@ void SwerveDriveSubsystem::InitializeMotorsFromFS() {
   }
 
   // GET CURRENT VALUES
-  units::degree_t frontLeft_current = m_frontLeft.m_encoder.GetAbsolutePosition();
-  units::degree_t frontRight_current = m_frontRight.m_encoder.GetAbsolutePosition();
-  units::degree_t backRight_current = m_backRight.m_encoder.GetAbsolutePosition();
-  units::degree_t backLeft_current = m_backLeft.m_encoder.GetAbsolutePosition();
+  units::degree_t frontLeft_current = m_frontLeft.m_encoder.GetAbsolutePosition().GetValue();
+  units::degree_t frontRight_current = m_frontRight.m_encoder.GetAbsolutePosition().GetValue();
+  units::degree_t backRight_current = m_backRight.m_encoder.GetAbsolutePosition().GetValue();
+  units::degree_t backLeft_current = m_backLeft.m_encoder.GetAbsolutePosition().GetValue();
 
   // SUBTRACT SAVED FROM CURRENT
   const units::degree_t frontLeftCalibrated = frontLeft_current - homes.value().FrontLeft;
@@ -738,14 +738,14 @@ SwerveModule::SwerveModule(const argos_lib::CANAddress& driveAddr,
 
 frc::SwerveModuleState SwerveModule::GetState() {
   return frc::SwerveModuleState{
-      sensor_conversions::swerve_drive::drive::ToVelocity(m_drive.GetVelocity()),
-      frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(m_turn.GetPosition())}};
+      sensor_conversions::swerve_drive::drive::ToVelocity(m_drive.GetVelocity().GetValue()),
+      frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(m_turn.GetPosition().GetValue())}};
 }
 
 frc::SwerveModulePosition SwerveModule::GetPosition() {
   return frc::SwerveModulePosition{
-      sensor_conversions::swerve_drive::drive::ToDistance(m_drive.GetPosition()),
-      frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(m_turn.GetPosition())}};
+      sensor_conversions::swerve_drive::drive::ToDistance(m_drive.GetPosition().GetValue()),
+      frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(m_turn.GetPosition().GetValue())}};
 }
 
 void SwerveDriveSubsystem::UpdateFollowerLinearPIDParams(double kP, double kI, double kD) {

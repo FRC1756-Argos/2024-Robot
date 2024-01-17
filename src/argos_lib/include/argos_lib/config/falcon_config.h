@@ -49,7 +49,6 @@ namespace argos_lib {
     HAS_MEMBER(reverseLimit_deviceID)
     HAS_MEMBER(reverseLimit_normalState)
     HAS_MEMBER(reverseLimit_source)
-    HAS_MEMBER(sensorPhase)
     HAS_MEMBER(supplyCurrentLimit)
     HAS_MEMBER(supplyCurrentThreshold)
     HAS_MEMBER(supplyCurrentThresholdTime)
@@ -91,7 +90,6 @@ namespace argos_lib {
      *           - reverseLimit_deviceID
      *           - reverseLimit_normalState
      *           - reverseLimit_source
-     *           - sensorPhase
      *           - supplyCurrentLimit
      *           - supplyCurrentThreshold
      *           - supplyCurrentThresholdTime
@@ -109,9 +107,6 @@ namespace argos_lib {
       if constexpr (has_inverted<T>{}) {
         motorController.SetInverted(T::inverted);
       }
-      if constexpr (has_sensorPhase<T>{}) {
-        motorController.SetSensorPhase(T::sensorPhase);
-      }
       if constexpr (has_neutralMode<T>{}) {
         config.MotorOutput.NeutralMode(T::neutralMode);
       }
@@ -126,7 +121,7 @@ namespace argos_lib {
         config.MotorOutput.PeakReverseDutyCycle = T::peakOutputReverse;
       }
       if constexpr (has_selectedSensor<T>{}) {
-        config.FeedbackConfigs.FeedbackSensorSource = T::selectedSensor;
+        config.Feedback.FeedbackSensorSource = T::selectedSensor;
       }
       if constexpr (has_pid0_kP<T>{}) {
         config.Slot0.kP = T::pid0_kP;

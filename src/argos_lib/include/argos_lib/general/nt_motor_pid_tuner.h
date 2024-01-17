@@ -20,15 +20,27 @@ using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
 namespace argos_lib {
 
   /**
-   * @brief Generates a double value to convert raw sensor values to physical units represented as a double
+   * @brief Generates a double value to convert sensor position values to physical units represented as a double
    *
    * @tparam Callable Function that generates a units value from a double
    * @param toPhysicalUnitsFunction Conversion function
    * @return double Physical unit value stripped of unit so it's just a double
    */
   template <class Callable>
-  constexpr double GetSensorConversionFactor(Callable toPhysicalUnitsFunction) {
-    return toPhysicalUnitsFunction(1.0).template to<double>();
+  constexpr double GetPositionConversionFactor(Callable toPhysicalUnitsFunction) {
+    return toPhysicalUnitsFunction(units::angle::turn_t{1}).template to<double>();
+  }
+
+  /**
+   * @brief Generates a double value to convert sensor velocity values to physical units represented as a double
+   *
+   * @tparam Callable Function that generates a units value from a double
+   * @param toPhysicalUnitsFunction Conversion function
+   * @return double Physical unit value stripped of unit so it's just a double
+   */
+  template <class Callable>
+  constexpr double GetVelocityConversionFactor(Callable toPhysicalUnitsFunction) {
+    return toPhysicalUnitsFunction(units::angle::turn_t{1.0}/units::time::second_t{1.0}).template to<double>();
   }
 
   /**
