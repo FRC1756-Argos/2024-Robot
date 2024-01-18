@@ -1,8 +1,10 @@
-# 2023-Robot
+# 2024-Robot
 
-[![CI](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/ci.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/ci.yml) [![Format](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/format.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/format.yml) [![Documentation](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/doxygen.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/doxygen.yml)
+[![CI](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/ci.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/ci.yml) [![Format](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/format.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/format.yml) [![Documentation](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/doxygen.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/doxygen.yml)\
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/FRC1756-Argos/2024-Robot?quickstart=1)
 
-Robot code for 2023 FRC season
+
+Robot code for 2024 FRC season
 
 ## Key Features
 
