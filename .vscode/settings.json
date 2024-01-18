@@ -15,6 +15,16 @@
     "**/*~": true
   },
   "C_Cpp.default.configurationProvider": "vscode-wpilib",
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.fontLigatures": true,
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
+  "editor.rulers": [
+    100
+  ],
   "files.associations": {
     "*.inc": "cpp",
     "deque": "cpp",
@@ -72,5 +82,26 @@
     "thread": "cpp",
     "cinttypes": "cpp",
     "typeinfo": "cpp"
-  }
+  },
+  "[cpp]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
+  "cSpell.words": [
+    "ctre",
+    "holonomic",
+    "odometry",
+    "talonsrx",
+    "teleop"
+  ],
+  "todo-tree.general.tags": [
+    "BUG",
+    "HACK",
+    "FIXME",
+    "TODO",
+    "XXX",
+    "[ ]",
+    "[x]",
+    "@todo"
+  ],
+  "wpilib.skipTests": true
 }
