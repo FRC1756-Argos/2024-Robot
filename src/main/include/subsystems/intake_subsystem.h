@@ -10,7 +10,7 @@
 
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
-  IntakeSubsystem(argos_lib::RobotInstance robotInstance);
+  explicit IntakeSubsystem(argos_lib::RobotInstance robotInstance);
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
