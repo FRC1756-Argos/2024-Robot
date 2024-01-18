@@ -20,12 +20,11 @@ namespace address {
       constexpr static argos_lib::CANAddress backLeftDrive{7, "drive"};
       constexpr static argos_lib::CANAddress backLeftTurn{8, "drive"};
     };
-    struct intake
-    {
+    struct intake {
       constexpr static argos_lib::CANAddress primaryIntake{9, "rio"};
       constexpr static argos_lib::CANAddress secondaryIntake{10, "rio"};
     };
-    
+
     struct encoders {
       constexpr static argos_lib::CANAddress frontLeftEncoder{1, "drive"};
       constexpr static argos_lib::CANAddress frontRightEncoder{2, "drive"};
