@@ -19,12 +19,11 @@ namespace address {
       constexpr static argos_lib::CANAddress backRightTurn{6, "drive"};
       constexpr static argos_lib::CANAddress backLeftDrive{7, "drive"};
       constexpr static argos_lib::CANAddress backLeftTurn{8, "drive"};
-    };  
+    };
     struct shooter {
-      constexpr static argos_lib::CANAddress primaryMotor{11,"rio"};
-      constexpr static argos_lib::CANAddress secondaryMotor{12,"rio"};
-      constexpr static argos_lib::CANAddress feedMotor{13,"rio"};
-
+      constexpr static argos_lib::CANAddress primaryMotor{11, "rio"};
+      constexpr static argos_lib::CANAddress secondaryMotor{12, "rio"};
+      constexpr static argos_lib::CANAddress feedMotor{13, "rio"};
     };
     struct encoders {
       constexpr static argos_lib::CANAddress frontLeftEncoder{1, "drive"};
@@ -46,7 +45,7 @@ namespace address {
   }  // namespace comp_bot
   namespace practice_bot {
     using drive = address::comp_bot::drive;
-    using shooter =  address::comp_bot::shooter;
+    using shooter = address::comp_bot::shooter;
     using encoders = address::comp_bot::encoders;
     using controllers = address::comp_bot::controllers;
     using solenoids = address::comp_bot::solenoids;

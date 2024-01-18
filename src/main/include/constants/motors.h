@@ -118,20 +118,20 @@ namespace motorConfig {
       };
 
     }  // namespace drive
-    namespace shooter{
-      struct primaryMotor{
+    namespace shooter {
+      struct primaryMotor {
         constexpr static auto inverted = false;
-         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
       };
-      struct secondaryMotor{
+      struct secondaryMotor {
         constexpr static auto inverted = false;
-         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
       };
-      struct feedMotor{
+      struct feedMotor {
         constexpr static auto inverted = false;
-         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
+        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
       };
-    }
+    }  // namespace shooter
   }    // namespace comp_bot
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
