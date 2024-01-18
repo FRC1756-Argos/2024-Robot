@@ -546,7 +546,7 @@ void SwerveDriveSubsystem::Home(const units::degree_t& angle) {
 }
 
 units::degrees_per_second_t SwerveDriveSubsystem::GetRobotPitchRate() {
-  m_pigeonIMU.GetAngularVelocityXDevice().GetValue();
+  return m_pigeonIMU.GetAngularVelocityXDevice().GetValue();
 }
 
 void SwerveDriveSubsystem::LockWheels() {

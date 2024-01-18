@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
+#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <units/current.h>
 #include <units/time.h>
 #include <units/voltage.h>
@@ -64,9 +64,9 @@ namespace argos_lib {
      * @return false Configuration failed
      */
     template <typename T>
-    bool TalonSRXConfig(ctre::phoenix::motorcontrol::can::WPI_TalonSRX& motorController,
+    bool TalonSRXConfig(ctre::phoenix::motorcontrol::can::TalonSRX& motorController,
                         units::millisecond_t configTimeout) {
-      TalonSRXConfiguration config;
+      ctre::phoenix::motorcontrol::can::TalonSRXConfiguration config;
       auto timeout = configTimeout.to<int>();
 
       if constexpr (has_inverted<T>{}) {
@@ -165,7 +165,7 @@ namespace argos_lib {
      * @return false Configuration failed
      */
     template <typename CompetitionConfig, typename PracticeConfig>
-    bool TalonSRXConfig(ctre::phoenix::motorcontrol::can::WPI_TalonSRX& motorController,
+    bool TalonSRXConfig(ctre::phoenix::motorcontrol::can::TalonSRX& motorController,
                         units::millisecond_t configTimeout,
                         argos_lib::RobotInstance instance) {
       switch (instance) {

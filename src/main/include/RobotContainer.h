@@ -14,6 +14,7 @@
 #include <frc2/command/button/CommandXboxController.h>
 
 #include "Constants.h"
+#include "subsystems/intake_subsystem.h"
 #include "subsystems/simple_led_subsystem.h"
 #include "subsystems/swerve_drive_subsystem.h"
 #include "subsystems/vision_subsystem.h"
@@ -56,6 +57,7 @@ class RobotContainer {
   SwerveDriveSubsystem m_swerveDrive;
   SimpleLedSubsystem m_ledSubSystem;
   VisionSubsystem m_visionSubSystem;
+  IntakeSubsystem m_intakeSubsystem;
 
   // Autonomous
   AutonomousNothing m_autoNothing;
