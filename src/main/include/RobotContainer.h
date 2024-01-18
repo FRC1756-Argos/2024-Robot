@@ -17,6 +17,7 @@
 #include "subsystems/simple_led_subsystem.h"
 #include "subsystems/swerve_drive_subsystem.h"
 #include "subsystems/vision_subsystem.h"
+#include "subsystems/intake_subsystem.h"
 #include "utils/auto_selector.h"
 
 /**
@@ -56,6 +57,7 @@ class RobotContainer {
   SwerveDriveSubsystem m_swerveDrive;
   SimpleLedSubsystem m_ledSubSystem;
   VisionSubsystem m_visionSubSystem;
+  IntakeSubsystem m_intakeSubsystem;
 
   // Autonomous
   AutonomousNothing m_autoNothing;

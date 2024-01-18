@@ -6,6 +6,7 @@
 
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
 #include "addresses.h"
 #include "argos_lib/config/status_frame_config.h"
@@ -117,6 +118,16 @@ namespace motorConfig {
       };
 
     }  // namespace drive
+    namespace intake{
+      struct primaryIntake{
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
+      };
+      struct secondaryIntake{
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
+      };
+    }
   }    // namespace comp_bot
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -199,5 +210,9 @@ namespace motorConfig {
         constexpr static auto pid0_gravityType = motorConfig::comp_bot::drive::backLeftTurn::pid0_gravityType;
       };
     }  // namespace drive
+    namespace intake {
+      using primaryIntake = motorConfig::comp_bot::intake::primaryIntake;
+      using secondaryIntake = motorConfig::comp_bot::intake::secondaryIntake;
+    }
   }    // namespace practice_bot
 }  // namespace motorConfig
