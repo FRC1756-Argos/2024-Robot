@@ -9,17 +9,19 @@
 #include "constants/motors.h"
 
 ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
-    : m_primaryMotor(GetCANAddr(
-          address::comp_bot::elevator::primaryElevator, address::practice_bot::elevator::primaryElevator, robotInstance))
-    , m_carriageMotor(GetCANAddr(
-          address::comp_bot::elevator::primaryElevator, address::practice_bot::elevator::primaryElevator, robotInstance))
+    : m_primaryMotor(GetCANAddr(address::comp_bot::elevator::primaryElevator,
+                                address::practice_bot::elevator::primaryElevator,
+                                robotInstance))
+    , m_carriageMotor(GetCANAddr(address::comp_bot::elevator::primaryElevator,
+                                 address::practice_bot::elevator::primaryElevator,
+                                 robotInstance))
     , m_robotInstance(robotInstance) {
-      argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::elevator::primaryElevator,
-                                             motorConfig::practice_bot::elevator::primaryElevator>(
-            m_primaryMotor, 100_ms, robotInstance);
-      argos_lib::falcon_config::FalconConfig<motorConfig::practice_bot::elevator::carriageRotation,
-                                             motorConfig::comp_bot::elevator::carriageRotation>(
-            m_carriageMotor, 100_ms, robotInstance);
-    }
-      // This method will be called once per scheduler run
-      void ElevatorSubsystem::Periodic() {}
+  argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::elevator::primaryElevator,
+                                         motorConfig::practice_bot::elevator::primaryElevator>(
+      m_primaryMotor, 100_ms, robotInstance);
+  argos_lib::falcon_config::FalconConfig<motorConfig::practice_bot::elevator::carriageRotation,
+                                         motorConfig::comp_bot::elevator::carriageRotation>(
+      m_carriageMotor, 100_ms, robotInstance);
+}
+// This method will be called once per scheduler run
+void ElevatorSubsystem::Periodic() {}
