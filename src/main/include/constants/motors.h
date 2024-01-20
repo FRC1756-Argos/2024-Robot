@@ -117,8 +117,18 @@ namespace motorConfig {
         constexpr static auto pid0_kG = controlLoop::comp_bot::drive::rotate::kG;
         constexpr static auto pid0_gravityType = controlLoop::comp_bot::drive::rotate::gravityType;
       };
-
     }  // namespace drive
+
+    namespace climber {
+      struct primaryClimbing {
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto inverted = false;
+      };
+      struct secondaryClimbing{
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto inverted = false;
+      };
+    }
     namespace intake {
       struct primaryIntake {
         constexpr static auto inverted = false;
@@ -215,5 +225,9 @@ namespace motorConfig {
       using primaryIntake = motorConfig::comp_bot::intake::primaryIntake;
       using secondaryIntake = motorConfig::comp_bot::intake::secondaryIntake;
     }  // namespace intake
+    namespace climber {
+      using primaryClimbing = motorConfig::comp_bot::climber::primaryClimbing;
+      using secondaryClimbing = motorConfig::comp_bot::climber::secondaryClimbing;
+    }
   }    // namespace practice_bot
 }  // namespace motorConfig

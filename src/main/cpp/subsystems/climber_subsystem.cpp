@@ -3,22 +3,26 @@
 ///            the license file in the root directory of this project.
 
 #include "subsystems/climber_subsystem.h"
+#include "argos_lib/config/falcon_config.h"
+#include "constants/addresses.h"
+#include "constants/motors.h"
+#include <ctre/phoenix6/TalonFX.hpp>
 
-ClimbingSubsystem::ClimbingSubsystem(argos_lib::RobotInstance robotInstance)
-    : m_primaryMotor(GetCANAddr(address::comp_bot::Climbing::primaryClimbing,
-                                address::practice_bot::Climbing::primaryClimbing,
+ClimberSubsystem::ClimberSubsystem(argos_lib::RobotInstance robotInstance)
+    : m_primaryMotor(GetCANAddr(address::comp_bot::climber::primaryClimbing,
+                                address::practice_bot::climber::primaryClimbing,
                                 robotInstance))
-    , m_secondaryMotor(GetCANAddr(address::comp_bot::Climbing::secondaryClimbing,
-                                  address::practice_bot::Climbing::secondaryClimbing,
+    , m_secondaryMotor(GetCANAddr(address::comp_bot::climber::secondaryClimbing,
+                                  address::practice_bot::climber::secondaryClimbing,
                                   robotInstance))
     , m_robotInstance(robotInstance) {
-  argos_lib::talonfx_config::TalonFXConfig<motorConfig::comp_bot::Climbing::primaryClimbing,
-                                           motorConfig::practice_bot::Climbing::primaryClimbing>(
+        argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::climber::primaryClimbing,
+                                         motorConfig::practice_bot::climber::primaryClimbing>(
       m_primaryMotor, 100_ms, robotInstance);
-  argos_lib::talonsfx_config::TalonsxConfig<motorConfig::comp_bot::Climbing::secondaryClimbing,
-                                            motorConfig::practice_bot::Climbing::secondaryClimbing>(
+        argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::climber::secondaryClimbing,
+                                         motorConfig::practice_bot::climber::secondaryClimbing>(
       m_secondaryMotor, 100_ms, robotInstance);
-  m_secondaryMotor.Follow(m_primaryMotor);
+  m_secondaryMotor.SetControl(ctre::phoenix6::controls::Follower(m_primaryMotor.GetDeviceID(), false));
 }
 // This method will be called once per scheduler run
 void ClimberSubsystem::Periodic() {}

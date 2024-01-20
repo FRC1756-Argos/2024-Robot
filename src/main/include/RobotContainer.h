@@ -19,6 +19,7 @@
 #include "subsystems/swerve_drive_subsystem.h"
 #include "subsystems/vision_subsystem.h"
 #include "utils/auto_selector.h"
+#include "subsystems/climber_subsystem.h"
 
 /**
  * @brief  Command-based is a "declarative" paradigm, very little robot logic should
@@ -58,7 +59,7 @@ class RobotContainer {
   SimpleLedSubsystem m_ledSubSystem;
   VisionSubsystem m_visionSubSystem;
   IntakeSubsystem m_intakeSubsystem;
-
+  ClimberSubsystem m_climberSubsystem;
   // Autonomous
   AutonomousNothing m_autoNothing;
 

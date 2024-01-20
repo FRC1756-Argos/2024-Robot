@@ -42,6 +42,10 @@ namespace address {
     struct led {
       constexpr static argos_lib::CANAddress CANdle{1, "drive"};
     };
+    struct climber {
+      constexpr static argos_lib::CANAddress primaryClimbing{17, "climb"};
+      constexpr static argos_lib::CANAddress secondaryClimbing{18, "climb"};
+    };
   }  // namespace comp_bot
   namespace practice_bot {
     using drive = address::comp_bot::drive;
@@ -51,6 +55,7 @@ namespace address {
     using solenoids = address::comp_bot::solenoids;
     using sensors = address::comp_bot::sensors;
     using led = address::comp_bot::led;
+    using climber = address::comp_bot::climber;
   }  // namespace practice_bot
 
 }  // namespace address

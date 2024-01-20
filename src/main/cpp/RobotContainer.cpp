@@ -45,6 +45,7 @@ RobotContainer::RobotContainer()
     , m_ledSubSystem(m_instance)
     , m_visionSubSystem(m_instance, &m_swerveDrive)
     , m_intakeSubsystem(m_instance)
+    , m_climberSubsystem(m_instance)
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}
