@@ -25,6 +25,12 @@ namespace address {
       constexpr static argos_lib::CANAddress secondaryIntake{10, "rio"};
     };
 
+    struct elevator {
+      constexpr static argos_lib::CANAddress primaryElevator{14, "rio"};
+      constexpr static argos_lib::CANAddress secondaryElevator{15, "rio"};
+      constexpr static argos_lib::CANAddress carriageRotation{16, "rio"};
+    };
+
     struct encoders {
       constexpr static argos_lib::CANAddress frontLeftEncoder{1, "drive"};
       constexpr static argos_lib::CANAddress frontRightEncoder{2, "drive"};
@@ -51,6 +57,7 @@ namespace address {
     using solenoids = address::comp_bot::solenoids;
     using sensors = address::comp_bot::sensors;
     using led = address::comp_bot::led;
+    using elevator = address::comp_bot::elevator;
   }  // namespace practice_bot
 
 }  // namespace address
