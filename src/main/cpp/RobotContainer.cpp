@@ -119,7 +119,8 @@ void RobotContainer::ConfigureBindings() {
   auto fieldHome = m_controllers.DriverController().TriggerDebounced(argos_lib::XboxController::Button::kY);
 
   // INTAKE TRIGGERS
-
+  auto intake = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
+  auto outtake = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
 
   // Swap controllers config
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
@@ -140,6 +141,10 @@ void RobotContainer::ConfigureBindings() {
   homeDrive.OnTrue(frc2::InstantCommand([this]() { m_swerveDrive.Home(0_deg); }, {&m_swerveDrive}).ToPtr());
   lockWheels.OnTrue(frc2::InstantCommand([this]() { m_swerveDrive.LockWheels(); }, {&m_swerveDrive}).ToPtr());
 
+  intake.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(1.0); }, {&m_intakeSubsystem}).ToPtr());
+  outtake.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(-0.8); }, {&m_intakeSubsystem}).ToPtr());
+  (intake || outtake).OnFalse(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(0.0); }, {&m_intakeSubsystem}).ToPtr());
+
   // SWAP CONTROLLERS TRIGGER ACTIVATION
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
       .WhileTrue(argos_lib::SwapControllersCommand(&m_controllers).ToPtr());
@@ -148,6 +153,7 @@ void RobotContainer::ConfigureBindings() {
 void RobotContainer::Disable() {
   m_ledSubSystem.Disable();
   m_swerveDrive.Disable();
+  m_intakeSubsystem.Disable();
 }
 
 void RobotContainer::Enable() {

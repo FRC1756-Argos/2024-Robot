@@ -7,7 +7,6 @@
 #include "argos_lib/config/talonsrx_config.h"
 #include "constants/addresses.h"
 #include "constants/motors.h"
-#include "ctre/phoenix/motorcontrol/ControlMode.h"
 
 
 IntakeSubsystem::IntakeSubsystem(argos_lib::RobotInstance robotInstance)
@@ -28,5 +27,9 @@ IntakeSubsystem::IntakeSubsystem(argos_lib::RobotInstance robotInstance)
 void IntakeSubsystem::Periodic() {}
 
 void IntakeSubsystem::Intake(double speed){
-      m_primaryMotor.Set(ControlMode.PercentOutput, speed);
+      m_primaryMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+}
+
+void IntakeSubsystem::Disable(){
+      m_primaryMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
 }
