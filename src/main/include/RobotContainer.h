@@ -14,12 +14,12 @@
 #include <frc2/command/button/CommandXboxController.h>
 
 #include "Constants.h"
+#include "subsystems/climber_subsystem.h"
 #include "subsystems/intake_subsystem.h"
 #include "subsystems/simple_led_subsystem.h"
 #include "subsystems/swerve_drive_subsystem.h"
 #include "subsystems/vision_subsystem.h"
 #include "utils/auto_selector.h"
-#include "subsystems/climber_subsystem.h"
 
 /**
  * @brief  Command-based is a "declarative" paradigm, very little robot logic should

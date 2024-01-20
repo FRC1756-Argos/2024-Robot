@@ -5,8 +5,9 @@
 #pragma once
 
 #include <argos_lib/config/config_types.h>
-#include <ctre/phoenix6/TalonFX.hpp>
 #include <frc2/command/SubsystemBase.h>
+
+#include <ctre/phoenix6/TalonFX.hpp>
 
 class ClimberSubsystem : public frc2::SubsystemBase {
  public:

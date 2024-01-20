@@ -124,11 +124,11 @@ namespace motorConfig {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
         constexpr static auto inverted = false;
       };
-      struct secondaryClimbing{
+      struct secondaryClimbing {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
         constexpr static auto inverted = false;
       };
-    }
+    }  // namespace climber
     namespace intake {
       struct primaryIntake {
         constexpr static auto inverted = false;
@@ -228,6 +228,6 @@ namespace motorConfig {
     namespace climber {
       using primaryClimbing = motorConfig::comp_bot::climber::primaryClimbing;
       using secondaryClimbing = motorConfig::comp_bot::climber::secondaryClimbing;
-    }
+    }  // namespace climber
   }    // namespace practice_bot
 }  // namespace motorConfig
