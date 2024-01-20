@@ -15,5 +15,4 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
           address::comp_bot::intake::secondaryIntake, address::practice_bot::intake::secondaryIntake, robotInstance))
     , m_carriageMotor(GetCANAddr(
           address::comp_bot::intake::primaryIntake, address::practice_bot::intake::primaryIntake, robotInstance))
-    , m_robotInstance(robotInstance){
-}
+    , m_robotInstance(robotInstance) {}

@@ -130,20 +130,19 @@ namespace motorConfig {
       };
     }  // namespace intake
     namespace elevator {
-    struct primaryElevator{
-      constexpr static auto inverted = true;
-      constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
-
-    };
-    struct secondaryElevator{
-      constexpr static auto inverted = true;
-      constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
-    };
-    struct carriageRotation{
-      constexpr static auto inverted = true;
-      constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
-    };
-    }
+      struct primaryElevator {
+        constexpr static auto inverted = true;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+      };
+      struct secondaryElevator {
+        constexpr static auto inverted = true;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+      };
+      struct carriageRotation {
+        constexpr static auto inverted = true;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+      };
+    }  // namespace elevator
   }    // namespace comp_bot
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,19 +230,18 @@ namespace motorConfig {
       using secondaryIntake = motorConfig::comp_bot::intake::secondaryIntake;
     }  // namespace intake
     namespace elevator {
-    struct primaryElevator{
-      constexpr static auto inverted = motorConfig::comp_bot::elevator::primaryElevator::inverted;
-      constexpr static auto neutralMode = motorConfig::comp_bot::elevator::primaryElevator::neutralMode;
-
-    };
-    struct secondaryElevator{
-      constexpr static auto inverted = motorConfig::comp_bot::elevator::secondaryElevator::inverted;
-      constexpr static auto neutralMode = motorConfig::comp_bot::elevator::secondaryElevator::neutralMode;
-    };
-    struct carriageRotation{
-      constexpr static auto inverted = motorConfig::comp_bot::elevator::carriageRotation::inverted;
-      constexpr static auto neutralMode = motorConfig::comp_bot::elevator::carriageRotation::neutralMode;
-    };
-    }
+      struct primaryElevator {
+        constexpr static auto inverted = motorConfig::comp_bot::elevator::primaryElevator::inverted;
+        constexpr static auto neutralMode = motorConfig::comp_bot::elevator::primaryElevator::neutralMode;
+      };
+      struct secondaryElevator {
+        constexpr static auto inverted = motorConfig::comp_bot::elevator::secondaryElevator::inverted;
+        constexpr static auto neutralMode = motorConfig::comp_bot::elevator::secondaryElevator::neutralMode;
+      };
+      struct carriageRotation {
+        constexpr static auto inverted = motorConfig::comp_bot::elevator::carriageRotation::inverted;
+        constexpr static auto neutralMode = motorConfig::comp_bot::elevator::carriageRotation::neutralMode;
+      };
+    }  // namespace elevator
   }    // namespace practice_bot
 }  // namespace motorConfig
