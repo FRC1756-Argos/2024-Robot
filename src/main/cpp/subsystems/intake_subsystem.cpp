@@ -25,10 +25,10 @@ IntakeSubsystem::IntakeSubsystem(argos_lib::RobotInstance robotInstance)
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {}
 
-void IntakeSubsystem::Intake(double speed){
-      m_primaryMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+void IntakeSubsystem::Intake(double speed) {
+  m_primaryMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
 }
 
-void IntakeSubsystem::Disable(){
-      m_primaryMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+void IntakeSubsystem::Disable() {
+  m_primaryMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
 }

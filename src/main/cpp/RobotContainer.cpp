@@ -143,7 +143,8 @@ void RobotContainer::ConfigureBindings() {
 
   intake.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(1.0); }, {&m_intakeSubsystem}).ToPtr());
   outtake.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(-0.8); }, {&m_intakeSubsystem}).ToPtr());
-  (intake || outtake).OnFalse(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(0.0); }, {&m_intakeSubsystem}).ToPtr());
+  (intake || outtake)
+      .OnFalse(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(0.0); }, {&m_intakeSubsystem}).ToPtr());
 
   // SWAP CONTROLLERS TRIGGER ACTIVATION
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
