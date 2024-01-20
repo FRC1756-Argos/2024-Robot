@@ -34,7 +34,7 @@ void ElevatorSubsystem::Pivot(double speed) {
   m_carriageMotor.Set(speed);
 }
 
-void ElevatorSubsystem::Disable(){
+void ElevatorSubsystem::Disable() {
   m_primaryMotor.Set(0.0);
   m_carriageMotor.Set(0.0);
 }

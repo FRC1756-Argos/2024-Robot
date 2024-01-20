@@ -150,13 +150,16 @@ void RobotContainer::ConfigureBindings() {
 
   // ELEVATOR TRIGGER ACTIVITATION
   m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
-      [this]{
-        double elevatorSpeed = m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kRightHand);
-        double carriageSpeed = m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kLeftHand);
-        m_elevatorSubsystem.ElevatorMove(elevatorSpeed);
-        m_elevatorSubsystem.Pivot(carriageSpeed);
-      },
-      {&m_elevatorSubsystem}).ToPtr());
+                                            [this] {
+                                              double elevatorSpeed = m_controllers.OperatorController().GetY(
+                                                  argos_lib::XboxController::JoystickHand::kRightHand);
+                                              double carriageSpeed = m_controllers.OperatorController().GetY(
+                                                  argos_lib::XboxController::JoystickHand::kLeftHand);
+                                              m_elevatorSubsystem.ElevatorMove(elevatorSpeed);
+                                              m_elevatorSubsystem.Pivot(carriageSpeed);
+                                            },
+                                            {&m_elevatorSubsystem})
+                                            .ToPtr());
 
   // SWAP CONTROLLERS TRIGGER ACTIVATION
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
