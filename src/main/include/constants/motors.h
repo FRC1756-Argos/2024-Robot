@@ -131,15 +131,15 @@ namespace motorConfig {
     }  // namespace intake
     namespace elevator {
       struct primaryElevator {
-        constexpr static auto inverted = true;
+        constexpr static auto inverted = false;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
       };
       struct secondaryElevator {
-        constexpr static auto inverted = true;
+        constexpr static auto inverted = false;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
       };
       struct carriageRotation {
-        constexpr static auto inverted = true;
+        constexpr static auto inverted = false;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
       };
     }  // namespace elevator

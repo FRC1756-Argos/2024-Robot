@@ -12,8 +12,8 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
     : m_primaryMotor(GetCANAddr(address::comp_bot::elevator::primaryElevator,
                                 address::practice_bot::elevator::primaryElevator,
                                 robotInstance))
-    , m_carriageMotor(GetCANAddr(address::comp_bot::elevator::primaryElevator,
-                                 address::practice_bot::elevator::primaryElevator,
+    , m_carriageMotor(GetCANAddr(address::comp_bot::elevator::carriageRotation,
+                                 address::practice_bot::elevator::carriageRotation,
                                  robotInstance))
     , m_robotInstance(robotInstance) {
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::elevator::primaryElevator,
