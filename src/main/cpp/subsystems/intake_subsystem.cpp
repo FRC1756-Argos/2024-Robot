@@ -9,7 +9,6 @@
 #include "constants/motors.h"
 #include "ctre/phoenix/motorcontrol/ControlMode.h"
 
-
 IntakeSubsystem::IntakeSubsystem(argos_lib::RobotInstance robotInstance)
     : m_primaryMotor(GetCANAddr(
           address::comp_bot::intake::primaryIntake, address::practice_bot::intake::primaryIntake, robotInstance))
@@ -27,6 +26,6 @@ IntakeSubsystem::IntakeSubsystem(argos_lib::RobotInstance robotInstance)
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {}
 
-void IntakeSubsystem::Intake(double speed){
-      m_primaryMotor.Set(ControlMode.PercentOutput, speed);
+void IntakeSubsystem::Intake(double speed) {
+  m_primaryMotor.Set(ControlMode.PercentOutput, speed);
 }

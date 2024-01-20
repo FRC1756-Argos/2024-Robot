@@ -120,7 +120,6 @@ void RobotContainer::ConfigureBindings() {
 
   // INTAKE TRIGGERS
 
-
   // Swap controllers config
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kStart, {1500_ms, 0_ms});
