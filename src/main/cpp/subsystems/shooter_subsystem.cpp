@@ -32,3 +32,16 @@ ShooterSubsystem::ShooterSubsystem(const argos_lib::RobotInstance robotInstance)
 
 // This method will be called once per scheduler run
 void ShooterSubsystem::Periodic() {}
+
+void ShooterSubsystem::Shoot(double speed) {
+  m_primaryMotor.Set(speed);
+}
+
+void ShooterSubsystem::Feed(double speed) {
+  m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+}
+
+void ShooterSubsystem::Disable() {
+  m_primaryMotor.Set(0.0);
+  m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+}
