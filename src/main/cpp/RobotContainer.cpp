@@ -46,6 +46,7 @@ RobotContainer::RobotContainer()
     , m_visionSubSystem(m_instance, &m_swerveDrive)
     , m_ShooterSubSystem(m_instance)
     , m_intakeSubsystem(m_instance)
+    , m_climberSubsystem(m_instance)
     , m_elevatorSubsystem(m_instance)
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}

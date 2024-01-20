@@ -14,6 +14,7 @@
 #include <frc2/command/button/CommandXboxController.h>
 
 #include "Constants.h"
+#include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/intake_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
@@ -61,6 +62,7 @@ class RobotContainer {
   VisionSubsystem m_visionSubSystem;
   ShooterSubsystem m_ShooterSubSystem;
   IntakeSubsystem m_intakeSubsystem;
+  ClimberSubsystem m_climberSubsystem;
   ElevatorSubsystem m_elevatorSubsystem;
 
   // Autonomous
