@@ -241,11 +241,11 @@ namespace motorConfig {
       };
 
     }  // namespace drive
-      namespace shooter{
-        using primaryMotor = motorConfig::comp_bot::shooter::primaryMotor;
-        using secondaryMotor = motorConfig::comp_bot::shooter::secondaryMotor;
-        using feedMotor = motorConfig::comp_bot::shooter::feedMotor;
-      } //namespace shooter
+    namespace shooter {
+      using primaryMotor = motorConfig::comp_bot::shooter::primaryMotor;
+      using secondaryMotor = motorConfig::comp_bot::shooter::secondaryMotor;
+      using feedMotor = motorConfig::comp_bot::shooter::feedMotor;
+    }  // namespace shooter
     namespace intake {
       using primaryIntake = motorConfig::comp_bot::intake::primaryIntake;
       using secondaryIntake = motorConfig::comp_bot::intake::secondaryIntake;

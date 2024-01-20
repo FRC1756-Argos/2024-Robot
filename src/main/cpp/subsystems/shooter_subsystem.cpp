@@ -4,26 +4,27 @@
 
 #include "subsystems/shooter_subsystem.h"
 
-#include <argos_lib/config/talonsrx_config.h>
 #include <argos_lib/config/falcon_config.h>
+#include <argos_lib/config/talonsrx_config.h>
+
 #include "constants/addresses.h"
 #include "constants/motors.h"
 
 ShooterSubsystem::ShooterSubsystem(const argos_lib::RobotInstance robotInstance)
-    : m_primaryMotor(
-          GetCANAddr(
-            address::comp_bot::shooter::primaryMotor, address::practice_bot::shooter::primaryMotor, robotInstance))
-    , m_secondaryMotor(
-          GetCANAddr(address::comp_bot::shooter::secondaryMotor, address::practice_bot::shooter::secondaryMotor, robotInstance))
-    , m_feedMotor(GetCANAddr(address::comp_bot::shooter::feedMotor, address::practice_bot::shooter::feedMotor, robotInstance))
+    : m_primaryMotor(GetCANAddr(
+          address::comp_bot::shooter::primaryMotor, address::practice_bot::shooter::primaryMotor, robotInstance))
+    , m_secondaryMotor(GetCANAddr(
+          address::comp_bot::shooter::secondaryMotor, address::practice_bot::shooter::secondaryMotor, robotInstance))
+    , m_feedMotor(
+          GetCANAddr(address::comp_bot::shooter::feedMotor, address::practice_bot::shooter::feedMotor, robotInstance))
     , m_robotInstance(robotInstance) {
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::shooter::primaryMotor,
-                                          motorConfig::practice_bot::shooter::primaryMotor>(
+                                         motorConfig::practice_bot::shooter::primaryMotor>(
       m_primaryMotor, 100_ms, robotInstance);
- argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::shooter::secondaryMotor,
-                                          motorConfig::practice_bot::shooter::secondaryMotor>(
+  argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::shooter::secondaryMotor,
+                                         motorConfig::practice_bot::shooter::secondaryMotor>(
       m_secondaryMotor, 100_ms, robotInstance);
-  argos_lib::talonsrx_config::TalonSRXConfig <motorConfig::comp_bot::shooter::feedMotor,
+  argos_lib::talonsrx_config::TalonSRXConfig<motorConfig::comp_bot::shooter::feedMotor,
                                              motorConfig::practice_bot::shooter::feedMotor>(
       m_feedMotor, 100_ms, robotInstance);
   m_secondaryMotor.SetControl(ctre::phoenix6::controls::Follower(m_primaryMotor.GetDeviceID(), false));
