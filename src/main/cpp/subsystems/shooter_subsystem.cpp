@@ -28,5 +28,6 @@ ShooterSubsystem::ShooterSubsystem(const argos_lib::RobotInstance robotInstance)
       m_feedMotor, 100_ms, robotInstance);
   m_secondaryMotor.SetControl(ctre::phoenix6::controls::Follower(m_primaryMotor.GetDeviceID(), false));
 }
+
 // This method will be called once per scheduler run
 void ShooterSubsystem::Periodic() {}

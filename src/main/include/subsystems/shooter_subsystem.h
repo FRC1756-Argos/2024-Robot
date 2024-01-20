@@ -7,6 +7,7 @@
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <frc2/command/SubsystemBase.h>
+#include <argos_lib/config/config_types.h>
 
 class ShooterSubsystem : public frc2::SubsystemBase {
  public:
