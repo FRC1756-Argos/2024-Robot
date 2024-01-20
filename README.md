@@ -1,8 +1,10 @@
-# 2023-Robot
+# 2024-Robot
 
-[![CI](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/ci.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/ci.yml) [![Format](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/format.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/format.yml) [![Documentation](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/doxygen.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/doxygen.yml)
+[![CI](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/ci.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/ci.yml) [![Format](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/format.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/format.yml) [![Documentation](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/doxygen.yml/badge.svg)](https://github.com/FRC1756-Argos/2024-Robot/actions/workflows/doxygen.yml)\
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/FRC1756-Argos/2024-Robot?quickstart=1)
 
-Robot code for 2023 FRC season
+
+Robot code for 2024 FRC season
 
 ## Key Features
 
@@ -99,18 +101,18 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | Left JS Y       | Drive |
 | Right JS X      | Turn |
 | Right JS Y      | Unused |
-| DPad Up         | Unused |
+| DPad Up         | Shooter Feed Forward |
 | DPad Right      | Unused |
-| DPad Down       | Unused |
+| DPad Down       | Shooter Feed Backwards |
 | DPad Left       | Unused |
 | A               | Home Swerve (hold with <kbd>B</kbd> and <kbd>X</kbd>) |
 | B               | Home Swerve (hold with <kbd>A</kbd> and <kbd>X</kbd>) |
 | X               | Home Swerve (hold with <kbd>A</kbd> and <kbd>B</kbd>) |
 | Y               | Field Home (hold) |
-| LB              | Unused |
+| LB              | Reverse Intake |
 | RB              | Unused |
-| LT              | Unused |
-| RT              | Unused |
+| LT              | Intake |
+| RT              | Shoot |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |
@@ -120,21 +122,21 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | Button          | Function |
 | --------------- | -------- |
 | Left JS X       | Unused |
-| Left JS Y       | Unused |
+| Left JS Y       | Elevator Up/Down |
 | Right JS X      | Unused |
-| Right JS Y      | Unused |
+| Right JS Y      | Shooter Pivot Forwards/Backwards |
 | A               | Unused |
 | B               | Unused |
 | X               | Unused |
 | Y               | Unused |
-| DPad Up         | Unused |
+| DPad Up         | Climber Up |
 | DPad Right      | Unused |
-| DPad Down       | Unused |
+| DPad Down       | Climber Down |
 | DPad Left       | Unused |
 | LB              | Unused |
 | RB              | Unused |
 | LT              | Unused |
-| RT              | Unused |
+| RT              | Aim |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |

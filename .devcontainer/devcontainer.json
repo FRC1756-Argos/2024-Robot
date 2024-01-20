@@ -1,0 +1,27 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/cpp
+{
+  "name": "WPI",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "argos",
+  "mounts": [
+    "source=${localEnv:HOME}/.gradle,target=/home/argos/.gradle,type=bind,consistency=cached"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "streetsidesoftware.code-spell-checker",
+        "cschlosser.doxdocgen",
+        "tyriar.sort-lines",
+        "xaver.clang-format",
+        "gruntfuggly.todo-tree",
+        "elagil.pre-commit-helper",
+        "stackbreak.comment-divider",
+        "aaron-bond.better-comments"
+      ]
+    }
+  }
+}

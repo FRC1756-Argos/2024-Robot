@@ -20,11 +20,24 @@ namespace address {
       constexpr static argos_lib::CANAddress backLeftDrive{7, "drive"};
       constexpr static argos_lib::CANAddress backLeftTurn{8, "drive"};
     };
+
+    struct intake {
+      constexpr static argos_lib::CANAddress primaryIntake{9, "rio"};
+      constexpr static argos_lib::CANAddress secondaryIntake{10, "rio"};
+    };
+
     struct shooter {
       constexpr static argos_lib::CANAddress primaryMotor{11, "rio"};
       constexpr static argos_lib::CANAddress secondaryMotor{12, "rio"};
       constexpr static argos_lib::CANAddress feedMotor{13, "rio"};
     };
+
+    struct elevator {
+      constexpr static argos_lib::CANAddress primaryElevator{14, "rio"};
+      constexpr static argos_lib::CANAddress secondaryElevator{15, "rio"};
+      constexpr static argos_lib::CANAddress carriageRotation{16, "rio"};
+    };
+
     struct encoders {
       constexpr static argos_lib::CANAddress frontLeftEncoder{1, "drive"};
       constexpr static argos_lib::CANAddress frontRightEncoder{2, "drive"};
@@ -45,7 +58,9 @@ namespace address {
   }  // namespace comp_bot
   namespace practice_bot {
     using drive = address::comp_bot::drive;
+    using intake = address::comp_bot::intake;
     using shooter = address::comp_bot::shooter;
+    using elevator = address::comp_bot::elevator;
     using encoders = address::comp_bot::encoders;
     using controllers = address::comp_bot::controllers;
     using solenoids = address::comp_bot::solenoids;

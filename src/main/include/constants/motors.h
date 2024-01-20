@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
+
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
 
@@ -132,6 +134,30 @@ namespace motorConfig {
         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
       };
     }  // namespace shooter
+    namespace intake {
+      struct primaryIntake {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
+      };
+      struct secondaryIntake {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
+      };
+    }  // namespace intake
+    namespace elevator {
+      struct primaryElevator {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+      };
+      struct secondaryElevator {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+      };
+      struct carriageRotation {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+      };
+    }  // namespace elevator
   }    // namespace comp_bot
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,12 +239,30 @@ namespace motorConfig {
         constexpr static auto pid0_kG = motorConfig::comp_bot::drive::backLeftTurn::pid0_kG;
         constexpr static auto pid0_gravityType = motorConfig::comp_bot::drive::backLeftTurn::pid0_gravityType;
       };
-       
+
     }  // namespace drive
       namespace shooter{
         using primaryMotor = motorConfig::comp_bot::shooter::primaryMotor;
         using secondaryMotor = motorConfig::comp_bot::shooter::secondaryMotor;
         using feedMotor = motorConfig::comp_bot::shooter::feedMotor;
       } //namespace shooter
+    namespace intake {
+      using primaryIntake = motorConfig::comp_bot::intake::primaryIntake;
+      using secondaryIntake = motorConfig::comp_bot::intake::secondaryIntake;
+    }  // namespace intake
+    namespace elevator {
+      struct primaryElevator {
+        constexpr static auto inverted = motorConfig::comp_bot::elevator::primaryElevator::inverted;
+        constexpr static auto neutralMode = motorConfig::comp_bot::elevator::primaryElevator::neutralMode;
+      };
+      struct secondaryElevator {
+        constexpr static auto inverted = motorConfig::comp_bot::elevator::secondaryElevator::inverted;
+        constexpr static auto neutralMode = motorConfig::comp_bot::elevator::secondaryElevator::neutralMode;
+      };
+      struct carriageRotation {
+        constexpr static auto inverted = motorConfig::comp_bot::elevator::carriageRotation::inverted;
+        constexpr static auto neutralMode = motorConfig::comp_bot::elevator::carriageRotation::neutralMode;
+      };
+    }  // namespace elevator
   }    // namespace practice_bot
 }  // namespace motorConfig
