@@ -25,3 +25,16 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
 }
 // This method will be called once per scheduler run
 void ElevatorSubsystem::Periodic() {}
+
+void ElevatorSubsystem::ElevatorMove(double speed) {
+  m_primaryMotor.Set(speed);
+}
+
+void ElevatorSubsystem::Pivot(double speed) {
+  m_carriageMotor.Set(speed);
+}
+
+void ElevatorSubsystem::Disable(){
+  m_primaryMotor.Set(0.0);
+  m_carriageMotor.Set(0.0);
+}
