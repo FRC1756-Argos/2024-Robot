@@ -144,10 +144,24 @@ void RobotContainer::ConfigureBindings() {
   homeDrive.OnTrue(frc2::InstantCommand([this]() { m_swerveDrive.Home(0_deg); }, {&m_swerveDrive}).ToPtr());
   lockWheels.OnTrue(frc2::InstantCommand([this]() { m_swerveDrive.LockWheels(); }, {&m_swerveDrive}).ToPtr());
 
+  // INTAKE TRIGGER ACTIVITATION
   intake.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(1.0); }, {&m_intakeSubsystem}).ToPtr());
   outtake.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(-0.8); }, {&m_intakeSubsystem}).ToPtr());
   (intake || outtake)
       .OnFalse(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(0.0); }, {&m_intakeSubsystem}).ToPtr());
+
+  // ELEVATOR TRIGGER ACTIVITATION
+  m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
+                                            [this] {
+                                              double elevatorSpeed = m_controllers.OperatorController().GetY(
+                                                  argos_lib::XboxController::JoystickHand::kRightHand);
+                                              double carriageSpeed = m_controllers.OperatorController().GetY(
+                                                  argos_lib::XboxController::JoystickHand::kLeftHand);
+                                              m_elevatorSubsystem.ElevatorMove(elevatorSpeed);
+                                              m_elevatorSubsystem.Pivot(carriageSpeed);
+                                            },
+                                            {&m_elevatorSubsystem})
+                                            .ToPtr());
 
   // SWAP CONTROLLERS TRIGGER ACTIVATION
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
@@ -158,6 +172,7 @@ void RobotContainer::Disable() {
   m_ledSubSystem.Disable();
   m_swerveDrive.Disable();
   m_intakeSubsystem.Disable();
+  m_elevatorSubsystem.Disable();
 }
 
 void RobotContainer::Enable() {
