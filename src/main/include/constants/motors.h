@@ -213,6 +213,12 @@ namespace motorConfig {
         constexpr static auto pid0_kG = motorConfig::comp_bot::drive::backLeftTurn::pid0_kG;
         constexpr static auto pid0_gravityType = motorConfig::comp_bot::drive::backLeftTurn::pid0_gravityType;
       };
+       
     }  // namespace drive
+      namespace shooter{
+        using primaryMotor = motorConfig::comp_bot::shooter::primaryMotor;
+        using secondaryMotor = motorConfig::comp_bot::shooter::secondaryMotor;
+        using feedMotor = motorConfig::comp_bot::shooter::feedMotor;
+      } //namespace shooter
   }    // namespace practice_bot
 }  // namespace motorConfig

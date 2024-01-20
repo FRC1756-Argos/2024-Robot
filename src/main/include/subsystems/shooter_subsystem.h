@@ -4,35 +4,21 @@
 
 #pragma once
 
-#include <argos_lib/config/falcon_config.h>
-#include <argos_lib/general/angle_utils.h>
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <frc2/command/SubsystemBase.h>
-#include <units/angular_velocity.h>
-
-#include <string>
-
 #include <ctre/phoenix6/TalonFX.hpp>
-
-#include "constants/addresses.h"
-#include "constants/measure_up.h"
-#include "constants/motors.h"
-#include "ctre/phoenix6/core/CoreCANcoder.hpp"
-#include "ctre/phoenix6/core/CorePigeon2.hpp"
-#include "utils/sensor_conversions.h"
+#include <frc2/command/SubsystemBase.h>
 
 class ShooterSubsystem : public frc2::SubsystemBase {
  public:
-  explicit ShooterSubsystem(const argos_lib::RobotInstance instance);
+  explicit ShooterSubsystem(const argos_lib::RobotInstance robotInstance);
 
   void Periodic() override;
 
  private:
-  ctre::phoenix6::motorcontrol::can::TalonFX m_primaryMotor;
-  ctre::phoenix6::motorcontrol::can::TalonFX m_secondaryMotor;
+  ctre::phoenix6::hardware::TalonFX m_primaryMotor;
+  ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
   ctre::phoenix::motorcontrol::can::TalonSRX m_feedMotor;
-  argos_lib::RobotInstance m_instance;
+  argos_lib::RobotInstance m_robotInstance;
 };
 // Components (e.g. motor controllers and sensors) should generally be
 // declared private and exposed only through public methods.

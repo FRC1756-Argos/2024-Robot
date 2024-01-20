@@ -44,6 +44,7 @@ RobotContainer::RobotContainer()
     , m_swerveDrive(m_instance)
     , m_ledSubSystem(m_instance)
     , m_visionSubSystem(m_instance, &m_swerveDrive)
+    , m_ShooterSubSystem(m_instance)
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}
