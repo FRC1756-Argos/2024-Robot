@@ -8,7 +8,6 @@
 #include "constants/addresses.h"
 #include "constants/motors.h"
 
-
 IntakeSubsystem::IntakeSubsystem(argos_lib::RobotInstance robotInstance)
     : m_primaryMotor(GetCANAddr(
           address::comp_bot::intake::primaryIntake, address::practice_bot::intake::primaryIntake, robotInstance))
