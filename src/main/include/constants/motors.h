@@ -119,16 +119,6 @@ namespace motorConfig {
       };
     }  // namespace drive
 
-    namespace climber {
-      struct primaryClimbing {
-        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
-        constexpr static auto inverted = false;
-      };
-      struct secondaryClimbing {
-        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
-        constexpr static auto inverted = false;
-      };
-    }  // namespace climber
     namespace intake {
       struct primaryIntake {
         constexpr static auto inverted = false;
@@ -139,6 +129,30 @@ namespace motorConfig {
         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
       };
     }  // namespace intake
+    namespace climber {
+      struct primaryClimbing {
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto inverted = false;
+      };
+      struct secondaryClimbing {
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto inverted = false;
+      };
+    }  // namespace climber
+    namespace elevator {
+      struct primaryElevator {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+      };
+      struct secondaryElevator {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+      };
+      struct carriageRotation {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+      };
+    }  // namespace elevator
   }    // namespace comp_bot
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -229,5 +243,19 @@ namespace motorConfig {
       using primaryClimbing = motorConfig::comp_bot::climber::primaryClimbing;
       using secondaryClimbing = motorConfig::comp_bot::climber::secondaryClimbing;
     }  // namespace climber
+    namespace elevator {
+      struct primaryElevator {
+        constexpr static auto inverted = motorConfig::comp_bot::elevator::primaryElevator::inverted;
+        constexpr static auto neutralMode = motorConfig::comp_bot::elevator::primaryElevator::neutralMode;
+      };
+      struct secondaryElevator {
+        constexpr static auto inverted = motorConfig::comp_bot::elevator::secondaryElevator::inverted;
+        constexpr static auto neutralMode = motorConfig::comp_bot::elevator::secondaryElevator::neutralMode;
+      };
+      struct carriageRotation {
+        constexpr static auto inverted = motorConfig::comp_bot::elevator::carriageRotation::inverted;
+        constexpr static auto neutralMode = motorConfig::comp_bot::elevator::carriageRotation::neutralMode;
+      };
+    }  // namespace elevator
   }    // namespace practice_bot
 }  // namespace motorConfig

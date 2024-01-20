@@ -20,9 +20,21 @@ namespace address {
       constexpr static argos_lib::CANAddress backLeftDrive{7, "drive"};
       constexpr static argos_lib::CANAddress backLeftTurn{8, "drive"};
     };
+
     struct intake {
       constexpr static argos_lib::CANAddress primaryIntake{9, "rio"};
       constexpr static argos_lib::CANAddress secondaryIntake{10, "rio"};
+    };
+
+    struct climber {
+      constexpr static argos_lib::CANAddress primaryClimbing{17, "climb"};
+      constexpr static argos_lib::CANAddress secondaryClimbing{18, "climb"};
+    };
+
+    struct elevator {
+      constexpr static argos_lib::CANAddress primaryElevator{14, "rio"};
+      constexpr static argos_lib::CANAddress secondaryElevator{15, "rio"};
+      constexpr static argos_lib::CANAddress carriageRotation{16, "rio"};
     };
 
     struct encoders {
@@ -31,31 +43,32 @@ namespace address {
       constexpr static argos_lib::CANAddress backRightEncoder{3, "drive"};
       constexpr static argos_lib::CANAddress backLeftEncoder{4, "drive"};
     };
+
     struct controllers {
       constexpr static const char driver = 0;
       constexpr static const char secondary = 1;
     };
+
     struct solenoids {};
+
     struct sensors {
       constexpr static argos_lib::CANAddress pigeonIMU{1, "drive"};
     };
+
     struct led {
       constexpr static argos_lib::CANAddress CANdle{1, "drive"};
-    };
-    struct climber {
-      constexpr static argos_lib::CANAddress primaryClimbing{17, "climb"};
-      constexpr static argos_lib::CANAddress secondaryClimbing{18, "climb"};
     };
   }  // namespace comp_bot
   namespace practice_bot {
     using drive = address::comp_bot::drive;
     using intake = address::comp_bot::intake;
+    using climber = address::comp_bot::climber;
+    using elevator = address::comp_bot::elevator;
     using encoders = address::comp_bot::encoders;
     using controllers = address::comp_bot::controllers;
     using solenoids = address::comp_bot::solenoids;
     using sensors = address::comp_bot::sensors;
     using led = address::comp_bot::led;
-    using climber = address::comp_bot::climber;
   }  // namespace practice_bot
 
 }  // namespace address

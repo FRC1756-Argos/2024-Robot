@@ -5,26 +5,24 @@
 #pragma once
 
 #include <argos_lib/config/config_types.h>
-#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <frc2/command/SubsystemBase.h>
 
-class IntakeSubsystem : public frc2::SubsystemBase {
+#include <ctre/phoenix6/TalonFX.hpp>
+
+class ElevatorSubsystem : public frc2::SubsystemBase {
  public:
-  explicit IntakeSubsystem(argos_lib::RobotInstance robotInstance);
+  explicit ElevatorSubsystem(argos_lib::RobotInstance robotInstance);
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
 
-  void Intake(double speed);
-
-  void Disable();
-
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
-  ctre::phoenix::motorcontrol::can::TalonSRX m_primaryMotor;
-  ctre::phoenix::motorcontrol::can::TalonSRX m_secondaryMotor;
+  ctre::phoenix6::hardware::TalonFX m_primaryMotor;
+  // ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
+  ctre::phoenix6::hardware::TalonFX m_carriageMotor;
   argos_lib::RobotInstance m_robotInstance;
 };
