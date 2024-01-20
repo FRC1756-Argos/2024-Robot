@@ -17,6 +17,7 @@
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/intake_subsystem.h"
+#include "subsystems/shooter_subsystem.h"
 #include "subsystems/simple_led_subsystem.h"
 #include "subsystems/swerve_drive_subsystem.h"
 #include "subsystems/vision_subsystem.h"
@@ -59,6 +60,7 @@ class RobotContainer {
   SwerveDriveSubsystem m_swerveDrive;
   SimpleLedSubsystem m_ledSubSystem;
   VisionSubsystem m_visionSubSystem;
+  ShooterSubsystem m_ShooterSubSystem;
   IntakeSubsystem m_intakeSubsystem;
   ClimberSubsystem m_climberSubsystem;
   ElevatorSubsystem m_elevatorSubsystem;

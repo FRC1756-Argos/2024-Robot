@@ -26,6 +26,12 @@ namespace address {
       constexpr static argos_lib::CANAddress secondaryIntake{10, "rio"};
     };
 
+    struct shooter {
+      constexpr static argos_lib::CANAddress primaryMotor{11, "rio"};
+      constexpr static argos_lib::CANAddress secondaryMotor{12, "rio"};
+      constexpr static argos_lib::CANAddress feedMotor{13, "rio"};
+    };
+
     struct climber {
       constexpr static argos_lib::CANAddress primaryClimbing{17, "climb"};
       constexpr static argos_lib::CANAddress secondaryClimbing{18, "climb"};
@@ -62,6 +68,7 @@ namespace address {
   namespace practice_bot {
     using drive = address::comp_bot::drive;
     using intake = address::comp_bot::intake;
+    using shooter = address::comp_bot::shooter;
     using climber = address::comp_bot::climber;
     using elevator = address::comp_bot::elevator;
     using encoders = address::comp_bot::encoders;

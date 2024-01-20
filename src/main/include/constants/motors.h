@@ -45,6 +45,7 @@ namespace motorConfig {
         constexpr static auto pid0_kG = controlLoop::comp_bot::drive::drive::kG;
         constexpr static auto pid0_gravityType = controlLoop::comp_bot::drive::drive::gravityType;
       };
+
       struct frontLeftTurn {
         constexpr static auto inverted = true;
         constexpr static bool sensorPhase = true;
@@ -118,6 +119,20 @@ namespace motorConfig {
         constexpr static auto pid0_gravityType = controlLoop::comp_bot::drive::rotate::gravityType;
       };
     }  // namespace drive
+    namespace shooter {
+      struct primaryMotor {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+      };
+      struct secondaryMotor {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+      };
+      struct feedMotor {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
+      };
+    }  // namespace shooter
 
     namespace intake {
       struct primaryIntake {
@@ -234,7 +249,13 @@ namespace motorConfig {
         constexpr static auto pid0_kG = motorConfig::comp_bot::drive::backLeftTurn::pid0_kG;
         constexpr static auto pid0_gravityType = motorConfig::comp_bot::drive::backLeftTurn::pid0_gravityType;
       };
+
     }  // namespace drive
+    namespace shooter {
+      using primaryMotor = motorConfig::comp_bot::shooter::primaryMotor;
+      using secondaryMotor = motorConfig::comp_bot::shooter::secondaryMotor;
+      using feedMotor = motorConfig::comp_bot::shooter::feedMotor;
+    }  // namespace shooter
     namespace intake {
       using primaryIntake = motorConfig::comp_bot::intake::primaryIntake;
       using secondaryIntake = motorConfig::comp_bot::intake::secondaryIntake;
