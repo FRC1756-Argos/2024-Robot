@@ -151,7 +151,7 @@ We're using the following dependencies:
  * [CTRE Phoenix 24.1.0](https://github.com/CrossTheRoadElec/Phoenix-Releases/releases/tag/v24.1.0)
  * [Playing With Fusion 2024.01.10](https://www.playingwithfusion.com/docview.php?docid=1205)
  * [REVLib 2024.2.0](https://docs.revrobotics.com/brushless/spark-max/revlib)
- * [WPILib 2024.1.1](https://github.com/wpilibsuite/allwpilib/releases/tag/v2024.1.1)
+ * [WPILib 2024.2.1](https://github.com/wpilibsuite/allwpilib/releases/tag/v2024.2.1)
 
 ## Special Thanks
 
