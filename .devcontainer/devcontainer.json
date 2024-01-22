@@ -23,5 +23,13 @@
         "aaron-bond.better-comments"
       ]
     }
-  }
+  },
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
+    "ghcr.io/devcontainers-contrib/features/pipx-package:1": {
+      "package": "wpiformat",
+      "version": "2022.21"
+    }
+  },
+  "postCreateCommand": "pre-commit install"
 }
