@@ -29,6 +29,10 @@
     "ghcr.io/devcontainers-contrib/features/pipx-package:1": {
       "package": "wpiformat",
       "version": "2022.21"
+    },
+    "ghcr.io/devcontainers-contrib/features/pipx-package:1": {
+      "package": "clang-format",
+      "version": "15.0.7"
     }
   },
   "postCreateCommand": "pre-commit install"

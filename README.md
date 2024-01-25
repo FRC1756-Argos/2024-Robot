@@ -152,6 +152,7 @@ We're using the following dependencies:
  * [Playing With Fusion 2024.01.10](https://www.playingwithfusion.com/docview.php?docid=1205)
  * [REVLib 2024.2.0](https://docs.revrobotics.com/brushless/spark-max/revlib)
  * [WPILib 2024.2.1](https://github.com/wpilibsuite/allwpilib/releases/tag/v2024.2.1)
+ * [Choreo v2024.1.2](https://github.com/SleipnirGroup/Choreo/releases/tag/v2024.1.2-b)
 
 ## Special Thanks
 
