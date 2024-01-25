@@ -129,6 +129,11 @@ void RobotContainer::ConfigureBindings() {
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto climberDown = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kDown);
 
+  // SHOOT TRIGGERS
+  auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
+  auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
+  auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
+
   // Swap controllers config
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kStart, {1500_ms, 0_ms});
@@ -175,6 +180,14 @@ void RobotContainer::ConfigureBindings() {
                                             {&m_elevatorSubsystem})
                                             .ToPtr());
 
+  // SHOOTER TRIGGER ACTIVATION
+  shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());
+  feedForward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(1.0); }, {&m_ShooterSubSystem}).ToPtr());
+  feedBackward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(-1.0); }, {&m_ShooterSubSystem}).ToPtr());
+  shoot.OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.0); }, {&m_ShooterSubSystem}).ToPtr());
+  (feedForward || feedBackward)
+      .OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.0); }, {&m_ShooterSubSystem}).ToPtr());
+
   // SWAP CONTROLLERS TRIGGER ACTIVATION
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
       .WhileTrue(argos_lib::SwapControllersCommand(&m_controllers).ToPtr());
@@ -186,6 +199,7 @@ void RobotContainer::Disable() {
   m_intakeSubsystem.Disable();
   m_elevatorSubsystem.Disable();
   m_climberSubsystem.Disable();
+  m_ShooterSubSystem.Disable();
 }
 
 void RobotContainer::Enable() {

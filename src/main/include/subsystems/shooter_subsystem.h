@@ -16,6 +16,12 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   void Periodic() override;
 
+  void Shoot(double speed);
+
+  void Feed(double speed);
+
+  void Disable();
+
  private:
   ctre::phoenix6::hardware::TalonFX m_primaryMotor;
   ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
