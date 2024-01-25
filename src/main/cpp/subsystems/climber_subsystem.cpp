@@ -32,6 +32,6 @@ void ClimberSubsystem::ClimberMove(double speed) {
   m_primaryMotor.Set(speed);
 }
 
-void ClimberSubsystem::Disable(){
+void ClimberSubsystem::Disable() {
   m_primaryMotor.Set(0.0);
 }
