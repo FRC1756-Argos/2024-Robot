@@ -28,13 +28,11 @@ namespace measure_up {
     constexpr auto backLeftLOffset = 3.25_in;
   }  // namespace swerve_offsets
   namespace camera_front {
-    constexpr auto cameraX = 0_in; /// @todo real mounting offsets
+    constexpr auto cameraX = 0_in;  /// @todo real mounting offsets
     constexpr auto cameraZ = 7.25_in;
     constexpr auto cameraMountAngle = 13.5_deg;
     constexpr auto vFov = 24.85_deg * 2;
     constexpr auto hFov = 29.8_deg * 2;
-  }  // namespace camera
-  namespace camera_back {
-
-  } //namespace camera_back
+  }                         // namespace camera_front
+  namespace camera_back {}  // namespace camera_back
 }  // namespace measure_up
