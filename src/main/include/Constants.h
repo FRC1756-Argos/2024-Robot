@@ -57,7 +57,7 @@ namespace networkTables {
       const std::string brHomeFullPath = "swerveHomes/brHome";
       const std::string blHomeFullPath = "swerveHomes/blHome";
     }  // namespace keys
-  }  // namespace swerveHomes
+  }    // namespace swerveHomes
 }  // namespace networkTables
 
 namespace leds {
@@ -84,6 +84,6 @@ namespace warning {
     /// @brief Turn back now!
     namespace option {
       constexpr bool wristEnabled = true;  ///< @warning Only set to false if wrist is broken beyond repair :(
-    }  // namespace option
-  }  // namespace nuclear
+    }                                      // namespace option
+  }                                        // namespace nuclear
 }  // namespace warning

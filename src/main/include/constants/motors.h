@@ -168,7 +168,7 @@ namespace motorConfig {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
       };
     }  // namespace elevator
-  }  // namespace comp_bot
+  }    // namespace comp_bot
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
   /// @brief Motor configurations specific to practice robot
@@ -278,5 +278,5 @@ namespace motorConfig {
         constexpr static auto neutralMode = motorConfig::comp_bot::elevator::carriageRotation::neutralMode;
       };
     }  // namespace elevator
-  }  // namespace practice_bot
+  }    // namespace practice_bot
 }  // namespace motorConfig
