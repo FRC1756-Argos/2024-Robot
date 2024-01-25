@@ -14,25 +14,27 @@
 namespace measure_up {
   constexpr auto bumperExtension = 3_in;  ///< Distance from frame to outer edge of bumpers
   namespace chassis {
-    constexpr units::inch_t width{26.0};
-    constexpr units::inch_t length{33.0};
+    constexpr units::inch_t width{29.0};
+    constexpr units::inch_t length{30.0};
   }  // namespace chassis
   namespace swerve_offsets {
-    constexpr auto frontLeftLOffset = 2.625_in;
-    constexpr auto frontLeftWOffset = 2.625_in;
-    constexpr auto frontRightLOffset = 2.625_in;
-    constexpr auto frontRightWOffset = 2.625_in;
-    constexpr auto backRightWOffset = 2.625_in;
-    constexpr auto backRightLOffset = 2.625_in;
-    constexpr auto backLeftWOffset = 2.625_in;
-    constexpr auto backLeftLOffset = 2.625_in;
+    constexpr auto frontLeftLOffset = 3.25_in;
+    constexpr auto frontLeftWOffset = 3.25_in;
+    constexpr auto frontRightLOffset = 3.25_in;
+    constexpr auto frontRightWOffset = 3.25_in;
+    constexpr auto backRightWOffset = 3.25_in;
+    constexpr auto backRightLOffset = 3.25_in;
+    constexpr auto backLeftWOffset = 3.25_in;
+    constexpr auto backLeftLOffset = 3.25_in;
   }  // namespace swerve_offsets
-  namespace camera {
-    constexpr auto cameraX = 0_in;
-    /// @todo why is this not 7.88 in?
+  namespace camera_front {
+    constexpr auto cameraX = 0_in; /// @todo real mounting offsets
     constexpr auto cameraZ = 7.25_in;
     constexpr auto cameraMountAngle = 13.5_deg;
     constexpr auto vFov = 24.85_deg * 2;
     constexpr auto hFov = 29.8_deg * 2;
   }  // namespace camera
+  namespace camera_back {
+
+  } //namespace camera_back
 }  // namespace measure_up
