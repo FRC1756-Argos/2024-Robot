@@ -125,6 +125,10 @@ void RobotContainer::ConfigureBindings() {
   auto intake = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
   auto outtake = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
 
+  // CLIMBER TRIGGERS
+  auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
+  auto climberDown = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kDown);
+
   // Swap controllers config
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kStart, {1500_ms, 0_ms});
@@ -150,6 +154,12 @@ void RobotContainer::ConfigureBindings() {
   (intake || outtake)
       .OnFalse(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(0.0); }, {&m_intakeSubsystem}).ToPtr());
 
+  // CLIMBER TRIGGER ACTIVATION
+  climberUp.OnTrue(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.5); }, {&m_climberSubsystem}).ToPtr());
+  climberDown.OnTrue(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(-0.5); }, {&m_climberSubsystem}).ToPtr());
+  (climberUp || climberDown)
+      .OnFalse(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.0); }, {&m_climberSubsystem}).ToPtr());
+
   // ELEVATOR TRIGGER ACTIVITATION
   m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
                                             [this] {
@@ -173,6 +183,7 @@ void RobotContainer::Disable() {
   m_swerveDrive.Disable();
   m_intakeSubsystem.Disable();
   m_elevatorSubsystem.Disable();
+  m_climberSubsystem.Disable();
 }
 
 void RobotContainer::Enable() {

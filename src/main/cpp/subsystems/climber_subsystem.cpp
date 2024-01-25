@@ -27,3 +27,11 @@ ClimberSubsystem::ClimberSubsystem(argos_lib::RobotInstance robotInstance)
 }
 // This method will be called once per scheduler run
 void ClimberSubsystem::Periodic() {}
+
+void ClimberSubsystem::ClimberMove(double speed) {
+  m_primaryMotor.Set(speed);
+}
+
+void ClimberSubsystem::Disable(){
+  m_primaryMotor.Set(0.0);
+}
