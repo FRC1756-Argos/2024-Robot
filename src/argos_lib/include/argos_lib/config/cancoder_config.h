@@ -34,6 +34,7 @@ namespace argos_lib {
     template <typename T>
     bool CanCoderConfig(CANcoder& encoder, units::millisecond_t configTimeout) {
       ctre::phoenix6::configs::CANcoderConfiguration config;
+      encoder.GetConfigurator().Refresh(config.MagnetSensor, configTimeout);
 
       if constexpr (has_direction<T>{}) {
         config.MagnetSensor.SensorDirection = T::direction;

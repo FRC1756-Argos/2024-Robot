@@ -31,7 +31,6 @@ namespace motorConfig {
     namespace drive {
       struct genericDrive {
         constexpr static auto inverted = true;
-        constexpr static bool sensorPhase = false;
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
@@ -47,8 +46,7 @@ namespace motorConfig {
       };
 
       struct frontLeftTurn {
-        constexpr static auto inverted = true;
-        constexpr static bool sensorPhase = true;
+        constexpr static auto inverted = false;
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
@@ -65,8 +63,7 @@ namespace motorConfig {
         constexpr static auto pid0_gravityType = controlLoop::comp_bot::drive::rotate::gravityType;
       };
       struct frontRightTurn {
-        constexpr static auto inverted = true;
-        constexpr static bool sensorPhase = true;
+        constexpr static auto inverted = false;
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
@@ -83,8 +80,7 @@ namespace motorConfig {
         constexpr static auto pid0_gravityType = controlLoop::comp_bot::drive::rotate::gravityType;
       };
       struct backRightTurn {
-        constexpr static auto inverted = true;
-        constexpr static bool sensorPhase = true;
+        constexpr static auto inverted = false;
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
@@ -101,8 +97,7 @@ namespace motorConfig {
         constexpr static auto pid0_gravityType = controlLoop::comp_bot::drive::rotate::gravityType;
       };
       struct backLeftTurn {
-        constexpr static auto inverted = true;
-        constexpr static bool sensorPhase = true;
+        constexpr static auto inverted = false;
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
@@ -121,7 +116,7 @@ namespace motorConfig {
     }  // namespace drive
     namespace shooter {
       struct primaryMotor {
-        constexpr static auto inverted = false;
+        constexpr static auto inverted = true;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
       };
       struct secondaryMotor {
@@ -136,7 +131,7 @@ namespace motorConfig {
 
     namespace intake {
       struct primaryIntake {
-        constexpr static auto inverted = false;
+        constexpr static auto inverted = true;
         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
       };
       struct secondaryIntake {
@@ -179,7 +174,6 @@ namespace motorConfig {
 
       struct frontLeftTurn {
         constexpr static auto inverted = motorConfig::comp_bot::drive::frontLeftTurn::inverted;
-        constexpr static bool sensorPhase = motorConfig::comp_bot::drive::frontLeftTurn::sensorPhase;
         constexpr static auto neutralDeadband = motorConfig::comp_bot::drive::frontLeftTurn::neutralDeadband;
         constexpr static auto neutralMode = motorConfig::comp_bot::drive::frontLeftTurn::neutralMode;
         constexpr static auto statusFrameMotorMode = motorConfig::comp_bot::drive::frontLeftTurn::statusFrameMotorMode;
@@ -197,7 +191,6 @@ namespace motorConfig {
       };
       struct frontRightTurn {
         constexpr static auto inverted = motorConfig::comp_bot::drive::frontRightTurn::inverted;
-        constexpr static bool sensorPhase = motorConfig::comp_bot::drive::frontRightTurn::sensorPhase;
         constexpr static auto neutralDeadband = motorConfig::comp_bot::drive::frontRightTurn::neutralDeadband;
         constexpr static auto neutralMode = motorConfig::comp_bot::drive::frontRightTurn::neutralMode;
         constexpr static auto statusFrameMotorMode = motorConfig::comp_bot::drive::frontRightTurn::statusFrameMotorMode;
@@ -215,7 +208,6 @@ namespace motorConfig {
       };
       struct backRightTurn {
         constexpr static auto inverted = motorConfig::comp_bot::drive::backRightTurn::inverted;
-        constexpr static bool sensorPhase = motorConfig::comp_bot::drive::backRightTurn::sensorPhase;
         constexpr static auto neutralDeadband = motorConfig::comp_bot::drive::backRightTurn::neutralDeadband;
         constexpr static auto neutralMode = motorConfig::comp_bot::drive::backRightTurn::neutralMode;
         constexpr static auto statusFrameMotorMode = motorConfig::comp_bot::drive::backRightTurn::statusFrameMotorMode;
@@ -233,7 +225,6 @@ namespace motorConfig {
       };
       struct backLeftTurn {
         constexpr static auto inverted = motorConfig::comp_bot::drive::backLeftTurn::inverted;
-        constexpr static bool sensorPhase = motorConfig::comp_bot::drive::backLeftTurn::sensorPhase;
         constexpr static auto neutralDeadband = motorConfig::comp_bot::drive::backLeftTurn::neutralDeadband;
         constexpr static auto neutralMode = motorConfig::comp_bot::drive::backLeftTurn::neutralMode;
         constexpr static auto statusFrameMotorMode = motorConfig::comp_bot::drive::backLeftTurn::statusFrameMotorMode;

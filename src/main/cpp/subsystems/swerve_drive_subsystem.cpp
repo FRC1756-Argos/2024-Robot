@@ -157,17 +157,17 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
       m_backRight.m_drive, 100_ms, instance);
 
   // CAN ENCODER CONFIG
-  argos_lib::cancoder_config::CanCoderConfig<motorConfig::comp_bot::drive::frontLeftTurn,
-                                             motorConfig::practice_bot::drive::frontLeftTurn>(
+  argos_lib::cancoder_config::CanCoderConfig<encoder_conf::comp_bot::drive::genericTurn,
+                                             encoder_conf::practice_bot::drive::genericTurn>(
       m_frontLeft.m_encoder, 100_ms, instance);
-  argos_lib::cancoder_config::CanCoderConfig<motorConfig::comp_bot::drive::frontRightTurn,
-                                             motorConfig::practice_bot::drive::frontRightTurn>(
+  argos_lib::cancoder_config::CanCoderConfig<encoder_conf::comp_bot::drive::genericTurn,
+                                             encoder_conf::practice_bot::drive::genericTurn>(
       m_frontRight.m_encoder, 100_ms, instance);
-  argos_lib::cancoder_config::CanCoderConfig<motorConfig::comp_bot::drive::backRightTurn,
-                                             motorConfig::practice_bot::drive::backRightTurn>(
+  argos_lib::cancoder_config::CanCoderConfig<encoder_conf::comp_bot::drive::genericTurn,
+                                             encoder_conf::practice_bot::drive::genericTurn>(
       m_backRight.m_encoder, 100_ms, instance);
-  argos_lib::cancoder_config::CanCoderConfig<motorConfig::comp_bot::drive::backLeftTurn,
-                                             motorConfig::practice_bot::drive::backLeftTurn>(
+  argos_lib::cancoder_config::CanCoderConfig<encoder_conf::comp_bot::drive::genericTurn,
+                                             encoder_conf::practice_bot::drive::genericTurn>(
       m_backLeft.m_encoder, 100_ms, instance);
 
   InitializeMotors();
@@ -676,7 +676,7 @@ void SwerveDriveSubsystem::SetControlMode(SwerveDriveSubsystem::DriveControlMode
 }
 
 void SwerveDriveSubsystem::InitializeMotors() {
-  InitializeMotorsFromFS();
+  // InitializeMotorsFromFS();
 }
 
 void SwerveDriveSubsystem::HomeToFS(const units::degree_t& angle) {

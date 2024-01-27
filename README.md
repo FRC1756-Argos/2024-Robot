@@ -38,15 +38,7 @@ When commissioning a new robot, you should set the instance type to either "Comp
 1. When homing swerve modules figure out what is the front of the robot. The intake is the front.
 2. Rotate each swerve module to where each bevel gear is to the left side of the robot.
 3. Use something flat that is the length of the robot and line the swerve wheels up.
-4. Power on the robot and connect your computer. You will need one XBox controller. Make sure the controller says its controller 0(driver) in drivers station. Once connected, enable the robot and press your swerve homing buttons. We are using the buttons <kbd>A</kbd>, <kbd>B</kbd>, and <kbd>X</kbd> on the XBox controller. You have to hold the three buttons for 1.5 seconds.
-5. Once the homes have been set the homes will be put in a document. You will be able to open up the document.
-6. First open file explorer.
-7. Once you are in click in the white box at the top where you can type.
-8. Use one of the above FTP addresses.
-9. Then double click on the home folder.
-10. Then double click on the lvuser folder.
-11. Then double click on the homes folder.
-12. Then you can click on the swerveHomes file to see the homes of the swerve modules.
+4. Power on the robot and connect your computer. Open Phoenix Tuner X. Select each drive CANcoder and click the "Zero CANcoder" button.
 
 
 ### Vision
@@ -105,14 +97,14 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | DPad Right      | Unused |
 | DPad Down       | Shooter Feed Backwards |
 | DPad Left       | Unused |
-| A               | Home Swerve (hold with <kbd>B</kbd> and <kbd>X</kbd>) |
-| B               | Home Swerve (hold with <kbd>A</kbd> and <kbd>X</kbd>) |
-| X               | Home Swerve (hold with <kbd>A</kbd> and <kbd>B</kbd>) |
+| A               | Unused |
+| B               | Unused |
+| X               | Unused |
 | Y               | Field Home (hold) |
-| LB              | Reverse Intake |
-| RB              | Unused |
-| LT              | Intake |
-| RT              | Shoot |
+| LB              | Unused |
+| RB              | Reverse Intake |
+| LT              | Shoot |
+| RT              | Intake |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |

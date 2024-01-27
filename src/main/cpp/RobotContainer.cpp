@@ -39,6 +39,9 @@
 RobotContainer::RobotContainer()
     : m_driveSpeedMap(controllerMap::driveSpeed)
     , m_driveRotSpeed(controllerMap::driveRotSpeed)
+    , m_elevatorSpeedMap(controllerMap::elevatorSpeed)
+    , m_elevatorRotateSpeedMap(controllerMap::elevatorRotateSpeed)
+    , m_climberSpeedMap(controllerMap::climberSpeed)
     , m_instance(argos_lib::GetRobotInstance())
     , m_controllers(address::comp_bot::controllers::driver, address::comp_bot::controllers::secondary)
     , m_swerveDrive(m_instance)
@@ -97,28 +100,13 @@ RobotContainer::RobotContainer()
 void RobotContainer::ConfigureBindings() {
   /* ———————————————————————— CONFIGURE DEBOUNCING ——————————————————————— */
 
-  m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kX, {1500_ms, 0_ms});
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kY, {1500_ms, 0_ms});
-  m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kA, {1500_ms, 0_ms});
-  m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kB, {1500_ms, 0_ms});
-  m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBumperLeft, {50_ms, 0_ms});
-  m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBumperRight, {50_ms, 0_ms});
-  m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kRight, {1500_ms, 0_ms});
-  m_controllers.OperatorController().SetButtonDebounce(argos_lib::XboxController::Button::kX, {1500_ms, 0_ms});
-  m_controllers.OperatorController().SetButtonDebounce(argos_lib::XboxController::Button::kY, {1500_ms, 0_ms});
-  m_controllers.OperatorController().SetButtonDebounce(argos_lib::XboxController::Button::kA, {1500_ms, 0_ms});
-  m_controllers.OperatorController().SetButtonDebounce(argos_lib::XboxController::Button::kB, {1500_ms, 0_ms});
 
   /* —————————————————————————————— TRIGGERS ————————————————————————————— */
 
   auto robotEnableTrigger = (frc2::Trigger{[this]() { return frc::DriverStation::IsEnabled(); }});
 
   // DRIVE TRIGGERS
-  auto homeDrive = m_controllers.DriverController().TriggerDebounced({argos_lib::XboxController::Button::kX,
-                                                                      argos_lib::XboxController::Button::kA,
-                                                                      argos_lib::XboxController::Button::kB});
-  auto lockWheels = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
-
   auto fieldHome = m_controllers.DriverController().TriggerDebounced(argos_lib::XboxController::Button::kY);
 
   // INTAKE TRIGGERS
@@ -150,8 +138,6 @@ void RobotContainer::ConfigureBindings() {
 
   // DRIVE TRIGGER ACTIVATION
   fieldHome.OnTrue(frc2::InstantCommand([this]() { m_swerveDrive.FieldHome(); }, {&m_swerveDrive}).ToPtr());
-  homeDrive.OnTrue(frc2::InstantCommand([this]() { m_swerveDrive.Home(0_deg); }, {&m_swerveDrive}).ToPtr());
-  lockWheels.OnTrue(frc2::InstantCommand([this]() { m_swerveDrive.LockWheels(); }, {&m_swerveDrive}).ToPtr());
 
   // INTAKE TRIGGER ACTIVITATION
   intake.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(1.0); }, {&m_intakeSubsystem}).ToPtr());
@@ -170,20 +156,20 @@ void RobotContainer::ConfigureBindings() {
   // ELEVATOR TRIGGER ACTIVITATION
   m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
                                             [this] {
-                                              double elevatorSpeed = m_controllers.OperatorController().GetY(
-                                                  argos_lib::XboxController::JoystickHand::kRightHand);
-                                              double carriageSpeed = m_controllers.OperatorController().GetY(
+                                              double elevatorSpeed = -m_controllers.OperatorController().GetY(
                                                   argos_lib::XboxController::JoystickHand::kLeftHand);
-                                              m_elevatorSubsystem.ElevatorMove(elevatorSpeed);
-                                              m_elevatorSubsystem.Pivot(carriageSpeed);
+                                              double carriageSpeed = -m_controllers.OperatorController().GetY(
+                                                  argos_lib::XboxController::JoystickHand::kRightHand);
+                                              m_elevatorSubsystem.ElevatorMove(m_elevatorSpeedMap(elevatorSpeed));
+                                              m_elevatorSubsystem.Pivot(m_elevatorRotateSpeedMap(carriageSpeed));
                                             },
                                             {&m_elevatorSubsystem})
                                             .ToPtr());
 
   // SHOOTER TRIGGER ACTIVATION
   shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());
-  feedForward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(1.0); }, {&m_ShooterSubSystem}).ToPtr());
-  feedBackward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(-1.0); }, {&m_ShooterSubSystem}).ToPtr());
+  feedForward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.5); }, {&m_ShooterSubSystem}).ToPtr());
+  feedBackward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(-0.5); }, {&m_ShooterSubSystem}).ToPtr());
   shoot.OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.0); }, {&m_ShooterSubSystem}).ToPtr());
   (feedForward || feedBackward)
       .OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.0); }, {&m_ShooterSubSystem}).ToPtr());
