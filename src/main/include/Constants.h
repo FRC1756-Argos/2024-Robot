@@ -13,10 +13,10 @@
 
 #include "constants/addresses.h"
 #include "constants/control_loops.h"
+#include "constants/encoders.h"
 #include "constants/interpolation_maps.h"
 #include "constants/measure_up.h"
 #include "constants/motors.h"
-#include "constants/encoders.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
 
