@@ -6,7 +6,7 @@
 
 #include <argos_lib/config/config_types.h>
 #include <frc2/command/SubsystemBase.h>
-
+#include <units/length.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 
 class ElevatorSubsystem : public frc2::SubsystemBase {
@@ -23,6 +23,8 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
   void Pivot(double speed);
 
   void Disable();
+
+  void ElevatorMoveToHeight(units::inch_t height);
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be

@@ -38,3 +38,6 @@ void ElevatorSubsystem::Disable() {
   m_primaryMotor.Set(0.0);
   m_carriageMotor.Set(0.0);
 }
+
+void ElevatorSubsystem::ElevatorMoveToHeight(units::inch_t height) {
+}
