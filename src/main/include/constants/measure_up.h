@@ -36,9 +36,9 @@ namespace measure_up {
   }                         // namespace camera_front
   namespace camera_back {}  // namespace camera_back
 
-  namespace elevator{
+  namespace elevator {
     constexpr auto minHeight = 21.5_in;
     constexpr auto maxHeight = 42.5_in;
     constexpr double inchesToRotations = 3.0;
-  }
+  }  // namespace elevator
 }  // namespace measure_up
