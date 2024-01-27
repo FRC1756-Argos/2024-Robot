@@ -35,4 +35,7 @@ namespace measure_up {
     constexpr auto hFov = 29.8_deg * 2;
   }                         // namespace camera_front
   namespace camera_back {}  // namespace camera_back
+  namespace elevator {
+
+  }
 }  // namespace measure_up
