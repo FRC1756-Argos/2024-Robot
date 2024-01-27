@@ -168,8 +168,8 @@ void RobotContainer::ConfigureBindings() {
 
   // SHOOTER TRIGGER ACTIVATION
   shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());
-  feedForward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(1.0); }, {&m_ShooterSubSystem}).ToPtr());
-  feedBackward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(-1.0); }, {&m_ShooterSubSystem}).ToPtr());
+  feedForward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.5); }, {&m_ShooterSubSystem}).ToPtr());
+  feedBackward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(-0.5); }, {&m_ShooterSubSystem}).ToPtr());
   shoot.OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.0); }, {&m_ShooterSubSystem}).ToPtr());
   (feedForward || feedBackward)
       .OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.0); }, {&m_ShooterSubSystem}).ToPtr());
