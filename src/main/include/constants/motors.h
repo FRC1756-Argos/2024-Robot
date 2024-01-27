@@ -116,7 +116,7 @@ namespace motorConfig {
     }  // namespace drive
     namespace shooter {
       struct primaryMotor {
-        constexpr static auto inverted = false;
+        constexpr static auto inverted = true;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
       };
       struct secondaryMotor {
@@ -131,7 +131,7 @@ namespace motorConfig {
 
     namespace intake {
       struct primaryIntake {
-        constexpr static auto inverted = false;
+        constexpr static auto inverted = true;
         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
       };
       struct secondaryIntake {
