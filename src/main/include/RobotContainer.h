@@ -52,6 +52,12 @@ class RobotContainer {
       m_driveSpeedMap;
   argos_lib::InterpolationMap<decltype(controllerMap::driveRotSpeed.front().inVal), controllerMap::driveRotSpeed.size()>
       m_driveRotSpeed;
+  argos_lib::InterpolationMap<decltype(controllerMap::elevatorSpeed.front().inVal), controllerMap::elevatorSpeed.size()>
+      m_elevatorSpeedMap;
+  argos_lib::InterpolationMap<decltype(controllerMap::elevatorRotateSpeed.front().inVal), controllerMap::elevatorRotateSpeed.size()>
+      m_elevatorRotateSpeedMap;
+  argos_lib::InterpolationMap<decltype(controllerMap::climberSpeed.front().inVal), controllerMap::climberSpeed.size()>
+      m_climberSpeedMap;
 
   const argos_lib::RobotInstance m_instance;
 
