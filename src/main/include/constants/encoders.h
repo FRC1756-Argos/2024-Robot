@@ -17,7 +17,7 @@ namespace encoder_conf {
   namespace practice_bot {
     namespace drive {
       using genericTurn = encoder_conf::comp_bot::drive::genericTurn;
-    }
+    }  // namespace drive
 
   }  // namespace practice_bot
 }  // namespace encoder_conf
