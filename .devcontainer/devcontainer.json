@@ -36,5 +36,5 @@
     //   "version": "15.0.7"
     // }
   },
-  "postCreateCommand": "pip3 install wpiformat==2022.21 clang-format==15.0.7 ; pre-commit install"
+  "postCreateCommand": "pipx install wpiformat==2022.21 clang-format==15.0.7 ; pre-commit install"
 }
