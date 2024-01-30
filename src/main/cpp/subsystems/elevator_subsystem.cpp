@@ -4,11 +4,12 @@
 
 #include "subsystems/elevator_subsystem.h"
 
+#include <ctre/phoenix6/controls/PositionVoltage.hpp>
+
 #include "argos_lib/config/falcon_config.h"
 #include "constants/addresses.h"
-#include "constants/motors.h"
 #include "constants/measure_up.h"
-#include <ctre/phoenix6/controls/PositionVoltage.hpp>
+#include "constants/motors.h"
 #include "utils/sensor_conversions.h"
 
 ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
@@ -26,7 +27,6 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
   argos_lib::falcon_config::FalconConfig<motorConfig::practice_bot::elevator::carriageRotation,
                                          motorConfig::comp_bot::elevator::carriageRotation>(
       m_carriageMotor, 100_ms, robotInstance);
-
 }
 // This method will be called once per scheduler run
 void ElevatorSubsystem::Periodic() {}
@@ -45,14 +45,12 @@ void ElevatorSubsystem::Disable() {
 }
 
 void ElevatorSubsystem::ElevatorMoveToHeight(units::inch_t height) {
-  if (height > measure_up::elevator::maxHeight)
-  {
+  if (height > measure_up::elevator::maxHeight) {
     height = measure_up::elevator::maxHeight;
+  } else if (height < measure_up::elevator::minHeight) {
+    height = measure_up::elevator::minHeight;
   }
-   else if (height < measure_up::elevator::minHeight)
-   {
-     height = measure_up::elevator::minHeight;
-   }
-  m_primaryMotor.SetControl(ctre::phoenix6::controls::PositionVoltage(sensor_conversions::elevator::raise::ToSensorUnit(height)));
+  m_primaryMotor.SetControl(
+      ctre::phoenix6::controls::PositionVoltage(sensor_conversions::elevator::raise::ToSensorUnit(height)));
   m_elevatorManualOverride = false;
 }

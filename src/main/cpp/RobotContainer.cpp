@@ -206,6 +206,5 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
   return m_autoSelector.GetSelectedCommand();
 }
 
-
-  overrideElevatorTrigger.OnTrue(
-      frc2::InstantCommand([this]() { m_lifter.SetShoulderManualOverride(true); }, {}).ToPtr());
+overrideElevatorTrigger.OnTrue(
+    frc2::InstantCommand([this]() { m_lifter.SetShoulderManualOverride(true); }, {}).ToPtr());
