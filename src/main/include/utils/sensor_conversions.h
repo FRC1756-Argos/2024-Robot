@@ -50,8 +50,8 @@ namespace sensor_conversions {
   namespace elevator {
     namespace raise {
       constexpr auto sensorConversionFactor = 1_in / 3_tr;
-      constexpr units::inch_t ToHeight(const units::angle::turn_t sensorunit) {
-        return sensorConversionFactor * sensorunit;
+      constexpr units::inch_t ToHeight(const units::angle::turn_t sensorUnit) {
+        return sensorConversionFactor * sensorUnit;
       }
       constexpr units::angle::turn_t ToSensorUnit(const units::inch_t height) {
         return height / sensorConversionFactor;

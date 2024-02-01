@@ -39,6 +39,5 @@ namespace measure_up {
   namespace elevator {
     constexpr auto minHeight = 21.5_in;
     constexpr auto maxHeight = 42.5_in;
-    constexpr double inchesToRotations = 3.0;
   }  // namespace elevator
 }  // namespace measure_up

@@ -32,7 +32,9 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
 void ElevatorSubsystem::Periodic() {}
 
 void ElevatorSubsystem::ElevatorMove(double speed) {
-  m_primaryMotor.Set(speed);
+  if (GetElevatorLiftManualOverride()) {
+    m_primaryMotor.Set(speed);
+  }
 }
 
 void ElevatorSubsystem::Pivot(double speed) {
@@ -45,12 +47,16 @@ void ElevatorSubsystem::Disable() {
 }
 
 void ElevatorSubsystem::ElevatorMoveToHeight(units::inch_t height) {
-  if (height > measure_up::elevator::maxHeight) {
-    height = measure_up::elevator::maxHeight;
-  } else if (height < measure_up::elevator::minHeight) {
-    height = measure_up::elevator::minHeight;
-  }
+  height = std::clamp<units::inch_t>(height, measure_up::elevator::minHeight, measure_up::elevator::maxHeight);
+  SetElevatorLiftManualOverride(true);
   m_primaryMotor.SetControl(
       ctre::phoenix6::controls::PositionVoltage(sensor_conversions::elevator::raise::ToSensorUnit(height)));
-  m_elevatorManualOverride = false;
+}
+
+void ElevatorSubsystem::SetElevatorLiftManualOverride(bool desiredOverrideState) {
+  m_elevatorManualOverride = desiredOverrideState;
+}
+
+bool ElevatorSubsystem::GetElevatorLiftManualOverride() const {
+  return m_elevatorManualOverride;
 }

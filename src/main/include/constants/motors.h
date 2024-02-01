@@ -142,7 +142,7 @@ namespace motorConfig {
     namespace climber {
       struct primaryClimbing {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
-        constexpr static auto inverted = false;
+        constexpr static auto inverted = true;
       };
       struct secondaryClimbing {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;

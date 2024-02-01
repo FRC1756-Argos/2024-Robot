@@ -23,7 +23,7 @@ ClimberSubsystem::ClimberSubsystem(argos_lib::RobotInstance robotInstance)
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::climber::secondaryClimbing,
                                          motorConfig::practice_bot::climber::secondaryClimbing>(
       m_secondaryMotor, 100_ms, robotInstance);
-  m_secondaryMotor.SetControl(ctre::phoenix6::controls::Follower(m_primaryMotor.GetDeviceID(), false));
+  m_secondaryMotor.SetControl(ctre::phoenix6::controls::Follower(m_primaryMotor.GetDeviceID(), true));
 }
 // This method will be called once per scheduler run
 void ClimberSubsystem::Periodic() {}
