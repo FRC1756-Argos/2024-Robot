@@ -7,6 +7,7 @@
 #include "argos_lib/config/falcon_config.h"
 #include "constants/addresses.h"
 #include "constants/motors.h"
+#include "constants/measure_up.h"
 
 ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
     : m_primaryMotor(GetCANAddr(address::comp_bot::elevator::primaryElevator,
@@ -37,4 +38,9 @@ void ElevatorSubsystem::Pivot(double speed) {
 void ElevatorSubsystem::Disable() {
   m_primaryMotor.Set(0.0);
   m_carriageMotor.Set(0.0);
+}
+
+void ElevatorSubsystem::SetCarriageAngle(units::degree_t carriageAngle) {
+  carriageAngle = std::clamp<units::degree_t>(
+    carriageAngle, measure_up::elevator::minAngle, measure_up::elevator::maxAngle); //Last thing I worked on//
 }
