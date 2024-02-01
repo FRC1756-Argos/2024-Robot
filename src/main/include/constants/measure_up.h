@@ -39,5 +39,5 @@ namespace measure_up {
     constexpr auto minAngle = -270_deg;
     constexpr auto maxAngle = 90_deg;
     constexpr auto intakeAngle = 40_deg;
-  }     // namespace elevator
+  }  // namespace elevator
 }  // namespace measure_up

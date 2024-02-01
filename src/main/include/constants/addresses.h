@@ -48,6 +48,7 @@ namespace address {
       constexpr static argos_lib::CANAddress frontRightEncoder{2, "drive"};
       constexpr static argos_lib::CANAddress backRightEncoder{3, "drive"};
       constexpr static argos_lib::CANAddress backLeftEncoder{4, "drive"};
+      constexpr static argos_lib::CANAddress shooterEncoder{5, "rio"};
     };
 
     struct controllers {

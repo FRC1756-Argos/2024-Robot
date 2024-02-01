@@ -49,13 +49,13 @@ namespace sensor_conversions {
   }    // namespace swerve_drive
   namespace elevator {
     namespace carriage {
-      constexpr auto sensorConversionFactor = (1/9_tr) * (15/72) * 360_deg;
+      constexpr auto sensorConversionFactor = (1 / 9_tr) * (15 / 72) * 360_deg;
       constexpr units::angle::turn_t ToSensorUnit(const units::degree_t degrees) {
         return degrees / sensorConversionFactor;
       }
       constexpr units::degree_t ToAngle(const units::angle::turn_t sensorUnit) {
         return sensorUnit * sensorConversionFactor;
       }
-    }
-  }
+    }  // namespace carriage
+  }    // namespace elevator
 }  // namespace sensor_conversions
