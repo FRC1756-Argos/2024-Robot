@@ -20,7 +20,7 @@ class LimelightTarget {
  private:
   frc::Pose3d m_robotPose;              ///< 3d pose of robot relative to field center
   frc::Pose3d m_robotPoseWPI;           ///< 3d pose of robot relative to WPI reference for active alliance
-  frc::Pose3d m_robotPoseTagSpace;      ///< 3d pose of robot relative to primary april tag (biggest?)
+  frc::Pose3d m_targetPose;             ///< 3d pose of Target relative to camera (Z - Forward, X - right, Y - down)
   bool m_hasTargets;                    ///< True if the camera has a target it can read
   units::degree_t m_pitch;              ///< Pitch of target relative to camera -24.85 to 24.85 degrees
   units::degree_t m_yaw;                ///< Yaw of target relative to camera -31.65 to 31.65 degrees
@@ -29,6 +29,7 @@ class LimelightTarget {
   frc::LinearFilter<units::degree_t> m_txFilter;
   frc::LinearFilter<units::degree_t> m_tyFilter;
   bool m_resetFilterFlag;
+  double m_tid;  ///< Tag ID
 
  public:
   LimelightTarget()
@@ -43,11 +44,12 @@ class LimelightTarget {
   struct tValues {
     frc::Pose3d robotPose;              ///< @copydoc LimelightTarget::m_robotPose
     frc::Pose3d robotPoseWPI;           ///< @copydoc LimelightTarget::m_robotPoseWPI
-    frc::Pose3d robotPoseTagSpace;      ///< @copydoc LimelightTarget::m_robotPoseTagSpace
+    frc::Pose3d tagPose;                ///< @copydoc LimelightTarget::m_targetPose
     bool hasTargets;                    ///< @copydoc LimelightTarget::m_hasTargets
     units::degree_t m_pitch;            ///< @copydoc LimelightTarget::m_pitch
     units::degree_t m_yaw;              ///< @copydoc LimelightTarget::m_yaw
     double m_area;                      ///< @copydoc LimelightTarget::m_area
+    double tagID;                       ///< @copydoc LimelightTarget::m_tid
     units::millisecond_t totalLatency;  ///< @copydoc LimelightTarget::m_totalLatency
   };
 
@@ -103,12 +105,18 @@ class VisionSubsystem : public frc2::SubsystemBase {
   VisionSubsystem(const argos_lib::RobotInstance instance, SwerveDriveSubsystem* pDriveSubsystem);
 
   /**
-   * @brief Get the offset to the center of the target
+   * @brief Get the distance to the tag
    *
-   * @param target Target to aim toward
-   * @return Desired offset.
+   * @return Desired distance in inches.
    */
-  std::optional<units::degree_t> GetOffsetToTarget(LimelightTarget::tValues target);
+  std::optional<units::inch_t> GetDistanceToTag();
+
+  /**
+   * @brief Get the distance to the tag calculated with the Ty (vertical offset)
+   *
+   * @return Desired distance in inches.
+   */
+  std::optional<units::inch_t> GetCalculatedDistanceToTag();
 
   /**
    * @brief Get the robot poses and latencies
@@ -131,7 +139,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
    */
   std::optional<units::degree_t> GetHorizontalOffsetToTarget();
 
-  void SetReflectiveVisionMode(bool mode);
+  void SetPipeline(uint16_t tag);
 
   void RequestFilterReset();
 
