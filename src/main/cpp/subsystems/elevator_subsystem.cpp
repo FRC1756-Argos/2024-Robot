@@ -33,7 +33,9 @@ void ElevatorSubsystem::ElevatorMove(double speed) {
 }
 
 void ElevatorSubsystem::Pivot(double speed) {
-  m_carriageMotor.Set(speed);
+  if (m_carriageMotorManualOverride) {
+    m_carriageMotor.Set(speed);
+  }
 }
 
 void ElevatorSubsystem::Disable() {

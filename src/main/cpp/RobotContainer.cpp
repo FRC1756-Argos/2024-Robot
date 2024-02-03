@@ -138,6 +138,8 @@ void RobotContainer::ConfigureBindings() {
   auto overrideCarriageTrigger = (frc2::Trigger([this]() {
     return std::abs(m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kRightHand)) > 0.2;
   }));
+  auto carriageTestTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
+  auto carriageTestTrigger2 = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kB);
 
   // Swap controllers config
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
@@ -176,9 +178,9 @@ void RobotContainer::ConfigureBindings() {
   m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
                                             [this] {
                                               double elevatorSpeed = m_controllers.OperatorController().GetY(
-                                                  argos_lib::XboxController::JoystickHand::kRightHand);
-                                              double carriageSpeed = m_controllers.OperatorController().GetY(
                                                   argos_lib::XboxController::JoystickHand::kLeftHand);
+                                              double carriageSpeed = m_controllers.OperatorController().GetY(
+                                                  argos_lib::XboxController::JoystickHand::kRightHand);
                                               m_elevatorSubsystem.ElevatorMove(elevatorSpeed);
                                               m_elevatorSubsystem.Pivot(carriageSpeed);
                                             },
@@ -186,6 +188,8 @@ void RobotContainer::ConfigureBindings() {
                                             .ToPtr());
 
     overrideCarriageTrigger.OnTrue(frc2::InstantCommand([this]() {m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
+    carriageTestTrigger.OnTrue(frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(0_deg); }, {&m_elevatorSubsystem}).ToPtr());
+    carriageTestTrigger2.OnTrue(frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(30_deg);}, {&m_elevatorSubsystem}).ToPtr());
 
   // SHOOTER TRIGGER ACTIVATION
   shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());
