@@ -50,8 +50,14 @@ std::optional<units::inch_t> VisionSubsystem::GetDistanceToTag() {
   return GetCameraTargetValues().tagPose.Z();
 }
 
-std::optional<units::inch_t> VisionSubsystem::GetCalculatedDistanceToTag() {
-  return GetCameraTargetValues().tagPose.Z();
+std::optional<units::inch_t> VisionSubsystem::GetCalculatedDistanceToSpeaker() {
+  // @todo: add checks here to make sure we are tracking the right ID based on the alliance color
+  // 4 or 7, else return null
+  // NOTE: pitch angle returned by the camera will be to the center of the speaker opening and not the tag
+  return (measure_up::shooter_targets::speakerOpeningHeight - measure_up::camera_front::cameraHeight) /
+         std::tan(
+             static_cast<units::radian_t>(measure_up::camera_front::cameraMountAngle + GetCameraTargetValues().m_pitch)
+                 .to<double>());
 }
 
 void VisionSubsystem::SetPipeline(uint16_t tag) {

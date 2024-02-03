@@ -116,7 +116,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
    *
    * @return Desired distance in inches.
    */
-  std::optional<units::inch_t> GetCalculatedDistanceToTag();
+  std::optional<units::inch_t> GetCalculatedDistanceToSpeaker();
 
   /**
    * @brief Get the robot poses and latencies

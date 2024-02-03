@@ -27,10 +27,15 @@ namespace measure_up {
     constexpr auto backLeftWOffset = 3.25_in;
     constexpr auto backLeftLOffset = 3.25_in;
   }  // namespace swerve_offsets
+  namespace shooter_targets {
+    constexpr auto speakerOpeningHeight = 77.25_in;  // needs update
+    constexpr auto tarpOpeningHeight = 36.25_in;
+  }  // namespace shooter_targets
   namespace camera_front {
     constexpr auto cameraX = 0_in;  /// @todo real mounting offsets
     constexpr auto cameraZ = 7.25_in;
-    constexpr auto cameraMountAngle = 13.5_deg;
+    constexpr auto cameraMountAngle = 30.5_deg;
+    constexpr auto cameraHeight = 23.5_in;
     constexpr auto vFov = 24.85_deg * 2;
     constexpr auto hFov = 29.8_deg * 2;
   }                         // namespace camera_front
