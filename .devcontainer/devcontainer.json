@@ -26,14 +26,15 @@
   },
   "features": {
     "ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
-    "ghcr.io/devcontainers-contrib/features/pipx-package:1": {
-      "package": "wpiformat",
-      "version": "2022.21"
-    },
-    "ghcr.io/devcontainers-contrib/features/pipx-package:1": {
-      "package": "clang-format",
-      "version": "15.0.7"
-    }
+    // Eventually there should be support for installing more than one package...
+    // "ghcr.io/devcontainers-contrib/features/pipx-package:1": {
+    //   "package": "wpiformat",
+    //   "version": "2022.21"
+    // },
+    // "ghcr.io/devcontainers-contrib/features/pipx-package:1": {
+    //   "package": "clang-format",
+    //   "version": "15.0.7"
+    // }
   },
-  "postCreateCommand": "pre-commit install"
+  "postCreateCommand": "pipx install wpiformat==2022.21 clang-format==15.0.7 ; pre-commit install ; pre-commit install-hooks"
 }
