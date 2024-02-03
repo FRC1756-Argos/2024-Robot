@@ -28,6 +28,7 @@ class LimelightTarget {
   units::millisecond_t m_totalLatency;  ///< Total latency
   frc::LinearFilter<units::degree_t> m_txFilter;
   frc::LinearFilter<units::degree_t> m_tyFilter;
+  frc::LinearFilter<units::meter_t> m_zFilter;
   bool m_resetFilterFlag;
   double m_tid;  ///< Tag ID
 
@@ -35,6 +36,7 @@ class LimelightTarget {
   LimelightTarget()
       : m_txFilter{frc::LinearFilter<units::degree_t>::SinglePoleIIR(0.01, 0.02_s)}
       , m_tyFilter{frc::LinearFilter<units::degree_t>::SinglePoleIIR(0.01, 0.02_s)}
+      , m_zFilter{frc::LinearFilter<units::meter_t>::SinglePoleIIR(0.01, 0.02_s)}
       , m_resetFilterFlag{false} {}
 
   /**

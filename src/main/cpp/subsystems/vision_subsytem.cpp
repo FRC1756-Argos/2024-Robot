@@ -28,7 +28,10 @@ void VisionSubsystem::Periodic() {
 
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag ID", targetValues.tagID);
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera",
-                                   targetValues.tagPose.Z().to<double>());
+                                   GetDistanceToTag().value().to<double>());
+
+    frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
+                                   GetCalculatedDistanceToSpeaker().value().to<double>());
   }
 }
 
@@ -47,14 +50,14 @@ std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
 }
 
 std::optional<units::inch_t> VisionSubsystem::GetDistanceToTag() {
-  return GetCameraTargetValues().tagPose.Z();
+  return static_cast<units::inch_t>(GetCameraTargetValues().tagPose.Z());
 }
 
 std::optional<units::inch_t> VisionSubsystem::GetCalculatedDistanceToSpeaker() {
   // @todo: add checks here to make sure we are tracking the right ID based on the alliance color
   // 4 or 7, else return null
   // NOTE: pitch angle returned by the camera will be to the center of the speaker opening and not the tag
-  return (measure_up::shooter_targets::speakerOpeningHeight - measure_up::camera_front::cameraHeight) /
+  return (measure_up::shooter_targets::speakerTagHeight - measure_up::camera_front::cameraHeight) /
          std::tan(
              static_cast<units::radian_t>(measure_up::camera_front::cameraMountAngle + GetCameraTargetValues().m_pitch)
                  .to<double>());
@@ -63,6 +66,23 @@ std::optional<units::inch_t> VisionSubsystem::GetCalculatedDistanceToSpeaker() {
 void VisionSubsystem::SetPipeline(uint16_t tag) {
   std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
 
+  uint16_t pipeline = 0;
+  switch (tag) {
+    case 4:
+      pipeline = 0;
+      break;
+    case 5:
+      pipeline = 2;
+      break;
+    case 6:
+      pipeline = 3;
+      break;
+    case 7:
+      pipeline = 1;
+      break;
+    default:
+      break;
+  }
   frc::SmartDashboard::PutNumber("(Vision) Setting Pipeline", tag);
 
   table->PutNumber("pipeline", tag);
@@ -110,8 +130,8 @@ LimelightTarget::tValues LimelightTarget::GetTarget(bool filter) {
                                              units::make_unit<units::radian_t>(tagPoseCamSpace.at(4)),
                                              units::make_unit<units::radian_t>(tagPoseCamSpace.at(5))));
 
-  auto tagId = table->GetNumberArray("tid", std::span<const double>({0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}));
-  m_tid = tagId.at(0);
+  auto tagId = table->GetNumber("tid", 0.0);
+  m_tid = tagId;
   m_hasTargets = (table->GetNumber("tv", 0) == 1);
   m_yaw = units::make_unit<units::degree_t>(table->GetNumber("tx", 0.0));
   m_pitch = units::make_unit<units::degree_t>(table->GetNumber("ty", 0.0));
@@ -130,6 +150,7 @@ LimelightTarget::tValues LimelightTarget::GetTarget(bool filter) {
   if (filter && m_hasTargets) {
     m_yaw = m_txFilter.Calculate(m_yaw);
     m_pitch = m_tyFilter.Calculate(m_pitch);
+    m_targetPose.Z() = m_zFilter.Calculate(m_targetPose.Z());
 
     // * debugging
     frc::SmartDashboard::PutNumber("VisionSubsystem/FilteredPitch (deg)", m_pitch.to<double>());
@@ -156,6 +177,7 @@ void LimelightTarget::ResetFilters() {
   m_resetFilterFlag = false;
   m_txFilter.Reset();
   m_tyFilter.Reset();
+  m_zFilter.Reset();
   LimelightTarget::tValues currentValue = GetTarget(false);
   // Hackily rest filter with initial value
   // TODO name the filter values
@@ -163,5 +185,6 @@ void LimelightTarget::ResetFilters() {
   for (size_t i = 0; i < samples; i++) {
     m_txFilter.Calculate(currentValue.m_yaw);
     m_tyFilter.Calculate(currentValue.m_pitch);
+    m_zFilter.Calculate(currentValue.tagPose.Z());
   }
 }
