@@ -126,6 +126,9 @@ void RobotContainer::ConfigureBindings() {
   auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
     return std::abs(m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kLeftHand)) > 0.2;
   }});
+  auto setPosLow = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
+  auto setPosMid = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kB);
+  auto setPosHigh = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kY);
 
   // Swap controllers config
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
@@ -172,6 +175,9 @@ void RobotContainer::ConfigureBindings() {
                                             },
                                             {&m_elevatorSubsystem})
                                             .ToPtr());
+  setPosLow.OnTrue(frc2::InstantCommand([this]() { m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::test1); }, {&m_elevatorSubsystem}).ToPtr());
+  setPosMid.OnTrue(frc2::InstantCommand([this]() { m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::test2); }, {&m_elevatorSubsystem}).ToPtr());
+  setPosHigh.OnTrue(frc2::InstantCommand([this]() { m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::test3); }, {&m_elevatorSubsystem}).ToPtr());
 
   // SHOOTER TRIGGER ACTIVATION
   shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());

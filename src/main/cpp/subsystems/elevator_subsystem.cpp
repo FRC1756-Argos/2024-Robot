@@ -5,6 +5,7 @@
 #include "subsystems/elevator_subsystem.h"
 
 #include <ctre/phoenix6/controls/PositionVoltage.hpp>
+#include <ctre/phoenix6/configs/Configurator.hpp>
 
 #include "argos_lib/config/falcon_config.h"
 #include "constants/addresses.h"
@@ -20,14 +21,22 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
                                  address::practice_bot::elevator::carriageRotation,
                                  robotInstance))
     , m_robotInstance(robotInstance)
-    , m_elevatorManualOverride{false} {
+    , m_elevatorManualOverride{false}{
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::elevator::primaryElevator,
                                          motorConfig::practice_bot::elevator::primaryElevator>(
       m_primaryMotor, 100_ms, robotInstance);
   argos_lib::falcon_config::FalconConfig<motorConfig::practice_bot::elevator::carriageRotation,
                                          motorConfig::comp_bot::elevator::carriageRotation>(
       m_carriageMotor, 100_ms, robotInstance);
-}
+      m_primaryMotor.SetPosition(sensor_conversions::elevator::raise::ToSensorUnit(measure_up::elevator::minHeight));
+      ctre::phoenix6::configs::SoftwareLimitSwitchConfigs elevatorLiftSoftLimits;
+      elevatorLiftSoftLimits.ForwardSoftLimitThreshold = sensor_conversions::elevator::raise::ToSensorUnit(measure_up::elevator::maxHeight).to<double>();
+      elevatorLiftSoftLimits.ReverseSoftLimitThreshold = sensor_conversions::elevator::raise::ToSensorUnit(measure_up::elevator::minHeight).to<double>();
+      elevatorLiftSoftLimits.ForwardSoftLimitEnable = true;
+      elevatorLiftSoftLimits.ReverseSoftLimitEnable = true;
+      m_primaryMotor.GetConfigurator().Apply(elevatorLiftSoftLimits);
+    }
+
 // This method will be called once per scheduler run
 void ElevatorSubsystem::Periodic() {}
 
@@ -48,7 +57,7 @@ void ElevatorSubsystem::Disable() {
 
 void ElevatorSubsystem::ElevatorMoveToHeight(units::inch_t height) {
   height = std::clamp<units::inch_t>(height, measure_up::elevator::minHeight, measure_up::elevator::maxHeight);
-  SetElevatorLiftManualOverride(true);
+  SetElevatorLiftManualOverride(false);
   m_primaryMotor.SetControl(
       ctre::phoenix6::controls::PositionVoltage(sensor_conversions::elevator::raise::ToSensorUnit(height)));
 }

@@ -153,7 +153,7 @@ namespace motorConfig {
       struct primaryElevator {
         constexpr static auto inverted = false;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
-        // constexpr static auto statorCurrentLimit = 0_A;
+        constexpr static auto statorCurrentLimit = 40_A;
         constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor;
         constexpr static auto pid0_kP = controlLoop::comp_bot::elevator::lift::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::elevator::lift::kI;

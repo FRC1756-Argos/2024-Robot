@@ -39,5 +39,8 @@ namespace measure_up {
   namespace elevator {
     constexpr auto minHeight = 21.5_in;
     constexpr auto maxHeight = 42.5_in;
+    constexpr auto test1 = 27.5_in;
+    constexpr auto test2 = 33.5_in;
+    constexpr auto test3 = 37.5_in;
   }  // namespace elevator
 }  // namespace measure_up

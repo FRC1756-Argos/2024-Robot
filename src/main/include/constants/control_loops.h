@@ -47,13 +47,13 @@ namespace controlLoop {
     }     // namespace drive
     namespace elevator {
       struct lift {
-        constexpr static double kP = 0.0;
+        constexpr static double kP = 2.1;
         constexpr static double kI = 0.0;
-        constexpr static double kD = 0.0;
+        constexpr static double kD = 0.04;
         constexpr static double kS = 0.0;
         constexpr static double kV = 0.0;
         constexpr static double kA = 0.0;
-        constexpr static double kG = 0.0;
+        constexpr static double kG = 0.4;
         constexpr static int gravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
       };
     }  // namespace elevator

@@ -53,6 +53,7 @@ namespace sensor_conversions {
       constexpr units::inch_t ToHeight(const units::angle::turn_t sensorUnit) {
         return sensorConversionFactor * sensorUnit;
       }
+
       constexpr units::angle::turn_t ToSensorUnit(const units::inch_t height) {
         return height / sensorConversionFactor;
       }
