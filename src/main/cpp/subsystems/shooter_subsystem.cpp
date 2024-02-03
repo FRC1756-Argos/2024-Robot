@@ -27,7 +27,7 @@ ShooterSubsystem::ShooterSubsystem(const argos_lib::RobotInstance robotInstance)
   argos_lib::talonsrx_config::TalonSRXConfig<motorConfig::comp_bot::shooter::feedMotor,
                                              motorConfig::practice_bot::shooter::feedMotor>(
       m_feedMotor, 100_ms, robotInstance);
-  m_secondaryMotor.SetControl(ctre::phoenix6::controls::Follower(m_primaryMotor.GetDeviceID(), false));
+  m_secondaryMotor.SetControl(ctre::phoenix6::controls::Follower(m_primaryMotor.GetDeviceID(), true));
 }
 
 // This method will be called once per scheduler run

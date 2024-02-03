@@ -23,4 +23,10 @@ namespace controllerMap {
                                                    InterpMapPoint{1.0, 1.0}};
   [[maybe_unused]] constexpr std::array driveRotSpeed{
       InterpMapPoint{-1.0, -1.0}, InterpMapPoint{-0.15, 0.0}, InterpMapPoint{0.15, 0.0}, InterpMapPoint{1.0, 1.0}};
+  [[maybe_unused]] constexpr std::array elevatorSpeed{
+      InterpMapPoint{-1.0, -0.2}, InterpMapPoint{-0.15, 0.0}, InterpMapPoint{0.15, 0.0}, InterpMapPoint{1.0, 0.2}};
+  [[maybe_unused]] constexpr std::array elevatorRotateSpeed{
+      InterpMapPoint{-1.0, -0.2}, InterpMapPoint{-0.15, 0.0}, InterpMapPoint{0.15, 0.0}, InterpMapPoint{1.0, 0.2}};
+  [[maybe_unused]] constexpr std::array climberSpeed{
+      InterpMapPoint{-1.0, -0.2}, InterpMapPoint{-0.15, 0.0}, InterpMapPoint{0.15, 0.0}, InterpMapPoint{1.0, 0.2}};
 }  // namespace controllerMap

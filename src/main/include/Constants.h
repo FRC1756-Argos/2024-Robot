@@ -13,6 +13,7 @@
 
 #include "constants/addresses.h"
 #include "constants/control_loops.h"
+#include "constants/encoders.h"
 #include "constants/interpolation_maps.h"
 #include "constants/measure_up.h"
 #include "constants/motors.h"
@@ -38,9 +39,6 @@ namespace indexes {
 
 namespace paths {
   const std::string swerveHomesPath = "homes/swerveHomes";
-  const std::string wristHomesPath = "homes/wristHomes";
-  const std::string shoulderHome = "homes/shoulderHome";
-  const std::string extensionHomePath = "homes/extensionHome";
 }  // namespace paths
 
 namespace networkTables {
@@ -76,14 +74,3 @@ namespace camera {
 
 /// @brief Designate the threshold approach direction
 enum class ApproachDirection { Increasing, Decreasing };
-
-/// @brief This is a bad idea...
-namespace warning {
-  /// @brief Are you sure you want to change this?!?!
-  namespace nuclear {
-    /// @brief Turn back now!
-    namespace option {
-      constexpr bool wristEnabled = true;  ///< @warning Only set to false if wrist is broken beyond repair :(
-    }                                      // namespace option
-  }                                        // namespace nuclear
-}  // namespace warning
