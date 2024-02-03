@@ -45,7 +45,19 @@ namespace controlLoop {
         constexpr static auto angularAcceleration = units::degrees_per_second_squared_t{360};
       };  // namespace rotational_follower
     }     // namespace drive
-  }       // namespace comp_bot
+    namespace elevator {
+      struct carriage {
+        constexpr static double kP = 75;
+        constexpr static double kI = 0.0;
+        constexpr static double kD = 0.0;
+        constexpr static double kS = 0.0;
+        constexpr static double kV = 0.0;
+        constexpr static double kA = 0.0;
+        constexpr static double kG = -0.45;
+        constexpr static int gravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
+      };
+    }  // namespace elevator
+  }    // namespace comp_bot
   namespace practice_bot {
     namespace drive {
       using rotate = controlLoop::comp_bot::drive::rotate;
@@ -53,5 +65,8 @@ namespace controlLoop {
       using linear_follower = controlLoop::comp_bot::drive::linear_follower;
       using rotational_follower = controlLoop::comp_bot::drive::rotational_follower;
     }  // namespace drive
+    namespace elevator {
+      using carriage = controlLoop::comp_bot::elevator::carriage;
+    }  // namespace elevator
   }    // namespace practice_bot
 }  // namespace controlLoop

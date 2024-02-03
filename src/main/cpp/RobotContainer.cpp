@@ -122,6 +122,13 @@ void RobotContainer::ConfigureBindings() {
   auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
 
+  // ELEVATOR TRIGGERS
+  auto overrideCarriageTrigger = (frc2::Trigger([this]() {
+    return std::abs(m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kRightHand)) > 0.2;
+  }));
+  auto carriageTestTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
+  auto carriageTestTrigger2 = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kB);
+
   // Swap controllers config
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kStart, {1500_ms, 0_ms});
@@ -156,15 +163,22 @@ void RobotContainer::ConfigureBindings() {
   // ELEVATOR TRIGGER ACTIVITATION
   m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
                                             [this] {
-                                              double elevatorSpeed = -m_controllers.OperatorController().GetY(
+                                              double elevatorSpeed = m_controllers.OperatorController().GetY(
                                                   argos_lib::XboxController::JoystickHand::kLeftHand);
-                                              double carriageSpeed = -m_controllers.OperatorController().GetY(
+                                              double carriageSpeed = m_controllers.OperatorController().GetY(
                                                   argos_lib::XboxController::JoystickHand::kRightHand);
                                               m_elevatorSubsystem.ElevatorMove(m_elevatorSpeedMap(elevatorSpeed));
                                               m_elevatorSubsystem.Pivot(m_elevatorRotateSpeedMap(carriageSpeed));
                                             },
                                             {&m_elevatorSubsystem})
                                             .ToPtr());
+
+  overrideCarriageTrigger.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
+  carriageTestTrigger.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(0_deg); }, {&m_elevatorSubsystem}).ToPtr());
+  carriageTestTrigger2.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(30_deg); }, {&m_elevatorSubsystem}).ToPtr());
 
   // SHOOTER TRIGGER ACTIVATION
   shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());

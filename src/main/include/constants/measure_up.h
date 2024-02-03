@@ -35,4 +35,9 @@ namespace measure_up {
     constexpr auto hFov = 29.8_deg * 2;
   }                         // namespace camera_front
   namespace camera_back {}  // namespace camera_back
+  namespace elevator {
+    constexpr auto minAngle = -270_deg;
+    constexpr auto maxAngle = 90_deg;
+    constexpr auto intakeAngle = 40_deg;
+  }  // namespace elevator
 }  // namespace measure_up
