@@ -24,16 +24,12 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   void ShooterGoToSpeed(units::turns_per_second_t speed);
 
-  void SetShooterManualOverride(bool desiredOverrideState);
-
-  [[nodiscard]] bool GetShooterManualOverride() const;
 
  private:
   ctre::phoenix6::hardware::TalonFX m_primaryMotor;
   ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
   ctre::phoenix::motorcontrol::can::TalonSRX m_feedMotor;
   argos_lib::RobotInstance m_robotInstance;
-  bool m_shooterManualOverride;
   ctre::phoenix6::controls::VelocityVoltage m_velocityControl;
 };
 // Components (e.g. motor controllers and sensors) should generally be

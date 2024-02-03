@@ -59,10 +59,10 @@ namespace controlLoop {
     }  // namespace elevator
     namespace shooter {
       struct shoot{
-        constexpr static double kP = 0.0;
+        constexpr static double kP = 0.5;
         constexpr static double kI = 0.0;
         constexpr static double kD = 0.0;
-        constexpr static double kV = 0.0;
+        constexpr static double kV = 0.12;
       };
     }
   }    // namespace comp_bot
