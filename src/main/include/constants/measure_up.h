@@ -8,6 +8,7 @@
 #include <frc/geometry/Translation2d.h>
 #include <units/angle.h>
 #include <units/length.h>
+#include <units/angular_velocity.h>
 
 #include <array>
 
@@ -42,7 +43,7 @@ namespace measure_up {
   }  // namespace elevator
 
   namespace shooter {
-    constexpr auto minSpeed = 0_tps; //units::revolutions_per_minute_t(0); //not actual value
+    constexpr auto minSpeed = 0_tps; //units::turns_per_second_t(0); //not actual value
     constexpr auto maxSpeed = 100_tps; //not actual value
   }
 }  // namespace measure_up
