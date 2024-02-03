@@ -175,9 +175,18 @@ void RobotContainer::ConfigureBindings() {
                                             },
                                             {&m_elevatorSubsystem})
                                             .ToPtr());
-  setPosLow.OnTrue(frc2::InstantCommand([this]() { m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::test1); }, {&m_elevatorSubsystem}).ToPtr());
-  setPosMid.OnTrue(frc2::InstantCommand([this]() { m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::test2); }, {&m_elevatorSubsystem}).ToPtr());
-  setPosHigh.OnTrue(frc2::InstantCommand([this]() { m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::test3); }, {&m_elevatorSubsystem}).ToPtr());
+  setPosLow.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::test1); },
+                           {&m_elevatorSubsystem})
+          .ToPtr());
+  setPosMid.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::test2); },
+                           {&m_elevatorSubsystem})
+          .ToPtr());
+  setPosHigh.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::test3); },
+                           {&m_elevatorSubsystem})
+          .ToPtr());
 
   // SHOOTER TRIGGER ACTIVATION
   shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());
