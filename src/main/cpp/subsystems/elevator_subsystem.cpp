@@ -8,6 +8,7 @@
 #include "constants/addresses.h"
 #include "constants/measure_up.h"
 #include "constants/motors.h"
+#include "utils/sensor_conversions.h"
 
 ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
     : m_primaryMotor(GetCANAddr(address::comp_bot::elevator::primaryElevator,
@@ -41,6 +42,16 @@ void ElevatorSubsystem::Disable() {
 }
 
 void ElevatorSubsystem::SetCarriageAngle(units::degree_t carriageAngle) {
+  SetCarriageMotorManualOverride(false);
   carriageAngle = std::clamp<units::degree_t>(
-      carriageAngle, measure_up::elevator::minAngle, measure_up::elevator::maxAngle);  // Last thing I worked on //
+      carriageAngle, measure_up::elevator::minAngle, measure_up::elevator::maxAngle);
+  m_carriageMotor.SetPosition(sensor_conversions::elevator::carriage::ToSensorUnit(carriageAngle));
+}
+
+void ElevatorSubsystem::SetCarriageMotorManualOverride(bool overrideState) {
+  m_carriageMotorManualOverride = overrideState;
+}
+
+bool ElevatorSubsystem::IsCarriageMotorManualOverride() {
+  return m_carriageMotorManualOverride;
 }

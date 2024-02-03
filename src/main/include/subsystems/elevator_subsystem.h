@@ -27,6 +27,10 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
 
   void SetCarriageAngle(units::degree_t carriageAngle);
 
+  bool IsCarriageMotorManualOverride();
+
+  void SetCarriageMotorManualOverride(bool overrideState);
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -34,4 +38,6 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
   // ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
   ctre::phoenix6::hardware::TalonFX m_carriageMotor;
   argos_lib::RobotInstance m_robotInstance;
+
+  bool m_carriageMotorManualOverride;
 };
