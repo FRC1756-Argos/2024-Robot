@@ -45,8 +45,8 @@ void ElevatorSubsystem::Disable() {
 
 void ElevatorSubsystem::SetCarriageAngle(units::degree_t carriageAngle) {
   SetCarriageMotorManualOverride(false);
-  carriageAngle = std::clamp<units::degree_t>(
-      carriageAngle, measure_up::elevator::minAngle, measure_up::elevator::maxAngle);
+  carriageAngle =
+      std::clamp<units::degree_t>(carriageAngle, measure_up::elevator::minAngle, measure_up::elevator::maxAngle);
   m_carriageMotor.SetPosition(sensor_conversions::elevator::carriage::ToSensorUnit(carriageAngle));
 }
 
