@@ -187,9 +187,12 @@ void RobotContainer::ConfigureBindings() {
                                             {&m_elevatorSubsystem})
                                             .ToPtr());
 
-    overrideCarriageTrigger.OnTrue(frc2::InstantCommand([this]() {m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
-    carriageTestTrigger.OnTrue(frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(0_deg); }, {&m_elevatorSubsystem}).ToPtr());
-    carriageTestTrigger2.OnTrue(frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(30_deg);}, {&m_elevatorSubsystem}).ToPtr());
+  overrideCarriageTrigger.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
+  carriageTestTrigger.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(0_deg); }, {&m_elevatorSubsystem}).ToPtr());
+  carriageTestTrigger2.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(30_deg); }, {&m_elevatorSubsystem}).ToPtr());
 
   // SHOOTER TRIGGER ACTIVATION
   shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());
