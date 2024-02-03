@@ -48,6 +48,16 @@ namespace sensor_conversions {
     }  // namespace drive
   }    // namespace swerve_drive
   namespace elevator {
+    namespace lift {
+      constexpr auto sensorConversionFactor = 1_in / 3_tr;
+      constexpr units::inch_t ToHeight(const units::angle::turn_t sensorUnit) {
+        return sensorConversionFactor * sensorUnit;
+      }
+
+      constexpr units::angle::turn_t ToSensorUnit(const units::inch_t height) {
+        return height / sensorConversionFactor;
+      }
+    }  // namespace lift
     namespace carriage {
       constexpr auto sensorConversionFactor = (1.0 / 9.0) * (15.0 / 72.0);
       constexpr units::angle::turn_t ToSensorUnit(const units::degree_t degrees) {

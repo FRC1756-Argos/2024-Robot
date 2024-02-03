@@ -46,6 +46,16 @@ namespace controlLoop {
       };  // namespace rotational_follower
     }     // namespace drive
     namespace elevator {
+      struct lift {
+        constexpr static double kP = 2.1;
+        constexpr static double kI = 0.0;
+        constexpr static double kD = 0.04;
+        constexpr static double kS = 0.0;
+        constexpr static double kV = 0.0;
+        constexpr static double kA = 0.0;
+        constexpr static double kG = 0.4;
+        constexpr static int gravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
+      };
       struct carriage {
         constexpr static double kP = 75;
         constexpr static double kI = 0.0;
@@ -66,6 +76,7 @@ namespace controlLoop {
       using rotational_follower = controlLoop::comp_bot::drive::rotational_follower;
     }  // namespace drive
     namespace elevator {
+      using lift = controlLoop::comp_bot::elevator::lift;
       using carriage = controlLoop::comp_bot::elevator::carriage;
     }  // namespace elevator
   }    // namespace practice_bot

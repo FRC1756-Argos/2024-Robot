@@ -142,7 +142,7 @@ namespace motorConfig {
     namespace climber {
       struct primaryClimbing {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
-        constexpr static auto inverted = false;
+        constexpr static auto inverted = true;
       };
       struct secondaryClimbing {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
@@ -153,6 +153,16 @@ namespace motorConfig {
       struct primaryElevator {
         constexpr static auto inverted = false;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+        constexpr static auto statorCurrentLimit = 40_A;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor;
+        constexpr static auto pid0_kP = controlLoop::comp_bot::elevator::lift::kP;
+        constexpr static auto pid0_kI = controlLoop::comp_bot::elevator::lift::kI;
+        constexpr static auto pid0_kD = controlLoop::comp_bot::elevator::lift::kD;
+        constexpr static auto pid0_kS = controlLoop::comp_bot::elevator::lift::kS;
+        constexpr static auto pid0_kV = controlLoop::comp_bot::elevator::lift::kV;
+        constexpr static auto pid0_kA = controlLoop::comp_bot::elevator::lift::kA;
+        constexpr static auto pid0_kG = controlLoop::comp_bot::elevator::lift::kG;
+        constexpr static auto pid0_gravityType = controlLoop::comp_bot::elevator::lift::gravityType;
       };
       struct secondaryElevator {
         constexpr static auto inverted = false;

@@ -123,11 +123,13 @@ void RobotContainer::ConfigureBindings() {
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
 
   // ELEVATOR TRIGGERS
+  auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
+    return std::abs(m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kLeftHand)) > 0.2;
+  }});
+
   auto overrideCarriageTrigger = (frc2::Trigger([this]() {
     return std::abs(m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kRightHand)) > 0.2;
   }));
-  auto carriageTestTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
-  auto carriageTestTrigger2 = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kB);
 
   // Swap controllers config
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
@@ -161,6 +163,8 @@ void RobotContainer::ConfigureBindings() {
       .OnFalse(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.0); }, {&m_climberSubsystem}).ToPtr());
 
   // ELEVATOR TRIGGER ACTIVITATION
+  elevatorLiftManualInput.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetElevatorLiftManualOverride(true); }, {}).ToPtr());
   m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
                                             [this] {
                                               double elevatorSpeed = m_controllers.OperatorController().GetY(
@@ -175,10 +179,6 @@ void RobotContainer::ConfigureBindings() {
 
   overrideCarriageTrigger.OnTrue(
       frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
-  carriageTestTrigger.OnTrue(
-      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(0_deg); }, {&m_elevatorSubsystem}).ToPtr());
-  carriageTestTrigger2.OnTrue(
-      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(30_deg); }, {&m_elevatorSubsystem}).ToPtr());
 
   // SHOOTER TRIGGER ACTIVATION
   shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());
