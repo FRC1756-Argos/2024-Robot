@@ -90,6 +90,7 @@
     "ctre",
     "holonomic",
     "odometry",
+    "sensorunit",
     "talonsrx",
     "teleop"
   ],

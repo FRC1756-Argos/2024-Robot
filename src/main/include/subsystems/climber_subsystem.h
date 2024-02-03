@@ -9,6 +9,8 @@
 
 #include <ctre/phoenix6/TalonFX.hpp>
 
+#include <units/length.h>
+
 class ClimberSubsystem : public frc2::SubsystemBase {
  public:
   explicit ClimberSubsystem(argos_lib::RobotInstance robotInstance);
@@ -20,6 +22,10 @@ class ClimberSubsystem : public frc2::SubsystemBase {
 
   void ClimberMove(double speed);
 
+  void SetHeight(units::inch_t height);
+
+  void SetManualOverride(bool state);
+
   void Disable();
 
  private:
@@ -28,4 +34,5 @@ class ClimberSubsystem : public frc2::SubsystemBase {
   ctre::phoenix6::hardware::TalonFX m_primaryMotor;
   ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
   argos_lib::RobotInstance m_robotInstance;
+  bool m_manualOverride;
 };
