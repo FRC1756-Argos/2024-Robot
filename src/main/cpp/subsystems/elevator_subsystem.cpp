@@ -4,9 +4,13 @@
 
 #include "subsystems/elevator_subsystem.h"
 
+#include <ctre/phoenix6/controls/PositionVoltage.hpp>
+
 #include "argos_lib/config/falcon_config.h"
 #include "constants/addresses.h"
+#include "constants/measure_up.h"
 #include "constants/motors.h"
+#include "utils/sensor_conversions.h"
 
 ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
     : m_primaryMotor(GetCANAddr(address::comp_bot::elevator::primaryElevator,
@@ -15,7 +19,8 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
     , m_carriageMotor(GetCANAddr(address::comp_bot::elevator::carriageRotation,
                                  address::practice_bot::elevator::carriageRotation,
                                  robotInstance))
-    , m_robotInstance(robotInstance) {
+    , m_robotInstance(robotInstance)
+    , m_elevatorManualOverride{false} {
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::elevator::primaryElevator,
                                          motorConfig::practice_bot::elevator::primaryElevator>(
       m_primaryMotor, 100_ms, robotInstance);
@@ -27,7 +32,9 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
 void ElevatorSubsystem::Periodic() {}
 
 void ElevatorSubsystem::ElevatorMove(double speed) {
-  m_primaryMotor.Set(speed);
+  if (GetElevatorLiftManualOverride()) {
+    m_primaryMotor.Set(speed);
+  }
 }
 
 void ElevatorSubsystem::Pivot(double speed) {
@@ -37,4 +44,19 @@ void ElevatorSubsystem::Pivot(double speed) {
 void ElevatorSubsystem::Disable() {
   m_primaryMotor.Set(0.0);
   m_carriageMotor.Set(0.0);
+}
+
+void ElevatorSubsystem::ElevatorMoveToHeight(units::inch_t height) {
+  height = std::clamp<units::inch_t>(height, measure_up::elevator::minHeight, measure_up::elevator::maxHeight);
+  SetElevatorLiftManualOverride(true);
+  m_primaryMotor.SetControl(
+      ctre::phoenix6::controls::PositionVoltage(sensor_conversions::elevator::raise::ToSensorUnit(height)));
+}
+
+void ElevatorSubsystem::SetElevatorLiftManualOverride(bool desiredOverrideState) {
+  m_elevatorManualOverride = desiredOverrideState;
+}
+
+bool ElevatorSubsystem::GetElevatorLiftManualOverride() const {
+  return m_elevatorManualOverride;
 }

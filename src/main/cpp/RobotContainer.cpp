@@ -122,6 +122,11 @@ void RobotContainer::ConfigureBindings() {
   auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
 
+  // ELEVATOR TRIGGERS
+  auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
+    return std::abs(m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kLeftHand)) > 0.2;
+  }});
+
   // Swap controllers config
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kStart, {1500_ms, 0_ms});
@@ -154,6 +159,8 @@ void RobotContainer::ConfigureBindings() {
       .OnFalse(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.0); }, {&m_climberSubsystem}).ToPtr());
 
   // ELEVATOR TRIGGER ACTIVITATION
+  elevatorLiftManualInput.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetElevatorLiftManualOverride(true); }, {}).ToPtr());
   m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
                                             [this] {
                                               double elevatorSpeed = -m_controllers.OperatorController().GetY(

@@ -6,6 +6,7 @@
 
 #include <argos_lib/config/config_types.h>
 #include <frc2/command/SubsystemBase.h>
+#include <units/length.h>
 
 #include <ctre/phoenix6/TalonFX.hpp>
 
@@ -24,6 +25,12 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
 
   void Disable();
 
+  void ElevatorMoveToHeight(units::inch_t height);
+
+  void SetElevatorLiftManualOverride(bool desiredOverrideState);
+
+  [[nodiscard]] bool GetElevatorLiftManualOverride() const;
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -31,4 +38,5 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
   // ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
   ctre::phoenix6::hardware::TalonFX m_carriageMotor;
   argos_lib::RobotInstance m_robotInstance;
+  bool m_elevatorManualOverride;
 };
