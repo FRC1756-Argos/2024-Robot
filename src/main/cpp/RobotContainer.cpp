@@ -185,7 +185,8 @@ void RobotContainer::ConfigureBindings() {
                                             {&m_elevatorSubsystem})
                                             .ToPtr());
 
-    overrideCarriageTrigger.OnTrue(frc2::InstantCommand([this]() {m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
+  overrideCarriageTrigger.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
 
   // SHOOTER TRIGGER ACTIVATION
   shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());
