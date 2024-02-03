@@ -48,7 +48,7 @@ void ElevatorSubsystem::Disable() {
 
 void ElevatorSubsystem::ElevatorMoveToHeight(units::inch_t height) {
   height = std::clamp<units::inch_t>(height, measure_up::elevator::minHeight, measure_up::elevator::maxHeight);
-  SetElevatorLiftManualOverride(true);
+  SetElevatorLiftManualOverride(false);
   m_primaryMotor.SetControl(
       ctre::phoenix6::controls::PositionVoltage(sensor_conversions::elevator::raise::ToSensorUnit(height)));
 }

@@ -40,4 +40,9 @@ namespace measure_up {
     constexpr auto minHeight = 21.5_in;
     constexpr auto maxHeight = 42.5_in;
   }  // namespace elevator
+
+  namespace shooter {
+    constexpr auto minSpeed = 0_tps; //units::revolutions_per_minute_t(0); //not actual value
+    constexpr auto maxSpeed = 100_tps; //not actual value
+  }
 }  // namespace measure_up

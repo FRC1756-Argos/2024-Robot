@@ -7,6 +7,7 @@
 #include <argos_lib/config/falcon_config.h>
 #include <argos_lib/config/talonsrx_config.h>
 
+#include "constants/measure_up.h"
 #include "constants/addresses.h"
 #include "constants/motors.h"
 
@@ -17,7 +18,9 @@ ShooterSubsystem::ShooterSubsystem(const argos_lib::RobotInstance robotInstance)
           address::comp_bot::shooter::secondaryMotor, address::practice_bot::shooter::secondaryMotor, robotInstance))
     , m_feedMotor(
           GetCANAddr(address::comp_bot::shooter::feedMotor, address::practice_bot::shooter::feedMotor, robotInstance))
-    , m_robotInstance(robotInstance) {
+    , m_robotInstance(robotInstance)
+    , m_shooterManualOverride(false)
+    , m_velocityControl{0_tps} {
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::shooter::primaryMotor,
                                          motorConfig::practice_bot::shooter::primaryMotor>(
       m_primaryMotor, 100_ms, robotInstance);
@@ -34,11 +37,27 @@ ShooterSubsystem::ShooterSubsystem(const argos_lib::RobotInstance robotInstance)
 void ShooterSubsystem::Periodic() {}
 
 void ShooterSubsystem::Shoot(double speed) {
-  m_primaryMotor.Set(speed);
+  if (GetShooterManualOverride()) {
+    m_primaryMotor.Set(speed);
+  }
+}
+
+bool ShooterSubsystem::GetShooterManualOverride() const {
+  return m_shooterManualOverride;
+}
+
+void ShooterSubsystem::ShooterGoToSpeed(units::turns_per_second_t speed){
+  speed = std::clamp<units::turns_per_second_t>(speed, measure_up::shooter::minSpeed, measure_up::shooter::maxSpeed);
+  SetShooterManualOverride(false);
+  m_primaryMotor.SetControl(m_velocityControl.WithVelocity(speed));
 }
 
 void ShooterSubsystem::Feed(double speed) {
   m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+}
+
+void ShooterSubsystem::SetShooterManualOverride(bool desiredOverrideState) {
+  m_shooterManualOverride = desiredOverrideState;
 }
 
 void ShooterSubsystem::Disable() {

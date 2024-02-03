@@ -57,6 +57,14 @@ namespace controlLoop {
         constexpr static int gravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
       };
     }  // namespace elevator
+    namespace shooter {
+      struct shoot{
+        constexpr static double kP = 0.0;
+        constexpr static double kI = 0.0;
+        constexpr static double kD = 0.0;
+        constexpr static double kV = 0.0;
+      };
+    }
   }    // namespace comp_bot
   namespace practice_bot {
     namespace drive {
@@ -68,5 +76,8 @@ namespace controlLoop {
     namespace elevator {
       using lift = controlLoop::comp_bot::elevator::lift;
     }  // namespace elevator
+    namespace shooter {
+      using shoot = controlLoop::comp_bot::shooter::shoot;
+    } // namespace shooter
   }    // namespace practice_bot
 }  // namespace controlLoop
