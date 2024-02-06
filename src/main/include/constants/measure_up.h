@@ -7,6 +7,7 @@
 #include <argos_lib/general/angle_utils.h>
 #include <frc/geometry/Translation2d.h>
 #include <units/angle.h>
+#include <units/angular_velocity.h>
 #include <units/length.h>
 
 #include <array>
@@ -52,4 +53,9 @@ namespace measure_up {
       constexpr auto intakeAngle = 40_deg;
     }  // namespace carriage
   }    // namespace elevator
+
+  namespace shooter {
+    constexpr auto minSpeed = 0_tps;
+    constexpr auto maxSpeed = 100_tps;
+  }  // namespace shooter
 }  // namespace measure_up
