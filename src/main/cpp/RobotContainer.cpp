@@ -22,6 +22,7 @@
 #include <frc2/command/WaitUntilCommand.h>
 #include <frc2/command/button/Trigger.h>
 #include <units/length.h>
+#include <units/rotational_velocity.h>
 
 // Include GamePiece enum
 #include <constants/field_points.h>
@@ -98,6 +99,10 @@ RobotContainer::RobotContainer()
 }
 
 void RobotContainer::ConfigureBindings() {
+  frc::SmartDashboard::GetNumber("elevator/Height (in)", 5.0);
+  frc::SmartDashboard::GetNumber("elevator/Angle (deg)", 0.0);
+  frc::SmartDashboard::GetNumber("shooter/Speed (rpm)", 3000);
+
   /* ———————————————————————— CONFIGURE DEBOUNCING ——————————————————————— */
 
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kY, {1500_ms, 0_ms});
@@ -121,6 +126,8 @@ void RobotContainer::ConfigureBindings() {
   auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
   auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
+
+  auto closedLoopSet = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
 
   // ELEVATOR TRIGGERS
   auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
@@ -191,6 +198,10 @@ void RobotContainer::ConfigureBindings() {
   // SWAP CONTROLLERS TRIGGER ACTIVATION
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
       .WhileTrue(argos_lib::SwapControllersCommand(&m_controllers).ToPtr());
+
+  closedLoopSet.OnTrue(frc2::InstantCommand([this]() {m_ShooterSubSystem.Shoot(units::rotations_per_minute_t(frc::SmartDashboard::GetNumber("shooter/Speed (rpm)", 3000)));
+                                                      m_elevatorSubsystem.ElevatorMoveToHeight(units::inch_t(frc::SmartDashboard::GetNumber("elevator/Height (in)", 5.0)));
+                                                      m_elevatorSubsystem.SetCarriageAngle(units::degree_t(frc::SmartDashboard::GetNumber("elevator/Angle (deg)", 0.0)))}, {&m_ShooterSubSystem, &m_elevatorSubsystem}).ToPtr());
 }
 
 void RobotContainer::Disable() {
