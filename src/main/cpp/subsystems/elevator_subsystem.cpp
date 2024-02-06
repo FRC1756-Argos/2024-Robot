@@ -20,14 +20,36 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
                                  address::practice_bot::elevator::carriageRotation,
                                  robotInstance))
     , m_robotInstance(robotInstance)
-    , m_elevatorManualOverride{false} {
+    , m_elevatorManualOverride{false}
+    , m_carriageMotorManualOverride{false} {
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::elevator::primaryElevator,
                                          motorConfig::practice_bot::elevator::primaryElevator>(
       m_primaryMotor, 100_ms, robotInstance);
   argos_lib::falcon_config::FalconConfig<motorConfig::practice_bot::elevator::carriageRotation,
                                          motorConfig::comp_bot::elevator::carriageRotation>(
       m_carriageMotor, 100_ms, robotInstance);
+
+  /// @todo Actually home elevator height instead of assuming elevator starts at bottom
+  m_primaryMotor.SetPosition(sensor_conversions::elevator::lift::ToSensorUnit(measure_up::elevator::lift::minHeight));
+  ctre::phoenix6::configs::SoftwareLimitSwitchConfigs elevatorLiftSoftLimits;
+  elevatorLiftSoftLimits.ForwardSoftLimitThreshold =
+      sensor_conversions::elevator::lift::ToSensorUnit(measure_up::elevator::lift::maxHeight).to<double>();
+  elevatorLiftSoftLimits.ReverseSoftLimitThreshold =
+      sensor_conversions::elevator::lift::ToSensorUnit(measure_up::elevator::lift::minHeight).to<double>();
+  elevatorLiftSoftLimits.ForwardSoftLimitEnable = true;
+  elevatorLiftSoftLimits.ReverseSoftLimitEnable = true;
+  // m_primaryMotor.GetConfigurator().Apply(elevatorLiftSoftLimits);
+
+  ctre::phoenix6::configs::SoftwareLimitSwitchConfigs carriageRotationSoftLimits;
+  carriageRotationSoftLimits.ForwardSoftLimitEnable = true;
+  carriageRotationSoftLimits.ReverseSoftLimitEnable = true;
+  carriageRotationSoftLimits.ForwardSoftLimitThreshold =
+      units::turn_t{measure_up::elevator::carriage::maxAngle}.to<double>();
+  carriageRotationSoftLimits.ReverseSoftLimitThreshold =
+      units::turn_t{measure_up::elevator::carriage::minAngle}.to<double>();
+  //   m_carriageMotor.GetConfigurator().Apply(carriageRotationSoftLimits);
 }
+
 // This method will be called once per scheduler run
 void ElevatorSubsystem::Periodic() {}
 
@@ -38,7 +60,9 @@ void ElevatorSubsystem::ElevatorMove(double speed) {
 }
 
 void ElevatorSubsystem::Pivot(double speed) {
-  m_carriageMotor.Set(speed);
+  if (m_carriageMotorManualOverride) {
+    m_carriageMotor.Set(speed);
+  }
 }
 
 void ElevatorSubsystem::Disable() {
@@ -47,10 +71,11 @@ void ElevatorSubsystem::Disable() {
 }
 
 void ElevatorSubsystem::ElevatorMoveToHeight(units::inch_t height) {
-  height = std::clamp<units::inch_t>(height, measure_up::elevator::minHeight, measure_up::elevator::maxHeight);
+  height =
+      std::clamp<units::inch_t>(height, measure_up::elevator::lift::minHeight, measure_up::elevator::lift::maxHeight);
   SetElevatorLiftManualOverride(false);
   m_primaryMotor.SetControl(
-      ctre::phoenix6::controls::PositionVoltage(sensor_conversions::elevator::raise::ToSensorUnit(height)));
+      ctre::phoenix6::controls::PositionVoltage(sensor_conversions::elevator::lift::ToSensorUnit(height)));
 }
 
 void ElevatorSubsystem::SetElevatorLiftManualOverride(bool desiredOverrideState) {
@@ -59,4 +84,19 @@ void ElevatorSubsystem::SetElevatorLiftManualOverride(bool desiredOverrideState)
 
 bool ElevatorSubsystem::GetElevatorLiftManualOverride() const {
   return m_elevatorManualOverride;
+}
+
+void ElevatorSubsystem::SetCarriageAngle(units::degree_t carriageAngle) {
+  SetCarriageMotorManualOverride(false);
+  carriageAngle = std::clamp<units::degree_t>(
+      carriageAngle, measure_up::elevator::carriage::minAngle, measure_up::elevator::carriage::maxAngle);
+  m_carriageMotor.SetControl(ctre::phoenix6::controls::PositionVoltage(carriageAngle));
+}
+
+void ElevatorSubsystem::SetCarriageMotorManualOverride(bool overrideState) {
+  m_carriageMotorManualOverride = overrideState;
+}
+
+bool ElevatorSubsystem::IsCarriageMotorManualOverride() const {
+  return m_carriageMotorManualOverride;
 }

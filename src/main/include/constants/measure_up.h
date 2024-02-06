@@ -7,8 +7,8 @@
 #include <argos_lib/general/angle_utils.h>
 #include <frc/geometry/Translation2d.h>
 #include <units/angle.h>
-#include <units/length.h>
 #include <units/angular_velocity.h>
+#include <units/length.h>
 
 #include <array>
 
@@ -28,22 +28,34 @@ namespace measure_up {
     constexpr auto backLeftWOffset = 3.25_in;
     constexpr auto backLeftLOffset = 3.25_in;
   }  // namespace swerve_offsets
+  namespace shooter_targets {
+    constexpr auto speakerTagHeight = 58_in;  // needs update
+    constexpr auto trapOpeningHeight = 36.25_in;
+  }  // namespace shooter_targets
   namespace camera_front {
     constexpr auto cameraX = 0_in;  /// @todo real mounting offsets
     constexpr auto cameraZ = 7.25_in;
-    constexpr auto cameraMountAngle = 13.5_deg;
+    constexpr auto cameraMountAngle = 29.9_deg;
+    constexpr auto cameraHeight = 28.5_in;
     constexpr auto vFov = 24.85_deg * 2;
     constexpr auto hFov = 29.8_deg * 2;
   }                         // namespace camera_front
   namespace camera_back {}  // namespace camera_back
 
   namespace elevator {
-    constexpr auto minHeight = 21.5_in;
-    constexpr auto maxHeight = 42.5_in;
-  }  // namespace elevator
+    namespace lift {
+      constexpr auto minHeight = 21.5_in;
+      constexpr auto maxHeight = 42.5_in;
+    }  // namespace lift
+    namespace carriage {
+      constexpr auto minAngle = -270_deg;
+      constexpr auto maxAngle = 90_deg;
+      constexpr auto intakeAngle = 40_deg;
+    }  // namespace carriage
+  }    // namespace elevator
 
   namespace shooter {
-    constexpr auto minSpeed = 0_tps; //units::turns_per_second_t(0); //not actual value
-    constexpr auto maxSpeed = 100_tps; //not actual value
-  }
+    constexpr auto minSpeed = 0_tps;
+    constexpr auto maxSpeed = 100_tps;
+  }  // namespace shooter
 }  // namespace measure_up

@@ -127,6 +127,10 @@ void RobotContainer::ConfigureBindings() {
     return std::abs(m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kLeftHand)) > 0.2;
   }});
 
+  auto overrideCarriageTrigger = (frc2::Trigger([this]() {
+    return std::abs(m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kRightHand)) > 0.2;
+  }));
+
   // Swap controllers config
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kStart, {1500_ms, 0_ms});
@@ -163,9 +167,9 @@ void RobotContainer::ConfigureBindings() {
       frc2::InstantCommand([this]() { m_elevatorSubsystem.SetElevatorLiftManualOverride(true); }, {}).ToPtr());
   m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
                                             [this] {
-                                              double elevatorSpeed = -m_controllers.OperatorController().GetY(
+                                              double elevatorSpeed = m_controllers.OperatorController().GetY(
                                                   argos_lib::XboxController::JoystickHand::kLeftHand);
-                                              double carriageSpeed = -m_controllers.OperatorController().GetY(
+                                              double carriageSpeed = m_controllers.OperatorController().GetY(
                                                   argos_lib::XboxController::JoystickHand::kRightHand);
                                               m_elevatorSubsystem.ElevatorMove(m_elevatorSpeedMap(elevatorSpeed));
                                               m_elevatorSubsystem.Pivot(m_elevatorRotateSpeedMap(carriageSpeed));
@@ -173,8 +177,12 @@ void RobotContainer::ConfigureBindings() {
                                             {&m_elevatorSubsystem})
                                             .ToPtr());
 
+  overrideCarriageTrigger.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
+
   // SHOOTER TRIGGER ACTIVATION
-  shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.ShooterGoToSpeed(5000_rpm); }, {&m_ShooterSubSystem}).ToPtr());
+  shoot.OnTrue(
+      frc2::InstantCommand([this]() { m_ShooterSubSystem.ShooterGoToSpeed(5000_rpm); }, {&m_ShooterSubSystem}).ToPtr());
   feedForward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.5); }, {&m_ShooterSubSystem}).ToPtr());
   feedBackward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(-0.5); }, {&m_ShooterSubSystem}).ToPtr());
   shoot.OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.0); }, {&m_ShooterSubSystem}).ToPtr());

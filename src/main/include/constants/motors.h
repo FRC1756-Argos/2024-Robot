@@ -157,7 +157,7 @@ namespace motorConfig {
       struct primaryElevator {
         constexpr static auto inverted = false;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
-        // constexpr static auto statorCurrentLimit = 0_A;
+        constexpr static auto statorCurrentLimit = 40_A;
         constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor;
         constexpr static auto pid0_kP = controlLoop::comp_bot::elevator::lift::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::elevator::lift::kI;
@@ -175,6 +175,18 @@ namespace motorConfig {
       struct carriageRotation {
         constexpr static auto inverted = false;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+        constexpr static auto statorCurrentLimit = 30_A;
+        constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::shooterEncoder;
+        constexpr static auto remoteFilter0_type = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto pid0_kP = controlLoop::comp_bot::elevator::carriage::kP;
+        constexpr static auto pid0_kI = controlLoop::comp_bot::elevator::carriage::kI;
+        constexpr static auto pid0_kD = controlLoop::comp_bot::elevator::carriage::kD;
+        constexpr static auto pid0_kS = controlLoop::comp_bot::elevator::carriage::kS;
+        constexpr static auto pid0_kV = controlLoop::comp_bot::elevator::carriage::kV;
+        constexpr static auto pid0_kA = controlLoop::comp_bot::elevator::carriage::kA;
+        constexpr static auto pid0_kG = controlLoop::comp_bot::elevator::carriage::kG;
+        constexpr static auto pid0_gravityType = controlLoop::comp_bot::elevator::carriage::gravityType;
       };
     }  // namespace elevator
   }    // namespace comp_bot

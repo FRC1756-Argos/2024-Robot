@@ -21,26 +21,23 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
 void VisionSubsystem::Periodic() {
   LimelightTarget::tValues targetValues = GetCameraTargetValues();  // Note that this will update the targets object
 
-  if (targetValues.hasTargets &&
-      (targetValues.robotPose.ToPose2d().X() != 0_in && targetValues.robotPose.ToPose2d().Y() != 0_in)) {
-    // m_pDriveSubsystem->GetPoseEstimate(targetValues.robotPoseWPI.ToPose2d(), targetValues.totalLatency);
-  }
-
   if (targetValues.hasTargets) {
     frc::SmartDashboard::PutBoolean("(Vision - Periodic) Is Target Present?", targetValues.hasTargets);
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Pitch", targetValues.m_pitch.to<double>());
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Yaw", targetValues.m_yaw.to<double>());
+
+    frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag ID", targetValues.tagID);
+    frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera",
+                                   GetDistanceToTag().value().to<double>());
+
+    frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
+                                   GetCalculatedDistanceToSpeaker().value().to<double>());
   }
 }
 
 std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
   // Updates and retrieves new target values
   LimelightTarget::tValues targetValues = GetCameraTargetValues();
-
-  // vision debugs
-  frc::SmartDashboard::PutBoolean("(AimToPlaceCone) Is Target Present?", targetValues.hasTargets);
-  frc::SmartDashboard::PutNumber("(AimToPlaceCone) Target Pitch", targetValues.m_pitch.to<double>());
-  frc::SmartDashboard::PutNumber("(AimToPlaceCone) Target Yaw", targetValues.m_yaw.to<double>());
 
   // add more target validation after testing e.g. area, margin, skew etc
   // for now has target is enough as we will be fairly close to target
@@ -52,14 +49,43 @@ std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
   return std::nullopt;
 }
 
-void VisionSubsystem::SetReflectiveVisionMode(bool mode) {
+std::optional<units::inch_t> VisionSubsystem::GetDistanceToTag() {
+  return static_cast<units::inch_t>(GetCameraTargetValues().tagPose.Z());
+}
+
+std::optional<units::inch_t> VisionSubsystem::GetCalculatedDistanceToSpeaker() {
+  // @todo: add checks here to make sure we are tracking the right ID based on the alliance color
+  // 4 or 7, else return null
+  // NOTE: pitch angle returned by the camera will be to the center of the speaker opening and not the tag
+  return (measure_up::shooter_targets::speakerTagHeight - measure_up::camera_front::cameraHeight) /
+         std::tan(
+             static_cast<units::radian_t>(measure_up::camera_front::cameraMountAngle + GetCameraTargetValues().m_pitch)
+                 .to<double>());
+}
+
+void VisionSubsystem::SetPipeline(uint16_t tag) {
   std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
 
-  int requestedPipeline = mode ? camera::reflectivePipeline : camera::aprilTagPipeline;
+  uint16_t pipeline = 0;
+  switch (tag) {
+    case 4:
+      pipeline = 0;
+      break;
+    case 5:
+      pipeline = 2;
+      break;
+    case 6:
+      pipeline = 3;
+      break;
+    case 7:
+      pipeline = 1;
+      break;
+    default:
+      break;
+  }
+  frc::SmartDashboard::PutNumber("(Vision) Setting Pipeline", tag);
 
-  frc::SmartDashboard::PutNumber("(SetReflectiveVisionMode) Pipeline", requestedPipeline);
-
-  table->PutNumber("pipeline", requestedPipeline);
+  table->PutNumber("pipeline", tag);
 }
 
 void VisionSubsystem::RequestFilterReset() {
@@ -71,7 +97,7 @@ LimelightTarget::tValues VisionSubsystem::GetCameraTargetValues() {
 }
 
 void VisionSubsystem::Disable() {
-  SetReflectiveVisionMode(false);
+  SetPipeline(0);
 }
 
 // LIMELIGHT TARGET MEMBER FUNCTIONS ===============================================================
@@ -95,14 +121,17 @@ LimelightTarget::tValues LimelightTarget::GetTarget(bool filter) {
                                frc::Rotation3d(units::make_unit<units::radian_t>(rawRobotPoseWPI.at(3)),
                                                units::make_unit<units::radian_t>(rawRobotPoseWPI.at(4)),
                                                units::make_unit<units::radian_t>(rawRobotPoseWPI.at(5))));
-  auto rawRobotTagSpace =
-      table->GetNumberArray("botpose_targetspace", std::span<const double>({0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}));
-  m_robotPoseTagSpace = frc::Pose3d(frc::Translation3d(units::make_unit<units::meter_t>(rawRobotTagSpace.at(0)),
-                                                       units::make_unit<units::meter_t>(rawRobotTagSpace.at(1)),
-                                                       units::make_unit<units::meter_t>(rawRobotTagSpace.at(2))),
-                                    frc::Rotation3d(units::make_unit<units::radian_t>(rawRobotTagSpace.at(3)),
-                                                    units::make_unit<units::radian_t>(rawRobotTagSpace.at(4)),
-                                                    units::make_unit<units::radian_t>(rawRobotTagSpace.at(5))));
+  auto tagPoseCamSpace =
+      table->GetNumberArray("targetpose_cameraspace", std::span<const double>({0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}));
+  m_targetPose = frc::Pose3d(frc::Translation3d(units::make_unit<units::meter_t>(tagPoseCamSpace.at(0)),
+                                                units::make_unit<units::meter_t>(tagPoseCamSpace.at(1)),
+                                                units::make_unit<units::meter_t>(tagPoseCamSpace.at(2))),
+                             frc::Rotation3d(units::make_unit<units::radian_t>(tagPoseCamSpace.at(3)),
+                                             units::make_unit<units::radian_t>(tagPoseCamSpace.at(4)),
+                                             units::make_unit<units::radian_t>(tagPoseCamSpace.at(5))));
+
+  auto tagId = table->GetNumber("tid", 0.0);
+  m_tid = tagId;
   m_hasTargets = (table->GetNumber("tv", 0) == 1);
   m_yaw = units::make_unit<units::degree_t>(table->GetNumber("tx", 0.0));
   m_pitch = units::make_unit<units::degree_t>(table->GetNumber("ty", 0.0));
@@ -121,6 +150,7 @@ LimelightTarget::tValues LimelightTarget::GetTarget(bool filter) {
   if (filter && m_hasTargets) {
     m_yaw = m_txFilter.Calculate(m_yaw);
     m_pitch = m_tyFilter.Calculate(m_pitch);
+    m_targetPose.Z() = m_zFilter.Calculate(m_targetPose.Z());
 
     // * debugging
     frc::SmartDashboard::PutNumber("VisionSubsystem/FilteredPitch (deg)", m_pitch.to<double>());
@@ -132,7 +162,7 @@ LimelightTarget::tValues LimelightTarget::GetTarget(bool filter) {
   m_totalLatency = units::make_unit<units::millisecond_t>(rawRobotPose.at(6));
 
   return tValues{
-      m_robotPose, m_robotPoseWPI, m_robotPoseTagSpace, m_hasTargets, m_pitch, m_yaw, m_area, m_totalLatency};
+      m_robotPose, m_robotPoseWPI, m_targetPose, m_hasTargets, m_pitch, m_yaw, m_area, m_tid, m_totalLatency};
 }
 
 bool LimelightTarget::HasTarget() {
@@ -147,6 +177,7 @@ void LimelightTarget::ResetFilters() {
   m_resetFilterFlag = false;
   m_txFilter.Reset();
   m_tyFilter.Reset();
+  m_zFilter.Reset();
   LimelightTarget::tValues currentValue = GetTarget(false);
   // Hackily rest filter with initial value
   // TODO name the filter values
@@ -154,5 +185,6 @@ void LimelightTarget::ResetFilters() {
   for (size_t i = 0; i < samples; i++) {
     m_txFilter.Calculate(currentValue.m_yaw);
     m_tyFilter.Calculate(currentValue.m_pitch);
+    m_zFilter.Calculate(currentValue.tagPose.Z());
   }
 }
