@@ -24,7 +24,6 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   void ShooterGoToSpeed(units::turns_per_second_t speed);
 
-
  private:
   ctre::phoenix6::hardware::TalonFX m_primaryMotor;
   ctre::phoenix6::hardware::TalonFX m_secondaryMotor;

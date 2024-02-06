@@ -21,8 +21,8 @@
 #include <frc2/command/WaitCommand.h>
 #include <frc2/command/WaitUntilCommand.h>
 #include <frc2/command/button/Trigger.h>
-#include <units/length.h>
 #include <units/angular_velocity.h>
+#include <units/length.h>
 
 // Include GamePiece enum
 #include <constants/field_points.h>
@@ -188,7 +188,8 @@ void RobotContainer::ConfigureBindings() {
       frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
 
   // SHOOTER TRIGGER ACTIVATION
-  shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.ShooterGoToSpeed(5000_rpm); }, {&m_ShooterSubSystem}).ToPtr());
+  shoot.OnTrue(
+      frc2::InstantCommand([this]() { m_ShooterSubSystem.ShooterGoToSpeed(5000_rpm); }, {&m_ShooterSubSystem}).ToPtr());
   feedForward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.5); }, {&m_ShooterSubSystem}).ToPtr());
   feedBackward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(-0.5); }, {&m_ShooterSubSystem}).ToPtr());
   shoot.OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.0); }, {&m_ShooterSubSystem}).ToPtr());
@@ -200,9 +201,17 @@ void RobotContainer::ConfigureBindings() {
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
       .WhileTrue(argos_lib::SwapControllersCommand(&m_controllers).ToPtr());
 
-  closedLoopSet.OnTrue(frc2::InstantCommand([this]() {m_ShooterSubSystem.ShooterGoToSpeed(units::revolutions_per_minute_t(frc::SmartDashboard::GetNumber("shooter/Speed (rpm)", 3000)));
-                                                      m_elevatorSubsystem.ElevatorMoveToHeight(units::inch_t(frc::SmartDashboard::GetNumber("elevator/Height (in)", 5.0)));
-                                                      m_elevatorSubsystem.SetCarriageAngle(units::degree_t(frc::SmartDashboard::GetNumber("elevator/Angle (deg)", 0.0)));}, {&m_ShooterSubSystem, &m_elevatorSubsystem}).ToPtr());
+  closedLoopSet.OnTrue(frc2::InstantCommand(
+                           [this]() {
+                             m_ShooterSubSystem.ShooterGoToSpeed(units::revolutions_per_minute_t(
+                                 frc::SmartDashboard::GetNumber("shooter/Speed (rpm)", 3000)));
+                             m_elevatorSubsystem.ElevatorMoveToHeight(
+                                 units::inch_t(frc::SmartDashboard::GetNumber("elevator/Height (in)", 5.0)));
+                             m_elevatorSubsystem.SetCarriageAngle(
+                                 units::degree_t(frc::SmartDashboard::GetNumber("elevator/Angle (deg)", 0.0)));
+                           },
+                           {&m_ShooterSubSystem, &m_elevatorSubsystem})
+                           .ToPtr());
 }
 
 void RobotContainer::Disable() {
