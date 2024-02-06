@@ -8,6 +8,7 @@
 #include <frc/geometry/Translation2d.h>
 #include <units/angle.h>
 #include <units/length.h>
+#include <units/angular_velocity.h>
 
 #include <array>
 
@@ -47,9 +48,14 @@ namespace measure_up {
       constexpr auto maxHeight = 42.5_in;
     }  // namespace lift
     namespace carriage {
-      constexpr auto minAngle = -270_deg;
-      constexpr auto maxAngle = 90_deg;
+      constexpr auto minAngle = -45_deg;
+      constexpr auto maxAngle = 270_deg;
       constexpr auto intakeAngle = 40_deg;
     }  // namespace carriage
   }    // namespace elevator
+
+  namespace shooter {
+    constexpr auto minSpeed = 0_tps; //units::turns_per_second_t(0); //not actual value
+    constexpr auto maxSpeed = 100_tps; //not actual value
+  }
 }  // namespace measure_up

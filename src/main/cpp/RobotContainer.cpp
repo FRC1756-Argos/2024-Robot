@@ -22,7 +22,7 @@
 #include <frc2/command/WaitUntilCommand.h>
 #include <frc2/command/button/Trigger.h>
 #include <units/length.h>
-#include <units/rotational_velocity.h>
+#include <units/angular_velocity.h>
 
 // Include GamePiece enum
 #include <constants/field_points.h>
@@ -99,9 +99,9 @@ RobotContainer::RobotContainer()
 }
 
 void RobotContainer::ConfigureBindings() {
-  frc::SmartDashboard::GetNumber("elevator/Height (in)", 5.0);
-  frc::SmartDashboard::GetNumber("elevator/Angle (deg)", 0.0);
-  frc::SmartDashboard::GetNumber("shooter/Speed (rpm)", 3000);
+  frc::SmartDashboard::PutNumber("elevator/Height (in)", 12.0);
+  frc::SmartDashboard::PutNumber("elevator/Angle (deg)", 0.0);
+  frc::SmartDashboard::PutNumber("shooter/Speed (rpm)", 3000);
 
   /* ———————————————————————— CONFIGURE DEBOUNCING ——————————————————————— */
 
@@ -155,7 +155,7 @@ void RobotContainer::ConfigureBindings() {
   // DRIVE TRIGGER ACTIVATION
   fieldHome.OnTrue(frc2::InstantCommand([this]() { m_swerveDrive.FieldHome(); }, {&m_swerveDrive}).ToPtr());
 
-  // INTAKE TRIGGER ACTIVITATION
+  // INTAKE TRIGGER ACTIVATION
   intake.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(1.0); }, {&m_intakeSubsystem}).ToPtr());
   outtake.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(-0.8); }, {&m_intakeSubsystem}).ToPtr());
   (intake || outtake)
@@ -169,7 +169,7 @@ void RobotContainer::ConfigureBindings() {
   (climberUp || climberDown)
       .OnFalse(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.0); }, {&m_climberSubsystem}).ToPtr());
 
-  // ELEVATOR TRIGGER ACTIVITATION
+  // ELEVATOR TRIGGER ACTIVATION
   elevatorLiftManualInput.OnTrue(
       frc2::InstantCommand([this]() { m_elevatorSubsystem.SetElevatorLiftManualOverride(true); }, {}).ToPtr());
   m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
@@ -188,20 +188,21 @@ void RobotContainer::ConfigureBindings() {
       frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
 
   // SHOOTER TRIGGER ACTIVATION
-  shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());
+  shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.ShooterGoToSpeed(5000_rpm); }, {&m_ShooterSubSystem}).ToPtr());
   feedForward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.5); }, {&m_ShooterSubSystem}).ToPtr());
   feedBackward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(-0.5); }, {&m_ShooterSubSystem}).ToPtr());
   shoot.OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.0); }, {&m_ShooterSubSystem}).ToPtr());
   (feedForward || feedBackward)
       .OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.0); }, {&m_ShooterSubSystem}).ToPtr());
 
+  //
   // SWAP CONTROLLERS TRIGGER ACTIVATION
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
       .WhileTrue(argos_lib::SwapControllersCommand(&m_controllers).ToPtr());
 
-  closedLoopSet.OnTrue(frc2::InstantCommand([this]() {m_ShooterSubSystem.Shoot(units::rotations_per_minute_t(frc::SmartDashboard::GetNumber("shooter/Speed (rpm)", 3000)));
+  closedLoopSet.OnTrue(frc2::InstantCommand([this]() {m_ShooterSubSystem.ShooterGoToSpeed(units::revolutions_per_minute_t(frc::SmartDashboard::GetNumber("shooter/Speed (rpm)", 3000)));
                                                       m_elevatorSubsystem.ElevatorMoveToHeight(units::inch_t(frc::SmartDashboard::GetNumber("elevator/Height (in)", 5.0)));
-                                                      m_elevatorSubsystem.SetCarriageAngle(units::degree_t(frc::SmartDashboard::GetNumber("elevator/Angle (deg)", 0.0)))}, {&m_ShooterSubSystem, &m_elevatorSubsystem}).ToPtr());
+                                                      m_elevatorSubsystem.SetCarriageAngle(units::degree_t(frc::SmartDashboard::GetNumber("elevator/Angle (deg)", 0.0)));}, {&m_ShooterSubSystem, &m_elevatorSubsystem}).ToPtr());
 }
 
 void RobotContainer::Disable() {

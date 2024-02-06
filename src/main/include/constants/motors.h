@@ -118,6 +118,10 @@ namespace motorConfig {
       struct primaryMotor {
         constexpr static auto inverted = true;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto pid0_kP = controlLoop::comp_bot::shooter::shoot::kP;
+        constexpr static auto pid0_kI = controlLoop::comp_bot::shooter::shoot::kI;
+        constexpr static auto pid0_kD = controlLoop::comp_bot::shooter::shoot::kD;
+        constexpr static auto pid0_kV = controlLoop::comp_bot::shooter::shoot::kV;
       };
       struct secondaryMotor {
         constexpr static auto inverted = false;
