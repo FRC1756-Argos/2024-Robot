@@ -44,11 +44,6 @@ void ShooterSubsystem::ShooterGoToSpeed(units::turns_per_second_t speed) {
   m_primaryMotor.SetControl(m_velocityControl.WithVelocity(speed));
 }
 
-void ShooterSubsystem::ShooterGoToSpeed(units::turns_per_second_t speed) {
-  speed = std::clamp<units::turns_per_second_t>(speed, measure_up::shooter::minSpeed, measure_up::shooter::maxSpeed);
-  m_primaryMotor.SetControl(m_velocityControl.WithVelocity(speed));
-}
-
 void ShooterSubsystem::Feed(double speed) {
   m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
 }
