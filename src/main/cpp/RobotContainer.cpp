@@ -21,6 +21,7 @@
 #include <frc2/command/WaitCommand.h>
 #include <frc2/command/WaitUntilCommand.h>
 #include <frc2/command/button/Trigger.h>
+#include <units/angular_velocity.h>
 #include <units/length.h>
 
 // Include GamePiece enum
@@ -98,6 +99,10 @@ RobotContainer::RobotContainer()
 }
 
 void RobotContainer::ConfigureBindings() {
+  frc::SmartDashboard::PutNumber("elevator/Height (in)", 12.0);
+  frc::SmartDashboard::PutNumber("elevator/Angle (deg)", 0.0);
+  frc::SmartDashboard::PutNumber("shooter/Speed (rpm)", 3000);
+
   /* ———————————————————————— CONFIGURE DEBOUNCING ——————————————————————— */
 
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kY, {1500_ms, 0_ms});
@@ -125,6 +130,17 @@ void RobotContainer::ConfigureBindings() {
   auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
 
+  auto closedLoopSet = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
+
+  // ELEVATOR TRIGGERS
+  auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
+    return std::abs(m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kLeftHand)) > 0.2;
+  }});
+
+  auto overrideCarriageTrigger = (frc2::Trigger([this]() {
+    return std::abs(m_controllers.OperatorController().GetY(argos_lib::XboxController::JoystickHand::kRightHand)) > 0.2;
+  }));
+
   // Swap controllers config
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
   m_controllers.DriverController().SetButtonDebounce(argos_lib::XboxController::Button::kStart, {1500_ms, 0_ms});
@@ -142,7 +158,7 @@ void RobotContainer::ConfigureBindings() {
   // DRIVE TRIGGER ACTIVATION
   fieldHome.OnTrue(frc2::InstantCommand([this]() { m_swerveDrive.FieldHome(); }, {&m_swerveDrive}).ToPtr());
 
-  // INTAKE TRIGGER ACTIVITATION
+  // INTAKE TRIGGER ACTIVATION
   intake.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(1.0); }, {&m_intakeSubsystem}).ToPtr());
   outtake.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(-0.8); }, {&m_intakeSubsystem}).ToPtr());
   (intake || outtake)
@@ -174,12 +190,14 @@ void RobotContainer::ConfigureBindings() {
                            {&m_climberSubsystem})
           .ToPtr());
 
-  // ELEVATOR TRIGGER ACTIVITATION
+  // ELEVATOR TRIGGER ACTIVATION
+  elevatorLiftManualInput.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetElevatorLiftManualOverride(true); }, {}).ToPtr());
   m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
                                             [this] {
-                                              double elevatorSpeed = -m_controllers.OperatorController().GetY(
+                                              double elevatorSpeed = m_controllers.OperatorController().GetY(
                                                   argos_lib::XboxController::JoystickHand::kLeftHand);
-                                              double carriageSpeed = -m_controllers.OperatorController().GetY(
+                                              double carriageSpeed = m_controllers.OperatorController().GetY(
                                                   argos_lib::XboxController::JoystickHand::kRightHand);
                                               m_elevatorSubsystem.ElevatorMove(m_elevatorSpeedMap(elevatorSpeed));
                                               m_elevatorSubsystem.Pivot(m_elevatorRotateSpeedMap(carriageSpeed));
@@ -187,17 +205,34 @@ void RobotContainer::ConfigureBindings() {
                                             {&m_elevatorSubsystem})
                                             .ToPtr());
 
+  overrideCarriageTrigger.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
+
   // SHOOTER TRIGGER ACTIVATION
-  shoot.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.7); }, {&m_ShooterSubSystem}).ToPtr());
+  shoot.OnTrue(
+      frc2::InstantCommand([this]() { m_ShooterSubSystem.ShooterGoToSpeed(5000_rpm); }, {&m_ShooterSubSystem}).ToPtr());
   feedForward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.5); }, {&m_ShooterSubSystem}).ToPtr());
   feedBackward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(-0.5); }, {&m_ShooterSubSystem}).ToPtr());
   shoot.OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.0); }, {&m_ShooterSubSystem}).ToPtr());
   (feedForward || feedBackward)
       .OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.0); }, {&m_ShooterSubSystem}).ToPtr());
 
+  //
   // SWAP CONTROLLERS TRIGGER ACTIVATION
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
       .WhileTrue(argos_lib::SwapControllersCommand(&m_controllers).ToPtr());
+
+  closedLoopSet.OnTrue(frc2::InstantCommand(
+                           [this]() {
+                             m_ShooterSubSystem.ShooterGoToSpeed(units::revolutions_per_minute_t(
+                                 frc::SmartDashboard::GetNumber("shooter/Speed (rpm)", 3000)));
+                             m_elevatorSubsystem.ElevatorMoveToHeight(
+                                 units::inch_t(frc::SmartDashboard::GetNumber("elevator/Height (in)", 5.0)));
+                             m_elevatorSubsystem.SetCarriageAngle(
+                                 units::degree_t(frc::SmartDashboard::GetNumber("elevator/Angle (deg)", 0.0)));
+                           },
+                           {&m_ShooterSubSystem, &m_elevatorSubsystem})
+                           .ToPtr());
 }
 
 void RobotContainer::Disable() {

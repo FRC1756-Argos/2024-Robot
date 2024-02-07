@@ -22,11 +22,14 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   void Disable();
 
+  void ShooterGoToSpeed(units::turns_per_second_t speed);
+
  private:
   ctre::phoenix6::hardware::TalonFX m_primaryMotor;
   ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
   ctre::phoenix::motorcontrol::can::TalonSRX m_feedMotor;
   argos_lib::RobotInstance m_robotInstance;
+  ctre::phoenix6::controls::VelocityVoltage m_velocityControl;
 };
 // Components (e.g. motor controllers and sensors) should generally be
 // declared private and exposed only through public methods.

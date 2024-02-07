@@ -81,10 +81,12 @@
     "streambuf": "cpp",
     "thread": "cpp",
     "cinttypes": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "core": "cpp",
+    "future": "cpp"
   },
   "[cpp]": {
-    "editor.defaultFormatter": "ms-vscode.cpptools"
+    "editor.defaultFormatter": "xaver.clang-format"
   },
   "cSpell.words": [
     "ctre",

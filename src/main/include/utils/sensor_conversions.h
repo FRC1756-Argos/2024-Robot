@@ -47,6 +47,7 @@ namespace sensor_conversions {
       }
     }  // namespace drive
   }    // namespace swerve_drive
+
   namespace climber {
     constexpr auto sensorConversionFactor = 4_in / 20_tr;
     //inches per sensor unit. 20:1 gear ratio, 4in/sprocket revolution -> 4in/20turns = 1inch/5turns
@@ -59,4 +60,26 @@ namespace sensor_conversions {
     }
 
   }  // namespace climber
+
+  namespace elevator {
+    namespace lift {
+      constexpr auto sensorConversionFactor = 1_in / 3_tr;
+      constexpr units::inch_t ToHeight(const units::angle::turn_t sensorUnit) {
+        return sensorConversionFactor * sensorUnit;
+      }
+
+      constexpr units::angle::turn_t ToSensorUnit(const units::inch_t height) {
+        return height / sensorConversionFactor;
+      }
+    }  // namespace lift
+    namespace carriage {
+      constexpr auto sensorConversionFactor = (1.0 / 9.0) * (15.0 / 72.0);
+      constexpr units::angle::turn_t ToSensorUnit(const units::degree_t degrees) {
+        return degrees / sensorConversionFactor;
+      }
+      constexpr units::degree_t ToAngle(const units::angle::turn_t sensorUnit) {
+        return sensorUnit * sensorConversionFactor;
+      }
+    }  // namespace carriage
+  }    // namespace elevator
 }  // namespace sensor_conversions
