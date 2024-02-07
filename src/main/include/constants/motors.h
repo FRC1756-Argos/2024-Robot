@@ -147,6 +147,16 @@ namespace motorConfig {
       struct primaryClimbing {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
         constexpr static auto inverted = true;
+        constexpr static auto statorCurrentLimit = 30_A;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor;
+        constexpr static auto pid0_kP = controlLoop::comp_bot::climber::climber::kP;
+        constexpr static auto pid0_kI = controlLoop::comp_bot::climber::climber::kI;
+        constexpr static auto pid0_kD = controlLoop::comp_bot::climber::climber::kD;
+        constexpr static auto pid0_kS = controlLoop::comp_bot::climber::climber::kS;
+        constexpr static auto pid0_kV = controlLoop::comp_bot::climber::climber::kV;
+        constexpr static auto pid0_kA = controlLoop::comp_bot::climber::climber::kA;
+        constexpr static auto pid0_kG = controlLoop::comp_bot::climber::climber::kG;
+        constexpr static auto pid0_gravityType = controlLoop::comp_bot::climber::climber::gravityType;
       };
       struct secondaryClimbing {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;

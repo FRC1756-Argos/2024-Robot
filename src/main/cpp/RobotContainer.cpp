@@ -162,10 +162,20 @@ void RobotContainer::ConfigureBindings() {
       .OnFalse(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(0.0); }, {&m_intakeSubsystem}).ToPtr());
 
   // CLIMBER TRIGGER ACTIVATION
-  climberUp.OnTrue(
-      frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.5); }, {&m_climberSubsystem}).ToPtr());
-  climberDown.OnTrue(
-      frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(-0.5); }, {&m_climberSubsystem}).ToPtr());
+  climberUp.OnTrue(frc2::InstantCommand(
+                       [this]() {
+                         m_climberSubsystem.SetManualOverride(true);
+                         m_climberSubsystem.ClimberMove(0.2);
+                       },
+                       {&m_climberSubsystem})
+                       .ToPtr());
+  climberDown.OnTrue(frc2::InstantCommand(
+                         [this]() {
+                           m_climberSubsystem.SetManualOverride(true);
+                           m_climberSubsystem.ClimberMove(-0.2);
+                         },
+                         {&m_climberSubsystem})
+                         .ToPtr());
   (climberUp || climberDown)
       .OnFalse(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.0); }, {&m_climberSubsystem}).ToPtr());
 

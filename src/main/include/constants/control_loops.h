@@ -45,6 +45,18 @@ namespace controlLoop {
         constexpr static auto angularAcceleration = units::degrees_per_second_squared_t{360};
       };  // namespace rotational_follower
     }     // namespace drive
+    namespace climber {
+      struct climber {
+        constexpr static double kP = 1.0;
+        constexpr static double kI = 0.0;
+        constexpr static double kD = 0.0;
+        constexpr static double kS = 0.0;
+        constexpr static double kV = 0.0;
+        constexpr static double kA = 0.0;
+        constexpr static double kG = 0.24;
+        constexpr static int gravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
+      };
+    }  // namespace climber
     namespace elevator {
       struct lift {
         constexpr static double kP = 2.1;
@@ -63,8 +75,8 @@ namespace controlLoop {
         constexpr static double kS = 0.0;
         constexpr static double kV = 0.0;
         constexpr static double kA = 0.0;
-        constexpr static double kG = 0.0;
-        constexpr static int gravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
+        constexpr static double kG = -0.45;
+        constexpr static int gravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
       };
     }  // namespace elevator
     namespace shooter {
@@ -83,6 +95,9 @@ namespace controlLoop {
       using linear_follower = controlLoop::comp_bot::drive::linear_follower;
       using rotational_follower = controlLoop::comp_bot::drive::rotational_follower;
     }  // namespace drive
+    namespace climber {
+      using climber = controlLoop::comp_bot::climber::climber;
+    }  // namespace climber
     namespace elevator {
       using lift = controlLoop::comp_bot::elevator::lift;
       using carriage = controlLoop::comp_bot::elevator::carriage;
