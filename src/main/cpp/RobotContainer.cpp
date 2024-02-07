@@ -121,9 +121,6 @@ void RobotContainer::ConfigureBindings() {
   // CLIMBER TRIGGERS
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto climberDown = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kDown);
-  auto climberMin =
-      m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kX);  //temp for testing
-  auto climberMax = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kY);
 
   // SHOOT TRIGGERS
   auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
@@ -181,14 +178,6 @@ void RobotContainer::ConfigureBindings() {
                          .ToPtr());
   (climberUp || climberDown)
       .OnFalse(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.0); }, {&m_climberSubsystem}).ToPtr());
-  climberMin.OnTrue(
-      frc2::InstantCommand([this]() { m_climberSubsystem.SetHeight(measure_up::climber::lowerLimit + 3_in); },
-                           {&m_climberSubsystem})
-          .ToPtr());  //temp
-  climberMax.OnTrue(
-      frc2::InstantCommand([this]() { m_climberSubsystem.SetHeight(measure_up::climber::upperLimit - 3_in); },
-                           {&m_climberSubsystem})
-          .ToPtr());
 
   // ELEVATOR TRIGGER ACTIVATION
   elevatorLiftManualInput.OnTrue(

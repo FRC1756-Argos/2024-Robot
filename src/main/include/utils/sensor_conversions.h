@@ -50,7 +50,7 @@ namespace sensor_conversions {
 
   namespace climber {
     constexpr auto sensorConversionFactor = 4_in / 20_tr;
-    //inches per sensor unit. 20:1 gear ratio, 4in/sprocket revolution -> 4in/20turns = 1inch/5turns
+    // inches per sensor unit. 20:1 gear ratio, 4in/sprocket revolution -> 4in/20turns = 1inch/5turns
 
     constexpr units::inch_t ToHeight(units::angle::turn_t sensorunit) {  // 0 sensor units = minimum climber height
       return sensorunit * sensorConversionFactor;

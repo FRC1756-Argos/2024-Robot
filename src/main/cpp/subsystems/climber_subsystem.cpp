@@ -8,8 +8,8 @@
 
 #include "argos_lib/config/falcon_config.h"
 #include "constants/addresses.h"
-#include "constants/motors.h"
 #include "constants/measure_up.h"
+#include "constants/motors.h"
 #include "utils/sensor_conversions.h"
 
 ClimberSubsystem::ClimberSubsystem(argos_lib::RobotInstance robotInstance)

@@ -6,10 +6,9 @@
 
 #include <argos_lib/config/config_types.h>
 #include <frc2/command/SubsystemBase.h>
+#include <units/length.h>
 
 #include <ctre/phoenix6/TalonFX.hpp>
-
-#include <units/length.h>
 
 class ClimberSubsystem : public frc2::SubsystemBase {
  public:

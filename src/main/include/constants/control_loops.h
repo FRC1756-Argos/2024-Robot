@@ -97,7 +97,7 @@ namespace controlLoop {
     }  // namespace drive
     namespace climber {
       using climber = controlLoop::comp_bot::climber::climber;
-    }
+    }  // namespace climber
     namespace elevator {
       using lift = controlLoop::comp_bot::elevator::lift;
       using carriage = controlLoop::comp_bot::elevator::carriage;
@@ -105,5 +105,5 @@ namespace controlLoop {
     namespace shooter {
       using shoot = controlLoop::comp_bot::shooter::shoot;
     }  // namespace shooter
-  }  // namespace practice_bot
+  }    // namespace practice_bot
 }  // namespace controlLoop
