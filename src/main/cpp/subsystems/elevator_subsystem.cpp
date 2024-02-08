@@ -100,3 +100,7 @@ void ElevatorSubsystem::SetCarriageMotorManualOverride(bool overrideState) {
 bool ElevatorSubsystem::IsCarriageMotorManualOverride() const {
   return m_carriageMotorManualOverride;
 }
+
+units::inch_t ElevatorSubsystem::GetElevatorHeight() {
+  return sensor_conversions::elevator::lift::ToHeight(m_primaryMotor.GetPosition().GetValue());
+}

@@ -51,6 +51,7 @@ namespace measure_up {
     namespace lift {
       constexpr auto minHeight = 21.5_in;
       constexpr auto maxHeight = 42.5_in;
+      constexpr auto intakeHeight = 22.5_in;
     }  // namespace lift
     namespace carriage {
       constexpr auto minAngle = -45_deg;

@@ -36,3 +36,7 @@ void IntakeSubsystem::Disable() {
 bool IntakeSubsystem::IsNotePresent() {
   return m_primaryMotor.IsFwdLimitSwitchClosed() != 0;
 }
+
+void IntakeSubsystem::NoteDetectionOverride(bool override) {
+  m_primaryMotor.OverrideLimitSwitchesEnable(override);
+}

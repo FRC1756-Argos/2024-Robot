@@ -26,6 +26,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] bool IsNotePresent();
 
+  void NoteDetectionOverride(bool override);
+
  private:
   ctre::phoenix6::hardware::TalonFX m_primaryMotor;
   ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
