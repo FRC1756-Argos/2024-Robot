@@ -52,3 +52,7 @@ void ShooterSubsystem::Disable() {
   m_primaryMotor.Set(0.0);
   m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
 }
+
+bool ShooterSubsystem::IsNotePresent() {
+  return m_feedMotor.IsFwdLimitSwitchClosed() != 0;
+}

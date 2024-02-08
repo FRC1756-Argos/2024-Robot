@@ -130,6 +130,10 @@ namespace motorConfig {
       struct feedMotor {
         constexpr static auto inverted = false;
         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
+        constexpr static auto forwardLimitSwitchSource =
+            ctre::phoenix::motorcontrol::LimitSwitchSource::LimitSwitchSource_FeedbackConnector;
+        constexpr static auto forwardLimitSwitchNormal =
+            ctre::phoenix::motorcontrol::LimitSwitchNormal::LimitSwitchNormal_NormallyOpen;
       };
     }  // namespace shooter
 
@@ -137,6 +141,10 @@ namespace motorConfig {
       struct primaryIntake {
         constexpr static auto inverted = true;
         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
+        constexpr static auto forwardLimitSwitchSource =
+            ctre::phoenix::motorcontrol::LimitSwitchSource::LimitSwitchSource_FeedbackConnector;
+        constexpr static auto forwardLimitSwitchNormal =
+            ctre::phoenix::motorcontrol::LimitSwitchNormal::LimitSwitchNormal_NormallyOpen;
       };
       struct secondaryIntake {
         constexpr static auto inverted = false;

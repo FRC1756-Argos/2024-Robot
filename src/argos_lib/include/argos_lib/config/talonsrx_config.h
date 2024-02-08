@@ -34,6 +34,10 @@ namespace argos_lib {
     HAS_MEMBER(continuousCurrentLimit)
     HAS_MEMBER(peakOutputForward)
     HAS_MEMBER(peakOutputReverse)
+    HAS_MEMBER(forwardLimitSwitchSource)
+    HAS_MEMBER(reverseLimitSwitchSource)
+    HAS_MEMBER(forwardLimitSwitchNormal)
+    HAS_MEMBER(reverseLimitSwitchNormal)
     /**
      * @brief Configures a CTRE TalonSRX with only the fields provided.  All other fields
      *        are given the factory default values.
@@ -58,6 +62,10 @@ namespace argos_lib {
      *           - continuousCurrentLimit
      *           - peakOutputForward
      *           - peakOutputReverse
+     *           - forwardLimitSwitchSource
+     *           - reverseLimitSwitchSource
+     *           - forwardLimitSwitchNormal
+     *           - reverseLimitSwitchNormal
      * @param motorController TalonSRX object to configure
      * @param configTimeout Time to wait for response from TalonSRX
      * @return true Configuration succeeded
@@ -136,6 +144,22 @@ namespace argos_lib {
 
       if constexpr (has_statusFrameMotorMode<T>()) {
         argos_lib::status_frame_config::SetMotorStatusFrameRates(motorController, T::statusFrameMotorMode);
+      }
+
+      if constexpr (has_forwardLimitSwitchSource<T>()) {
+        config.forwardLimitSwitchSource = T::forwardLimitSwitchSource;
+      }
+
+      if constexpr (has_reverseLimitSwitchSource<T>()) {
+        config.reverseLimitSwitchSource = T::reverseLimitSwitchSource;
+      }
+
+      if constexpr (has_forwardLimitSwitchNormal<T>()) {
+        config.forwardLimitSwitchNormal = T::forwardLimitSwitchNormal;
+      }
+
+      if constexpr (has_reverseLimitSwitchNormal<T>()) {
+        config.reverseLimitSwitchNormal = T::reverseLimitSwitchNormal;
       }
 
       // enable current limiting if any current limiting option is set, disable if none are

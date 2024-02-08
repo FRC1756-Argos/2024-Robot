@@ -32,3 +32,7 @@ void IntakeSubsystem::Intake(double speed) {
 void IntakeSubsystem::Disable() {
   m_primaryMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
 }
+
+bool IntakeSubsystem::IsNotePresent() {
+  return m_primaryMotor.IsFwdLimitSwitchClosed() != 0;
+}
