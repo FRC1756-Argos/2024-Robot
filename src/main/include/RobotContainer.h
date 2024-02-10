@@ -23,6 +23,8 @@
 #include "subsystems/vision_subsystem.h"
 #include "utils/auto_selector.h"
 
+#include "commands/intake_command.h"
+
 /**
  * @brief  Command-based is a "declarative" paradigm, very little robot logic should
  *         actually be handled in the {@link Robot} periodic methods (other than the
@@ -71,6 +73,8 @@ class RobotContainer {
   IntakeSubsystem m_intakeSubsystem;
   ClimberSubsystem m_climberSubsystem;
   ElevatorSubsystem m_elevatorSubsystem;
+
+  IntakeCommand m_IntakeCommand;
 
   // Autonomous
   AutonomousNothing m_autoNothing;

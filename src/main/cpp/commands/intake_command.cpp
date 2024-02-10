@@ -18,13 +18,13 @@ void IntakeCommand::Initialize() {
   m_pIntake->NoteDetectionOverride(false);
   m_pShooter->NoteDetectionOverride(false);
   m_pIntake->Intake(1);
-  m_pShooter->Feed(0.5);
+  m_pShooter->Feed(0.3);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void IntakeCommand::Execute() {
   if (m_pShooter->IsNotePresent()) {
-    m_pIntake->Intake(0);
+    Cancel();
   } else {
     m_pIntake->Intake(1);
   }

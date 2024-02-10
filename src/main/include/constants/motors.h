@@ -129,7 +129,7 @@ namespace motorConfig {
       };
       struct feedMotor {
         constexpr static auto inverted = false;
-        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Coast;
+        constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Brake;
         constexpr static auto forwardLimitSwitchSource =
             ctre::phoenix::motorcontrol::LimitSwitchSource::LimitSwitchSource_FeedbackConnector;
         constexpr static auto forwardLimitSwitchNormal =
