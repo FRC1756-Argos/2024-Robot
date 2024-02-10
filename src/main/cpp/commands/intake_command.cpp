@@ -13,6 +13,10 @@ IntakeCommand::IntakeCommand(IntakeSubsystem* intake, ShooterSubsystem* shooter,
 
 // Called when the command is initially scheduled.
 void IntakeCommand::Initialize() {
+  if (m_pShooter->IsNotePresent()) {
+    Cancel();
+    return;
+  }
   m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::intakeHeight);
   m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::intakeAngle);
   m_pIntake->NoteDetectionOverride(false);

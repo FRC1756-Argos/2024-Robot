@@ -57,6 +57,10 @@ bool ShooterSubsystem::IsNotePresent() {
   return m_feedMotor.IsFwdLimitSwitchClosed() != 0;
 }
 
+bool ShooterSubsystem::ReadyToShoot() {
+  return (IsNotePresent());
+}
+
 void ShooterSubsystem::NoteDetectionOverride(bool override) {
   m_feedMotor.OverrideLimitSwitchesEnable(override);
 }

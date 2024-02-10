@@ -26,6 +26,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] bool IsNotePresent();
 
+  bool ReadyToShoot();
+
   void NoteDetectionOverride(bool override);
 
  private:
