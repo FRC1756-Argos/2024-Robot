@@ -38,6 +38,8 @@ void IntakeCommand::Execute() {
 void IntakeCommand::End(bool interrupted) {
   m_pIntake->Intake(0);
   m_pShooter->Feed(0);
+  m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::intakeHeight);
+  m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::intakeAngle);
 }
 
 // Returns true when the command should end.
