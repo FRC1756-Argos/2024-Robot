@@ -160,7 +160,8 @@ void RobotContainer::ConfigureBindings() {
 
   // INTAKE TRIGGER ACTIVATION
   intakeManual.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(1.0); }, {&m_intakeSubsystem}).ToPtr());
-  outtakeManual.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(-0.8); }, {&m_intakeSubsystem}).ToPtr());
+  outtakeManual.OnTrue(
+      frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(-0.8); }, {&m_intakeSubsystem}).ToPtr());
   (intakeManual || outtakeManual)
       .OnFalse(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(0.0); }, {&m_intakeSubsystem}).ToPtr());
 
