@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - main
-      - windows_build
   pull_request:
     branches:
       - main
@@ -55,11 +54,11 @@ jobs:
     strategy:
       matrix:
         build_target: [
-          installFrcUserProgramLinuxathenaDebugExecutable,
+          # installFrcUserProgramLinuxathenaDebugExecutable,
           installFrcUserProgramLinuxathenaReleaseExecutable,
-          installFrcUserProgramWindowsx86-64DebugExecutable,
+          # installFrcUserProgramWindowsx86-64DebugExecutable,
           installFrcUserProgramWindowsx86-64ReleaseExecutable,
-          checkFrcUserProgramTestWindowsx86-64DebugGoogleTestExe,
+          # checkFrcUserProgramTestWindowsx86-64DebugGoogleTestExe,
           checkFrcUserProgramTestWindowsx86-64ReleaseGoogleTestExe
         ]
     # The type of runner that the job will run on
