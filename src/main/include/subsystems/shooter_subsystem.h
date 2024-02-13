@@ -18,13 +18,17 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   void Shoot(double speed);
 
-  void Feed(double speed);
+  void Feed(double speed, bool force = false);
 
   void Disable();
 
   void ShooterGoToSpeed(units::turns_per_second_t speed);
 
   [[nodiscard]] bool IsNotePresent();
+
+  bool ReadyToShoot();
+
+  void NoteDetectionOverride(bool override);
 
  private:
   ctre::phoenix6::hardware::TalonFX m_primaryMotor;
