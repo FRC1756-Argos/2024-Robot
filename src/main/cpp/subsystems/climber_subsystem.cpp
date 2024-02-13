@@ -49,8 +49,8 @@ void ClimberSubsystem::SetHeight(units::inch_t height) {
       ctre::phoenix6::controls::PositionVoltage(sensor_conversions::climber::ToSensorUnit(height)));
 }
 
-void ClimberSubsystem::SetManualOverride(bool state) {
-  m_manualOverride = state;
+void ClimberSubsystem::SetManualOverride(bool overrideState) {
+  m_manualOverride = overrideState;
 }
 
 void ClimberSubsystem::Disable() {

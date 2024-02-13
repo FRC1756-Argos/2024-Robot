@@ -13,11 +13,29 @@
 class ClimberSubsystem : public frc2::SubsystemBase {
  public:
   explicit ClimberSubsystem(argos_lib::RobotInstance robotInstance);
+  void SetExtensionSpeed(double speed);
+
+
+  void SetExtensionLength(units::inch_t length);
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
+
+  void UpdateClimberHome();
+
+  bool IsClimberHomed();
+
+  bool IsClimberManualOverride();
+
+  units::inch_t GetClimberExtension();
+
+  bool IsClimberMoving();
+
+  void SetHomeFailed(bool failed);
+
+  bool GetHomeFailed(bool failed);
 
   void ClimberMove(double speed);
 
@@ -27,11 +45,16 @@ class ClimberSubsystem : public frc2::SubsystemBase {
 
   void Disable();
 
+  void Stop();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
   ctre::phoenix6::hardware::TalonFX m_primaryMotor;
   ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
   argos_lib::RobotInstance m_robotInstance;
+  bool m_climberHomed;
+  bool m_climberFailed;
+
   bool m_manualOverride;
 };
