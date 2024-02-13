@@ -104,3 +104,23 @@ bool ElevatorSubsystem::IsCarriageMotorManualOverride() const {
 units::inch_t ElevatorSubsystem::GetElevatorHeight() {
   return sensor_conversions::elevator::lift::ToHeight(m_primaryMotor.GetPosition().GetValue());
 }
+
+bool ElevatorSubsystem::IsLiftAtSetPoint() {
+  if (m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltage) {
+    return false;
+  }
+  return sensor_conversions::elevator::lift::ToHeight(units::turn_t{m_primaryMotor.GetClosedLoopError().GetValue()}) <
+         0.25_in;
+}
+
+bool ElevatorSubsystem::IsCarriageAtSetPoint() {
+  if (m_carriageMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltage) {
+    return false;
+  }
+  return sensor_conversions::elevator::carriage::ToAngle(
+             units::turn_t{m_carriageMotor.GetClosedLoopError().GetValue()}) < 0.5_deg;
+}
+
+bool ElevatorSubsystem::IsElevatorAtSetPoint() {
+  return IsLiftAtSetPoint() && IsCarriageAtSetPoint();
+}

@@ -18,7 +18,7 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   void Shoot(double speed);
 
-  void Feed(double speed);
+  void Feed(double speed, bool force = false);
 
   void Disable();
 
