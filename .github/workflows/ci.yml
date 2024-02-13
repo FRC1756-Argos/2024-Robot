@@ -75,9 +75,8 @@ jobs:
         distribution: 'corretto' # See 'Supported distributions' for available options
         java-version: '21'
 
-    # # Declares the repository safe and not under dubious ownership.
-    # - name: Add repository to git safe directories
-    #   run: git config --global --add safe.directory $GITHUB_WORKSPACE
+    - name: Install RoboRIO toolchain
+      run: ./gradlew.bat installRoboRioToolchain
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
