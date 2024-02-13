@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - main
-      - fix-build
+      - windows_build
   pull_request:
     branches:
       - main
@@ -15,6 +15,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+    if: false
     # Build in parallel to reduce pull request wait time
     strategy:
       matrix:
@@ -49,3 +50,30 @@ jobs:
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew ${{matrix.build_target}}
+  windows-build:
+    # Build in parallel to reduce pull request wait time
+    strategy:
+      matrix:
+        build_target: [
+          installFrcUserProgramLinuxathenaDebugExecutable,
+          installFrcUserProgramLinuxathenaReleaseExecutable,
+          installFrcUserProgramWindowsx86-64DebugExecutable,
+          installFrcUserProgramWindowsx86-64ReleaseExecutable,
+          checkFrcUserProgramTestWindowsx86-64DebugGoogleTestExe,
+          checkFrcUserProgramTestWindowsx86-64ReleaseGoogleTestExe
+        ]
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v4
+
+    # Declares the repository safe and not under dubious ownership.
+    - name: Add repository to git safe directories
+      run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+    # Runs a single command using the runners shell
+    - name: Compile and run tests on robot code
+      run: ./gradlew.bat ${{matrix.build_target}}
