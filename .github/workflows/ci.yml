@@ -70,9 +70,9 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v4
 
-    # Declares the repository safe and not under dubious ownership.
-    - name: Add repository to git safe directories
-      run: git config --global --add safe.directory $GITHUB_WORKSPACE
+    # # Declares the repository safe and not under dubious ownership.
+    # - name: Add repository to git safe directories
+    #   run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
