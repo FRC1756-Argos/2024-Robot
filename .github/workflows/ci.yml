@@ -14,7 +14,6 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    if: false
     # Build in parallel to reduce pull request wait time
     strategy:
       matrix:
