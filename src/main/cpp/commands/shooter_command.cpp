@@ -6,9 +6,9 @@
 
 using namespace std::chrono_literals;
 
-ShooterCommand::ShooterCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator)
-    : m_pShooter{shooter}, m_pElevator{elevator} {
-  AddRequirements({m_pShooter, m_pElevator});
+ShooterCommand::ShooterCommand(ShooterSubsystem* shooter)
+    : m_pShooter{shooter} {
+  AddRequirements({m_pShooter});
   // Use addRequirements() here to declare subsystem dependencies.
 }
 
@@ -18,26 +18,20 @@ void ShooterCommand::Initialize() {
     Cancel();
     return;
   }
-  m_pShooter->NoteDetectionOverride(false);
-  m_pShooter->ShooterGoToSpeed(5000_rpm);
-  // put code for angle here
-  m_startTime = std::chrono::steady_clock::now();
+  m_pShooter->Feed(1.0);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void ShooterCommand::Execute() {
-  if ((std::chrono::steady_clock::now() - m_startTime) > 3.0s) {
-    m_pShooter->Feed(0.3);
-    if (!(m_pShooter->IsNotePresent())) {
-      Cancel();
-    }
+  if (!(m_pShooter->IsNotePresent())) {
+    Cancel();
   }
 }
 
 // Called once the command ends or is interrupted.
 void ShooterCommand::End(bool interrupted) {
   m_pShooter->Feed(0);
-  m_pShooter->Disable();
+  //m_pShooter->Disable();
 }
 
 // Returns true when the command should end.

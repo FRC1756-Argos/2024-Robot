@@ -7,10 +7,7 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-#include <chrono>
-
 #include "constants/measure_up.h"
-#include "subsystems/elevator_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
 
 /**
@@ -22,7 +19,7 @@
  */
 class ShooterCommand : public frc2::CommandHelper<frc2::Command, ShooterCommand> {
  public:
-  ShooterCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator);
+  ShooterCommand(ShooterSubsystem* shooter);
 
   void Initialize() override;
 
@@ -34,6 +31,4 @@ class ShooterCommand : public frc2::CommandHelper<frc2::Command, ShooterCommand>
 
  private:
   ShooterSubsystem* m_pShooter;
-  ElevatorSubsystem* m_pElevator;
-  std::chrono::time_point<std::chrono::steady_clock> m_startTime;
 };

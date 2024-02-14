@@ -60,7 +60,7 @@ RobotContainer::RobotContainer()
     , m_distanceNudgeRate{12 / 1_s}
     , m_alignLedDebouncer{50_ms}
     , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem}
-    , m_ShooterCommand{&m_ShooterSubSystem, &m_elevatorSubsystem} {
+    , m_ShooterCommand{&m_ShooterSubSystem} {
   // Initialize all of your commands and subsystems here
 
   AllianceChanged();
