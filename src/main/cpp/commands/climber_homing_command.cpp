@@ -1,6 +1,6 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/// \copyright Copyright (c) Argos FRC Team 1756.
+///            Open Source Software; you can modify and/or share it under the terms of
+///            the license file in the root directory of this project.
 
 #include "commands/climber_homing_command.h"
 
@@ -11,8 +11,8 @@
 using namespace std::chrono_literals;
 
 ClimberHomingCommand::ClimberHomingCommand(ClimberSubsystem& subsystem)
-    :m_climberSubsystem(subsystem), m_climberMovingDebounce{{0_ms, 250_ms}, true} {}
-  // Use addRequirements() here to declare subsystem dependencies.
+    : m_climberSubsystem(subsystem), m_climberMovingDebounce{{0_ms, 250_ms}, true} {}
+// Use addRequirements() here to declare subsystem dependencies.
 // Called when the command is initially scheduled.
 void ClimberHomingCommand::Initialize() {
   m_climberSubsystem.SetExtensionSpeed(-0.1);
