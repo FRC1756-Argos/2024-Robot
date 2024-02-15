@@ -7,6 +7,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/math.h>
 
+#include <ctre/phoenix6/configs/Configs.hpp>
 #include <ctre/phoenix6/controls/PositionVoltage.hpp>
 
 #include "argos_lib/config/falcon_config.h"
@@ -44,13 +45,13 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
   // m_primaryMotor.GetConfigurator().Apply(elevatorLiftSoftLimits);
 
   ctre::phoenix6::configs::SoftwareLimitSwitchConfigs carriageRotationSoftLimits;
-  carriageRotationSoftLimits.ForwardSoftLimitEnable = true;
-  carriageRotationSoftLimits.ReverseSoftLimitEnable = true;
   carriageRotationSoftLimits.ForwardSoftLimitThreshold =
       units::turn_t{measure_up::elevator::carriage::maxAngle}.to<double>();
   carriageRotationSoftLimits.ReverseSoftLimitThreshold =
       units::turn_t{measure_up::elevator::carriage::minAngle}.to<double>();
-  //   m_carriageMotor.GetConfigurator().Apply(carriageRotationSoftLimits);
+  carriageRotationSoftLimits.ForwardSoftLimitEnable = true;
+  carriageRotationSoftLimits.ReverseSoftLimitEnable = true;
+  // m_carriageMotor.GetConfigurator().Apply(carriageRotationSoftLimits);
 }
 
 // This method will be called once per scheduler run
