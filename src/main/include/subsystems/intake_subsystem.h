@@ -23,6 +23,8 @@ class IntakeSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] bool IsNotePresent();
 
+  void NoteDetectionOverride(bool override);
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

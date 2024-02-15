@@ -102,9 +102,9 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | X               | Unused |
 | Y               | Field Home (hold) |
 | LB              | Unused |
-| RB              | Reverse Intake |
+| RB              | Manual Reverse Intake |
 | LT              | Shoot |
-| RT              | Intake |
+| RT              | Manual Intake |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |
@@ -127,7 +127,7 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | DPad Left       | Unused |
 | LB              | Unused |
 | RB              | Unused |
-| LT              | Unused |
+| LT              | Intake |
 | RT              | Aim |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
