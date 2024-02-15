@@ -9,6 +9,7 @@
 #include <frc/geometry/Transform3d.h>
 #include <frc2/command/SubsystemBase.h>
 
+#include "constants/interpolation_maps.h"
 #include "argos_lib/config/config_types.h"
 #include "argos_lib/general/interpolation.h"
 #include "networktables/NetworkTable.h"

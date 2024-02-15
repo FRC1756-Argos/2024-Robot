@@ -60,7 +60,8 @@ RobotContainer::RobotContainer()
     , m_distanceNudgeRate{12 / 1_s}
     , m_alignLedDebouncer{50_ms}
     , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem}
-    , m_ShooterCommand{&m_ShooterSubSystem} {
+    , m_ShooterCommand{&m_ShooterSubSystem}
+    , m_autoAimCommand{&m_swerveDrive, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_visionSubSystem} {
   // Initialize all of your commands and subsystems here
 
   AllianceChanged();
@@ -119,17 +120,18 @@ void RobotContainer::ConfigureBindings() {
 
   // INTAKE TRIGGERS
   auto intake = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
-  auto outtakeManual = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
+  auto outtakeManual = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
 
   // CLIMBER TRIGGERS
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto climberDown = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kDown);
 
   // SHOOT TRIGGERS
-  auto shootManual = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
+  auto shootManual = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
   auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
-  auto shoot = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kBumperLeft);
+  auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
+  auto aim = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
 
   auto closedLoopSet = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
 
@@ -167,6 +169,7 @@ void RobotContainer::ConfigureBindings() {
 
   intake.WhileTrue(&m_IntakeCommand);
   shoot.WhileTrue(&m_ShooterCommand);
+  aim.WhileTrue(&m_autoAimCommand);
 
   // CLIMBER TRIGGER ACTIVATION
   climberUp.OnTrue(frc2::InstantCommand(
