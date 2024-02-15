@@ -29,7 +29,7 @@ void AutoAimCommand::Execute() {
   auto horzOffset = m_pVision->GetCalculatedDistanceToSpeaker();
   if (horzOffset != std::nullopt) {
     double offset = horzOffset.value().to<double>();
-    m_pSwerveDrive->SwerveDrive(0.0, 0.0, offset * 0.008);
+    m_pSwerveDrive->SwerveDrive(0.0, 0.0, -offset * 0.008);
   }
 }
 
