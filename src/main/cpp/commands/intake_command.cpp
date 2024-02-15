@@ -13,6 +13,13 @@ IntakeCommand::IntakeCommand(IntakeSubsystem* intake, ShooterSubsystem* shooter,
 
 // Called when the command is initially scheduled.
 void IntakeCommand::Initialize() {
+<<<<<<< HEAD
+  if (m_pShooter->IsNotePresent()) {
+    Cancel();
+    return;
+  }
+=======
+>>>>>>> origin/main
   m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::intakeHeight);
   m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::intakeAngle);
   m_pIntake->NoteDetectionOverride(false);
@@ -24,6 +31,12 @@ void IntakeCommand::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void IntakeCommand::Execute() {
   if (m_pShooter->IsNotePresent()) {
+<<<<<<< HEAD
+    Cancel();
+  } else {
+    m_pIntake->Intake(1);
+  }
+=======
     m_pIntake->Intake(0);
   } else {
     m_pIntake->Intake(1);
@@ -39,6 +52,11 @@ void IntakeCommand::Execute() {
 void IntakeCommand::End(bool interrupted) {
   m_pIntake->Intake(0);
   m_pShooter->Feed(0);
+<<<<<<< HEAD
+  m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::intakeHeight);
+  m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::intakeAngle);
+=======
+>>>>>>> origin/main
 }
 
 // Returns true when the command should end.

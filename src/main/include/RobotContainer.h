@@ -15,6 +15,7 @@
 
 #include "Constants.h"
 #include "commands/intake_command.h"
+<<<<<<< HEAD
 #include "commands/shooter_command.h"
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"

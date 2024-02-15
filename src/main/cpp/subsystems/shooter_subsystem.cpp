@@ -62,5 +62,6 @@ bool ShooterSubsystem::ReadyToShoot() {
 }
 
 void ShooterSubsystem::NoteDetectionOverride(bool override) {
+  m_feedMotor.OverrideLimitSwitchesEnable(override);
   m_feedMotor.OverrideLimitSwitchesEnable(!override);
 }
