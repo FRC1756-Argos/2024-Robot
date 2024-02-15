@@ -5,8 +5,9 @@
 #include "subsystems/climber_subsystem.h"
 
 #include <ctre/phoenix6/TalonFX.hpp>
-#include <ctre/phoenix6/controls/PositionVoltage.hpp>
 #include <ctre/phoenix6/configs/Configs.hpp>
+#include <ctre/phoenix6/controls/PositionVoltage.hpp>
+
 #include "argos_lib/config/falcon_config.h"
 #include "constants/addresses.h"
 #include "constants/measure_up.h"
@@ -58,13 +59,11 @@ void ClimberSubsystem::Disable() {
   m_primaryMotor.Set(0.0);
 }
 
-
 bool ClimberSubsystem::IsClimberMoving() {
   return (m_primaryMotor.GetVelocity()).GetValue() > 10_tps;
 }
 void ClimberSubsystem::SetHomeFailed(bool failed) {
   m_climberHomeFailed = failed;
-
 }
 bool ClimberSubsystem::GetHomeFailed() {
   return m_climberHomeFailed;
@@ -82,7 +81,7 @@ void ClimberSubsystem::Stop() {
   m_primaryMotor.Set(0.0);
 }
 
-bool ClimberSubsystem::IsClimberManualOverride(){
+bool ClimberSubsystem::IsClimberManualOverride() {
   return m_climberManualOverride;
 }
 
@@ -92,12 +91,6 @@ void ClimberSubsystem::UpdateClimberHome() {
   m_climberHomeFailed = false;
   EnableClimberSoftLimits();
 }
-
-
-
-
-
-
 
 // This method will be called once per scheduler run
 void ClimberSubsystem::Periodic() {}
