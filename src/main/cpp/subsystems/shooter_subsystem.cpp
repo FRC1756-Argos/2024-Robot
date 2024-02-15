@@ -44,7 +44,8 @@ void ShooterSubsystem::ShooterGoToSpeed(units::turns_per_second_t speed) {
   m_primaryMotor.SetControl(m_velocityControl.WithVelocity(speed));
 }
 
-void ShooterSubsystem::Feed(double speed) {
+void ShooterSubsystem::Feed(double speed, bool force) {
+  NoteDetectionOverride(force);
   m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
 }
 
@@ -61,5 +62,9 @@ bool ShooterSubsystem::ReadyToShoot() {
 }
 
 void ShooterSubsystem::NoteDetectionOverride(bool override) {
+<<<<<<< HEAD
   m_feedMotor.OverrideLimitSwitchesEnable(override);
+=======
+  m_feedMotor.OverrideLimitSwitchesEnable(!override);
+>>>>>>> origin/main
 }

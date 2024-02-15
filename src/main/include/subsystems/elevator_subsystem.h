@@ -40,6 +40,15 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] units::inch_t GetElevatorHeight();
 
+<<<<<<< HEAD
+=======
+  [[nodiscard]] bool IsLiftAtSetPoint();
+
+  [[nodiscard]] bool IsCarriageAtSetPoint();
+
+  [[nodiscard]] bool IsElevatorAtSetPoint();
+
+>>>>>>> origin/main
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
