@@ -3,7 +3,7 @@
 ///            the license file in the root directory of this project.
 
 #pragma once
-
+#include <ctre/phoenix6/configs/Configs.hpp>
 #include <argos_lib/config/config_types.h>
 #include <frc2/command/SubsystemBase.h>
 #include <units/length.h>
@@ -35,13 +35,13 @@ class ClimberSubsystem : public frc2::SubsystemBase {
 
   void SetHomeFailed(bool failed);
 
-  bool GetHomeFailed(bool failed);
+  bool GetHomeFailed();
 
   void ClimberMove(double speed);
 
   void SetHeight(units::inch_t height);
 
-  void SetManualOverride(bool state);
+  void SetClimberManualOverride(bool state);
 
   void Disable();
 
@@ -54,7 +54,9 @@ class ClimberSubsystem : public frc2::SubsystemBase {
   ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
   argos_lib::RobotInstance m_robotInstance;
   bool m_climberHomed;
-  bool m_climberFailed;
+  bool m_climberHomeFailed;
+  bool m_climberManualOverride;
 
-  bool m_manualOverride;
+    void EnableClimberSoftLimits();
+    void DisableClimberSoftLimits();
 };
