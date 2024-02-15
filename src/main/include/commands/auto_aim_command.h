@@ -8,8 +8,8 @@
 #include <frc2/command/CommandHelper.h>
 
 #include "subsystems/elevator_subsystem.h"
-#include "subsystems/swerve_drive_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
+#include "subsystems/swerve_drive_subsystem.h"
 #include "subsystems/vision_subsystem.h"
 
 /**

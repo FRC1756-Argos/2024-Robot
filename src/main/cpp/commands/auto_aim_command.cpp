@@ -26,7 +26,7 @@ void AutoAimCommand::Execute() {
     m_pElevator->SetCarriageAngle(angle.value());
   }
 
-  auto horzOffset = m_pVision->GetCalculatedDistanceToSpeaker();
+  auto horzOffset = m_pVision->GetHorizontalOffsetToTarget();
   if (horzOffset != std::nullopt) {
     double offset = horzOffset.value().to<double>();
     m_pSwerveDrive->SwerveDrive(0.0, 0.0, -offset * 0.008);

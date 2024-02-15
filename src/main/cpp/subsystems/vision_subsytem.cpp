@@ -28,15 +28,21 @@ void VisionSubsystem::Periodic() {
     frc::SmartDashboard::PutBoolean("(Vision - Periodic) Is Target Present?", targetValues.hasTargets);
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Pitch", targetValues.m_pitch.to<double>());
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Yaw", targetValues.m_yaw.to<double>());
-
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag ID", targetValues.tagID);
-    frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera",
-                                   GetDistanceToSpeaker().value().to<double>());
 
-    frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
-                                   GetCalculatedDistanceToSpeaker().value().to<double>());
+    if (GetDistanceToSpeaker() != std::nullopt) {
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera",
+                                     GetDistanceToSpeaker().value().to<double>());
+    }
 
-    frc::SmartDashboard::PutNumber("(Vision - Periodic) Shooter Angle", getShooterAngle().value().to<double>());
+    if (GetCalculatedDistanceToSpeaker() != std::nullopt) {
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
+                                     GetCalculatedDistanceToSpeaker().value().to<double>());
+    }
+
+    if (getShooterAngle() != std::nullopt) {
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Shooter Angle", getShooterAngle().value().to<double>());
+    }
   }
 }
 
@@ -79,13 +85,15 @@ std::optional<units::inch_t> VisionSubsystem::GetDistanceToSpeaker() {
 }
 
 std::optional<units::inch_t> VisionSubsystem::GetCalculatedDistanceToSpeaker() {
-  // @todo: add checks here to make sure we are tracking the right ID based on the alliance color
-  // 4 or 7, else return null
-  // NOTE: pitch angle returned by the camera will be to the center of the speaker opening and not the tag
-  return (measure_up::shooter_targets::speakerTagHeight - measure_up::camera_front::cameraHeight) /
-         std::tan(
-             static_cast<units::radian_t>(measure_up::camera_front::cameraMountAngle + GetCameraTargetValues().m_pitch)
-                 .to<double>());
+  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ? 7 : 4;
+  if (tagOfInterest == GetCameraTargetValues().tagID) {
+    return (measure_up::shooter_targets::speakerTagHeight - measure_up::camera_front::cameraHeight) /
+           std::tan(static_cast<units::radian_t>(measure_up::camera_front::cameraMountAngle +
+                                                 GetCameraTargetValues().m_pitch)
+                        .to<double>());
+  } else {
+    return std::nullopt;
+  }
 }
 
 void VisionSubsystem::SetPipeline(uint16_t tag) {

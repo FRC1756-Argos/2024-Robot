@@ -14,9 +14,9 @@
 #include <frc2/command/button/CommandXboxController.h>
 
 #include "Constants.h"
+#include "commands/auto_aim_command.h"
 #include "commands/intake_command.h"
 #include "commands/shooter_command.h"
-#include "commands/auto_aim_command.h"
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/intake_subsystem.h"
