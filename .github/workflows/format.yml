@@ -16,6 +16,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0' # Make sure main is available
+          token: ${{ secrets.FORMAT_REPO_ACCESS_TOKEN }} # Ensure formatting commits trigger additional formatting check for PR job requirements
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
@@ -53,3 +54,9 @@ jobs:
           delete-branch: true
           title: Formatting Changes
           labels: style
+
+
+
+
+
+          
