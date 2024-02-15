@@ -54,9 +54,3 @@ jobs:
           delete-branch: true
           title: Formatting Changes
           labels: style
-
-
-
-
-
-          
