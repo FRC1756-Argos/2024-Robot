@@ -38,5 +38,5 @@ bool IntakeSubsystem::IsNotePresent() {
 }
 
 void IntakeSubsystem::NoteDetectionOverride(bool override) {
-  m_primaryMotor.OverrideLimitSwitchesEnable(override);
+  m_primaryMotor.OverrideLimitSwitchesEnable(!override);
 }

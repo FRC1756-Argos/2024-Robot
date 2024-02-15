@@ -168,7 +168,7 @@ void RobotContainer::ConfigureBindings() {
       .OnFalse(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(0.0); }, {&m_intakeSubsystem}).ToPtr());
 
   intake.WhileTrue(&m_IntakeCommand);
-  shoot.OnTrue(&m_ShooterCommand);
+  shoot.WhileTrue(&m_ShooterCommand);
 
   // CLIMBER TRIGGER ACTIVATION
   climberUp.OnTrue(frc2::InstantCommand(
@@ -209,7 +209,8 @@ void RobotContainer::ConfigureBindings() {
   // SHOOTER TRIGGER ACTIVATION
   shootManual.OnTrue(
       frc2::InstantCommand([this]() { m_ShooterSubSystem.ShooterGoToSpeed(5000_rpm); }, {&m_ShooterSubSystem}).ToPtr());
-  feedForward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.5); }, {&m_ShooterSubSystem}).ToPtr());
+  feedForward.OnTrue(
+      frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.5, true); }, {&m_ShooterSubSystem}).ToPtr());
   feedBackward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(-0.5); }, {&m_ShooterSubSystem}).ToPtr());
   shootManual.OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.0); }, {&m_ShooterSubSystem}).ToPtr());
   (feedForward || feedBackward)
