@@ -14,17 +14,14 @@ ShooterCommand::ShooterCommand(ShooterSubsystem* shooter)
 
 // Called when the command is initially scheduled.
 void ShooterCommand::Initialize() {
-  if (!(m_pShooter->ReadyToShoot())) {
-    Cancel();
-    return;
-  }
-  m_pShooter->Feed(1.0);
+  m_pShooter->NoteDetectionOverride(false);
+  m_pShooter->Feed(0.0);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void ShooterCommand::Execute() {
-  if (!(m_pShooter->IsNotePresent())) {
-    Cancel();
+  if (m_pShooter->ReadyToShoot()) {
+    m_pShooter->Feed(1);
   }
 }
 
