@@ -59,10 +59,8 @@ RobotContainer::RobotContainer()
     , m_rotationalNudgeRate{4 / 1_s}
     , m_distanceNudgeRate{12 / 1_s}
     , m_alignLedDebouncer{50_ms}
-<<<<<<< HEAD
     , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_ShooterCommand{&m_ShooterSubSystem} {
->>>>>>>>> Temporary merge branch 2
   // Initialize all of your commands and subsystems here
 
   AllianceChanged();
@@ -120,7 +118,6 @@ void RobotContainer::ConfigureBindings() {
   auto fieldHome = m_controllers.DriverController().TriggerDebounced(argos_lib::XboxController::Button::kY);
 
   // INTAKE TRIGGERS
-<<<<<<< HEAD
   auto intakeManual = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
   auto outtakeManual = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
   auto intake = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
@@ -164,7 +161,6 @@ void RobotContainer::ConfigureBindings() {
   fieldHome.OnTrue(frc2::InstantCommand([this]() { m_swerveDrive.FieldHome(); }, {&m_swerveDrive}).ToPtr());
 
   // INTAKE TRIGGER ACTIVATION
-<<<<<<< HEAD
   intakeManual.OnTrue(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(1.0); }, {&m_intakeSubsystem}).ToPtr());
   outtakeManual.OnTrue(
       frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(-0.8); }, {&m_intakeSubsystem}).ToPtr());
