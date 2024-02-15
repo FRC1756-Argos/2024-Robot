@@ -59,7 +59,8 @@ RobotContainer::RobotContainer()
     , m_rotationalNudgeRate{4 / 1_s}
     , m_distanceNudgeRate{12 / 1_s}
     , m_alignLedDebouncer{50_ms}
-    , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem} {
+    , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem}
+    , m_ShooterCommand{&m_ShooterSubSystem} {
   // Initialize all of your commands and subsystems here
 
   AllianceChanged();
@@ -128,7 +129,7 @@ void RobotContainer::ConfigureBindings() {
   auto shootManual = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
   auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
-  auto shoot = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kLeft);
+  auto shoot = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kBumperLeft);
 
   auto closedLoopSet = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
 
@@ -161,10 +162,11 @@ void RobotContainer::ConfigureBindings() {
   // INTAKE TRIGGER ACTIVATION
   outtakeManual.OnTrue(
       frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(-0.8); }, {&m_intakeSubsystem}).ToPtr());
-  (intake || outtakeManual)
+  (outtakeManual)
       .OnFalse(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(0.0); }, {&m_intakeSubsystem}).ToPtr());
 
   intake.WhileTrue(&m_IntakeCommand);
+  shoot.WhileTrue(&m_ShooterCommand);
 
   // CLIMBER TRIGGER ACTIVATION
   climberUp.OnTrue(frc2::InstantCommand(

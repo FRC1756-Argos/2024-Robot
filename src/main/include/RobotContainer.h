@@ -15,6 +15,7 @@
 
 #include "Constants.h"
 #include "commands/intake_command.h"
+#include "commands/shooter_command.h"
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/intake_subsystem.h"
@@ -74,6 +75,7 @@ class RobotContainer {
   ElevatorSubsystem m_elevatorSubsystem;
 
   IntakeCommand m_IntakeCommand;
+  ShooterCommand m_ShooterCommand;
 
   // Autonomous
   AutonomousNothing m_autoNothing;
