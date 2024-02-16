@@ -11,12 +11,13 @@
 using namespace std::chrono_literals;
 
 ClimberHomingCommand::ClimberHomingCommand(ClimberSubsystem& subsystem)
-    : m_climberSubsystem(subsystem), m_climberMovingDebounce{{0_ms, 250_ms}, true} {}
-// Use addRequirements() here to declare subsystem dependencies.
-// Called when the command is initially scheduled.
+    : m_climberSubsystem(subsystem), m_climberMovingDebounce{{0_ms, 250_ms}, true} {
+  AddRequirements({&m_climberSubsystem});
+}
+
 void ClimberHomingCommand::Initialize() {
-  m_climberSubsystem.SetExtensionSpeed(-0.1);
-  m_climberSubsystem.SetManualOverride(false);
+  m_climberSubsystem.ClimberMove(-0.1);
+  m_climberSubsystem.SetClimberManualOverride(false);
   m_startTime = std::chrono::steady_clock::now();
   m_climberMovingDebounce.Reset(true);
 }
@@ -29,17 +30,17 @@ void ClimberHomingCommand::Execute() {
     Cancel();
 
   } else {
-    m_climberSubsystem.SetExtensionSpeed(-0.1);
+    m_climberSubsystem.ClimberMove(-0.1);
   }
 }
 
 // Called once the command ends or is interrupted.
 void ClimberHomingCommand::End(bool interrupted) {
+  m_climberSubsystem.ClimberMove(0.0);
   if (!interrupted) {
     m_climberSubsystem.UpdateClimberHome();
     m_climberSubsystem.SetHomeFailed(false);
   } else {
-    m_climberSubsystem.SetExtensionSpeed(0.0);
     m_climberSubsystem.SetHomeFailed(true);
   }
 }

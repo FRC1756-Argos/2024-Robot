@@ -29,7 +29,7 @@ ClimberSubsystem::ClimberSubsystem(argos_lib::RobotInstance robotInstance)
                                          motorConfig::practice_bot::climber::secondaryClimbing>(
       m_secondaryMotor, 100_ms, robotInstance);
   m_secondaryMotor.SetControl(ctre::phoenix6::controls::Follower(m_primaryMotor.GetDeviceID(), true));
-  m_primaryMotor.SetPosition(sensor_conversions::climber::ToSensorUnit(measure_up::climber::minExtension));
+  m_primaryMotor.SetPosition(sensor_conversions::climber::ToSensorUnit(measure_up::climber::lowerLimit));
 }
 // This method will be called once per scheduler run
 void ClimberSubsystem::Periodic() {}
@@ -42,11 +42,7 @@ void ClimberSubsystem::ClimberMove(double speed) {
 
 void ClimberSubsystem::SetHeight(units::inch_t height) {
   SetClimberManualOverride(false);
-  if (height > measure_up::climber::maxExtension) {
-    height = measure_up::climber::maxExtension;
-  } else if (height < measure_up::climber::minExtension) {
-    height = measure_up::climber::minExtension;
-  }
+  height = std::clamp<units::inch_t>(height, measure_up::climber::lowerLimit, measure_up::climber::upperLimit);
   m_primaryMotor.SetControl(
       ctre::phoenix6::controls::PositionVoltage(sensor_conversions::climber::ToSensorUnit(height)));
 }
@@ -60,52 +56,56 @@ void ClimberSubsystem::Disable() {
 }
 
 bool ClimberSubsystem::IsClimberMoving() {
-  return (m_primaryMotor.GetVelocity()).GetValue() > 10_tps;
+  return m_primaryMotor.GetRotorVelocity().GetValue() > 10_tps;
 }
+
 void ClimberSubsystem::SetHomeFailed(bool failed) {
   m_climberHomeFailed = failed;
 }
-bool ClimberSubsystem::GetHomeFailed() {
+
+bool ClimberSubsystem::GetHomeFailed() const {
   return m_climberHomeFailed;
 }
 
-bool ClimberSubsystem::IsClimberHomed() {
+bool ClimberSubsystem::IsClimberHomed() const {
   return m_climberHomed || m_climberHomeFailed;
 }
 
 units::inch_t ClimberSubsystem::GetClimberExtension() {
-  return sensor_conversions::climber::ToHeight(m_primaryMotor.GetRotorPosition())
+  return sensor_conversions::climber::ToHeight(m_primaryMotor.GetPosition().GetValue());
 }
 
 void ClimberSubsystem::Stop() {
   m_primaryMotor.Set(0.0);
 }
 
-bool ClimberSubsystem::IsClimberManualOverride() {
+bool ClimberSubsystem::IsClimberManualOverride() const {
   return m_climberManualOverride;
 }
 
 void ClimberSubsystem::UpdateClimberHome() {
-  m_primaryMotor;
+  /// @todo set position
   m_climberHomed = true;
   m_climberHomeFailed = false;
   EnableClimberSoftLimits();
 }
 
-// This method will be called once per scheduler run
-void ClimberSubsystem::Periodic() {}
-
 void ClimberSubsystem::EnableClimberSoftLimits() {
   if (m_climberHomed) {
-    m_primaryMotor.ForwardSoftLimitThreshold(
-        sensor_conversions::climber::ToSensorUnit(measure_up::climber::maxExtension));
-    m_primaryMotor.ReverseSoftLimitThreshold(
-        sensor_conversions::climber::ToSensorUnit(measure_up::climber::minExtension));
-    m_primaryMotor.ForwardSoftLimitEnable(true);
-    m_primaryMotor.ReverseSoftLimitEnable(true);
+    ctre::phoenix6::configs::SoftwareLimitSwitchConfigs climberSoftLimits;
+    climberSoftLimits.ForwardSoftLimitThreshold =
+        sensor_conversions::climber::ToSensorUnit(measure_up::climber::upperLimit).to<double>();
+    climberSoftLimits.ReverseSoftLimitThreshold =
+        sensor_conversions::climber::ToSensorUnit(measure_up::climber::lowerLimit).to<double>();
+    climberSoftLimits.ForwardSoftLimitEnable = true;
+    climberSoftLimits.ReverseSoftLimitEnable = true;
+    m_primaryMotor.GetConfigurator().Apply(climberSoftLimits);
   }
 }
-void m_primaryMotorSubsystem::DisableClimberSoftLimits() {
-  m_primaryMotor.ForwardSoftLimitEnable(false);
-  m_primaryMotor.ReverseSoftLimitEnable(false);
+
+void ClimberSubsystem::DisableClimberSoftLimits() {
+  ctre::phoenix6::configs::SoftwareLimitSwitchConfigs climberSoftLimits;
+  climberSoftLimits.ForwardSoftLimitEnable = false;
+  climberSoftLimits.ReverseSoftLimitEnable = false;
+  m_primaryMotor.GetConfigurator().Apply(climberSoftLimits);
 }

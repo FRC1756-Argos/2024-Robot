@@ -24,17 +24,17 @@ class ClimberSubsystem : public frc2::SubsystemBase {
 
   void UpdateClimberHome();
 
-  bool IsClimberHomed();
+  [[nodiscard]] bool IsClimberHomed() const;
 
-  bool IsClimberManualOverride();
+  [[nodiscard]] bool IsClimberManualOverride() const;
 
   units::inch_t GetClimberExtension();
 
-  bool IsClimberMoving();
+  [[nodiscard]] bool IsClimberMoving();
 
   void SetHomeFailed(bool failed);
 
-  bool GetHomeFailed();
+  [[nodiscard]] bool GetHomeFailed() const;
 
   void ClimberMove(double speed);
 

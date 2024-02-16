@@ -53,13 +53,13 @@ RobotContainer::RobotContainer()
     , m_intakeSubsystem(m_instance)
     , m_climberSubsystem(m_instance)
     , m_elevatorSubsystem(m_instance)
+    , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}
     , m_rotationalNudgeRate{4 / 1_s}
     , m_distanceNudgeRate{12 / 1_s}
-    , m_alignLedDebouncer{50_ms}
-    , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem} {
+    , m_alignLedDebouncer{50_ms} {
   // Initialize all of your commands and subsystems here
 
   AllianceChanged();
@@ -168,14 +168,14 @@ void RobotContainer::ConfigureBindings() {
   // CLIMBER TRIGGER ACTIVATION
   climberUp.OnTrue(frc2::InstantCommand(
                        [this]() {
-                         m_climberSubsystem.SetManualOverride(true);
+                         m_climberSubsystem.SetClimberManualOverride(true);
                          m_climberSubsystem.ClimberMove(0.2);
                        },
                        {&m_climberSubsystem})
                        .ToPtr());
   climberDown.OnTrue(frc2::InstantCommand(
                          [this]() {
-                           m_climberSubsystem.SetManualOverride(true);
+                           m_climberSubsystem.SetClimberManualOverride(true);
                            m_climberSubsystem.ClimberMove(-0.2);
                          },
                          {&m_climberSubsystem})
