@@ -37,5 +37,6 @@
     //   "version": "15.0.7"
     // }
   },
-  "postCreateCommand": "pipx install wpiformat==2022.21 clang-format==15.0.7 ; pre-commit install ; pre-commit install-hooks"
+  "postCreateCommand": "pipx install wpiformat==2022.21 clang-format==15.0.7 ; pre-commit install ; pre-commit install-hooks ; git fetch origin main:main",
+  "postStartCommand": "git fetch"
 }
