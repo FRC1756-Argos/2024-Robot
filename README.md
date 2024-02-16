@@ -140,15 +140,15 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 
 We're using the following dependencies:
 
- * [CTRE Phoenix 24.1.0](https://github.com/CrossTheRoadElec/Phoenix-Releases/releases/tag/v24.1.0)
+ * [CTRE Phoenix 24.2.0](https://github.com/CrossTheRoadElec/Phoenix-Releases/releases/tag/v24.2.0)
  * [Playing With Fusion 2024.01.10](https://www.playingwithfusion.com/docview.php?docid=1205)
  * [REVLib 2024.2.0](https://docs.revrobotics.com/brushless/spark-max/revlib)
  * [WPILib 2024.2.1](https://github.com/wpilibsuite/allwpilib/releases/tag/v2024.2.1)
- * [Choreo v2024.1.2](https://github.com/SleipnirGroup/Choreo/releases/tag/v2024.1.2-b)
+ * [Choreo v2024.1.3](https://github.com/SleipnirGroup/Choreo/releases/tag/v2024.1.3)
 
 ## Special Thanks
 
- * Our sponsors for the 2022 season.  Thank you for your continued support
+ * Our sponsors for the 2024 season.  Thank you for your continued support
    * [Caterpillar](https://www.caterpillar.com/)
    * [Gene Haas Foundation](https://ghaasfoundation.org/)
    * [Boeing](https://www.boeing.com/)
