@@ -55,4 +55,10 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
   argos_lib::RobotInstance m_robotInstance;
   bool m_elevatorManualOverride;
   bool m_carriageMotorManualOverride;
+  bool m_elevatorHomed;
+  bool m_carriageHomed;
+  void EnableElevatorSoftLimits();
+  void DisableElevatorSoftLimits();
+  void EnableCarriageSoftLimits();
+  void DisableCarriageSoftLimits();
 };
