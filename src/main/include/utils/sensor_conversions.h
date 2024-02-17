@@ -24,6 +24,13 @@ namespace sensor_conversions {
       constexpr units::degree_t ToAngle(const units::angle::turn_t sensorunit) {
         return sensorunit * sensorConversionFactor;
       }
+      constexpr double turnGearRatio = 12.8;
+      constexpr units::turn_t MotorToWheelAngle(const units::angle::turn_t motorPosition) {
+        return motorPosition / turnGearRatio;
+      }
+      constexpr units::turn_t WheelToMotorAngle(const units::angle::turn_t wheelPosition) {
+        return wheelPosition * turnGearRatio;
+      }
     }  // namespace turn
     namespace drive {
       constexpr auto wheelDiameter = 3.5_in / units::angle::turn_t{1};

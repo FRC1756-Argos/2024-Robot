@@ -15,7 +15,9 @@
 
 #include "Constants.h"
 #include "commands/climber_homing_command.h"
+#include "commands/auto_aim_command.h"
 #include "commands/intake_command.h"
+#include "commands/shooter_command.h"
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/intake_subsystem.h"
@@ -74,8 +76,10 @@ class RobotContainer {
   ClimberSubsystem m_climberSubsystem;
   ElevatorSubsystem m_elevatorSubsystem;
 
-  ClimberHomingCommand m_ClimberHomeCommand;
   IntakeCommand m_IntakeCommand;
+  ShooterCommand m_ShooterCommand;
+  AutoAimCommand m_autoAimCommand;
+  ClimberHomingCommand m_ClimberHomeCommand;
 
   // Autonomous
   AutonomousNothing m_autoNothing;

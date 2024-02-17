@@ -4,6 +4,9 @@
 
 #include "subsystems/elevator_subsystem.h"
 
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <units/math.h>
+
 #include <ctre/phoenix6/controls/PositionVoltage.hpp>
 
 #include "argos_lib/config/falcon_config.h"
@@ -106,19 +109,33 @@ units::inch_t ElevatorSubsystem::GetElevatorHeight() {
 }
 
 bool ElevatorSubsystem::IsLiftAtSetPoint() {
-  if (m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltage) {
+  frc::SmartDashboard::PutString("ElevatorLiftMode", m_primaryMotor.GetControlMode().GetValue().ToString());
+  frc::SmartDashboard::PutNumber("ElevatorLiftError", m_primaryMotor.GetClosedLoopError().GetValue());
+  frc::SmartDashboard::PutNumber(
+      "ElevatorHeightError",
+      sensor_conversions::elevator::lift::ToHeight(units::turn_t{m_primaryMotor.GetClosedLoopError().GetValue()})
+          .to<double>());
+  if (m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltage &&
+      m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltageFOC) {
     return false;
   }
-  return sensor_conversions::elevator::lift::ToHeight(units::turn_t{m_primaryMotor.GetClosedLoopError().GetValue()}) <
-         0.25_in;
+  return units::math::abs(sensor_conversions::elevator::lift::ToHeight(
+             units::turn_t{m_primaryMotor.GetClosedLoopError().GetValue()})) < 0.25_in;
 }
 
 bool ElevatorSubsystem::IsCarriageAtSetPoint() {
-  if (m_carriageMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltage) {
+  frc::SmartDashboard::PutString("ElevatorCarriageMode", m_primaryMotor.GetControlMode().GetValue().ToString());
+  frc::SmartDashboard::PutNumber("ElevatorCarriageError", m_primaryMotor.GetClosedLoopError().GetValue());
+  frc::SmartDashboard::PutNumber(
+      "ElevatorCarriageError(Deg)",
+      sensor_conversions::elevator::carriage::ToAngle(units::turn_t{m_carriageMotor.GetClosedLoopError().GetValue()})
+          .to<double>());
+  if (m_carriageMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltage &&
+      m_carriageMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltageFOC) {
     return false;
   }
-  return sensor_conversions::elevator::carriage::ToAngle(
-             units::turn_t{m_carriageMotor.GetClosedLoopError().GetValue()}) < 0.5_deg;
+  return units::math::abs(sensor_conversions::elevator::carriage::ToAngle(
+             units::turn_t{m_carriageMotor.GetClosedLoopError().GetValue()})) < 0.5_deg;
 }
 
 bool ElevatorSubsystem::IsElevatorAtSetPoint() {
