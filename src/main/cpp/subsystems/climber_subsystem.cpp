@@ -4,6 +4,8 @@
 
 #include "subsystems/climber_subsystem.h"
 
+#include <units/math.h>
+
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/configs/Configs.hpp>
 #include <ctre/phoenix6/controls/PositionVoltage.hpp>
@@ -13,7 +15,6 @@
 #include "constants/measure_up.h"
 #include "constants/motors.h"
 #include "utils/sensor_conversions.h"
-#include <units/math.h>
 
 ClimberSubsystem::ClimberSubsystem(argos_lib::RobotInstance robotInstance)
     : m_primaryMotor(GetCANAddr(
@@ -62,7 +63,7 @@ bool ClimberSubsystem::IsClimberMoving() {
 
 void ClimberSubsystem::SetHomeFailed(bool failed) {
   m_climberHomeFailed = failed;
-  if(failed) {
+  if (failed) {
     m_climberHomed = false;
   }
 }
@@ -100,7 +101,7 @@ void ClimberSubsystem::EnableClimberSoftLimits() {
     climberSoftLimits.ForwardSoftLimitThreshold =
         sensor_conversions::climber::ToSensorUnit(measure_up::climber::upperLimit).to<double>();
     climberSoftLimits.ReverseSoftLimitThreshold =
-        sensor_conversions::climber::ToSensorUnit(measure_up::climber::lowerLimit+0.25_in).to<double>();
+        sensor_conversions::climber::ToSensorUnit(measure_up::climber::lowerLimit + 0.25_in).to<double>();
     climberSoftLimits.ForwardSoftLimitEnable = true;
     climberSoftLimits.ReverseSoftLimitEnable = true;
     m_primaryMotor.GetConfigurator().Apply(climberSoftLimits);

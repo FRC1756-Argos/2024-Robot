@@ -12,8 +12,9 @@
 #include <frc/filter/SlewRateLimiter.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
-#include "commands/climber_homing_command.h"
+
 #include "Constants.h"
+#include "commands/climber_homing_command.h"
 #include "commands/intake_command.h"
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
