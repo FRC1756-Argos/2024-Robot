@@ -53,6 +53,7 @@ RobotContainer::RobotContainer()
     , m_intakeSubsystem(m_instance)
     , m_climberSubsystem(m_instance)
     , m_elevatorSubsystem(m_instance)
+    , m_ClimberHomeCommand(m_climberSubsystem)
     , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
@@ -113,6 +114,12 @@ void RobotContainer::ConfigureBindings() {
 
   auto robotEnableTrigger = (frc2::Trigger{[this]() { return frc::DriverStation::IsEnabled(); }});
 
+  // Climber homing trigger
+
+  auto ClimberHomeRequiredTrigger = (frc2::Trigger{[this]() { return !m_climberSubsystem.IsClimberHomed(); }});
+
+  auto startupClimberHomeTrigger = robotEnableTrigger && ClimberHomeRequiredTrigger;
+
   // DRIVE TRIGGERS
   auto fieldHome = m_controllers.DriverController().TriggerDebounced(argos_lib::XboxController::Button::kY);
 
@@ -166,6 +173,8 @@ void RobotContainer::ConfigureBindings() {
   intake.WhileTrue(&m_IntakeCommand);
 
   // CLIMBER TRIGGER ACTIVATION
+  startupClimberHomeTrigger.OnTrue(&m_ClimberHomeCommand);
+
   climberUp.OnTrue(frc2::InstantCommand(
                        [this]() {
                          m_climberSubsystem.SetClimberManualOverride(true);

@@ -13,6 +13,7 @@
 #include "constants/measure_up.h"
 #include "constants/motors.h"
 #include "utils/sensor_conversions.h"
+#include <units/math.h>
 
 ClimberSubsystem::ClimberSubsystem(argos_lib::RobotInstance robotInstance)
     : m_primaryMotor(GetCANAddr(
@@ -34,8 +35,8 @@ ClimberSubsystem::ClimberSubsystem(argos_lib::RobotInstance robotInstance)
 // This method will be called once per scheduler run
 void ClimberSubsystem::Periodic() {}
 
-void ClimberSubsystem::ClimberMove(double speed) {
-  if (m_climberManualOverride) {
+void ClimberSubsystem::ClimberMove(double speed, bool force) {
+  if (m_climberManualOverride || force) {
     m_primaryMotor.Set(speed);
   }
 }
@@ -56,11 +57,14 @@ void ClimberSubsystem::Disable() {
 }
 
 bool ClimberSubsystem::IsClimberMoving() {
-  return m_primaryMotor.GetRotorVelocity().GetValue() > 10_tps;
+  return units::math::abs(m_primaryMotor.GetRotorVelocity().GetValue()) > 0.5_tps;
 }
 
 void ClimberSubsystem::SetHomeFailed(bool failed) {
   m_climberHomeFailed = failed;
+  if(failed) {
+    m_climberHomed = false;
+  }
 }
 
 bool ClimberSubsystem::GetHomeFailed() const {
@@ -68,7 +72,7 @@ bool ClimberSubsystem::GetHomeFailed() const {
 }
 
 bool ClimberSubsystem::IsClimberHomed() const {
-  return m_climberHomed || m_climberHomeFailed;
+  return m_climberHomed;
 }
 
 units::inch_t ClimberSubsystem::GetClimberExtension() {
@@ -84,7 +88,7 @@ bool ClimberSubsystem::IsClimberManualOverride() const {
 }
 
 void ClimberSubsystem::UpdateClimberHome() {
-  /// @todo set position
+  m_primaryMotor.SetPosition(sensor_conversions::climber::ToSensorUnit(measure_up::climber::lowerLimit));
   m_climberHomed = true;
   m_climberHomeFailed = false;
   EnableClimberSoftLimits();
@@ -96,7 +100,7 @@ void ClimberSubsystem::EnableClimberSoftLimits() {
     climberSoftLimits.ForwardSoftLimitThreshold =
         sensor_conversions::climber::ToSensorUnit(measure_up::climber::upperLimit).to<double>();
     climberSoftLimits.ReverseSoftLimitThreshold =
-        sensor_conversions::climber::ToSensorUnit(measure_up::climber::lowerLimit).to<double>();
+        sensor_conversions::climber::ToSensorUnit(measure_up::climber::lowerLimit+0.25_in).to<double>();
     climberSoftLimits.ForwardSoftLimitEnable = true;
     climberSoftLimits.ReverseSoftLimitEnable = true;
     m_primaryMotor.GetConfigurator().Apply(climberSoftLimits);

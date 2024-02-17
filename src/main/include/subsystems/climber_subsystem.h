@@ -36,7 +36,7 @@ class ClimberSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] bool GetHomeFailed() const;
 
-  void ClimberMove(double speed);
+  void ClimberMove(double speed, bool force = false);
 
   void SetHeight(units::inch_t height);
 

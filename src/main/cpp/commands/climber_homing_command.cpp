@@ -16,7 +16,7 @@ ClimberHomingCommand::ClimberHomingCommand(ClimberSubsystem& subsystem)
 }
 
 void ClimberHomingCommand::Initialize() {
-  m_climberSubsystem.ClimberMove(-0.1);
+  m_climberSubsystem.ClimberMove(-0.07, true);
   m_climberSubsystem.SetClimberManualOverride(false);
   m_startTime = std::chrono::steady_clock::now();
   m_climberMovingDebounce.Reset(true);
@@ -26,17 +26,17 @@ void ClimberHomingCommand::Initialize() {
 void ClimberHomingCommand::Execute() {
   auto timePassed = units::second_t{std::chrono::steady_clock::now() - m_startTime};
 
-  if (m_climberSubsystem.IsClimberManualOverride() || (timePassed) > 1.5_s) {
+  if (m_climberSubsystem.IsClimberManualOverride() || (timePassed) > 3_s) {
     Cancel();
 
   } else {
-    m_climberSubsystem.ClimberMove(-0.1);
+    m_climberSubsystem.ClimberMove(-0.07, true);
   }
 }
 
 // Called once the command ends or is interrupted.
 void ClimberHomingCommand::End(bool interrupted) {
-  m_climberSubsystem.ClimberMove(0.0);
+  m_climberSubsystem.ClimberMove(0.0, !m_climberSubsystem.IsClimberManualOverride());
   if (!interrupted) {
     m_climberSubsystem.UpdateClimberHome();
     m_climberSubsystem.SetHomeFailed(false);
