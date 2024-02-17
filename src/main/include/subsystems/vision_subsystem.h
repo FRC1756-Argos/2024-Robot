@@ -157,6 +157,8 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] std::optional<units::degree_t> getShooterAngle();
 
+  [[nodiscard]] std::optional<units::degree_t> getShooterOffset();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

@@ -19,7 +19,7 @@ void CameraInterface::RequestTargetFilterReset() {
 VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, SwerveDriveSubsystem* pDriveSubsystem)
     : m_instance(instance)
     , m_pDriveSubsystem(pDriveSubsystem)
-    , m_usePolynomial(false)
+    , m_usePolynomial(true)
     , m_useTrigonometry(false)
     , m_shooterAngleMap{shooterRange::shooterAngle} {}
 
@@ -71,18 +71,28 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
   if (distance) {
     double d = distance.value().to<double>();
     if (m_usePolynomial) {
-      d /= 12.0;
-      return units::degree_t(83.4 - (9.38 * d) + (0.531 * d * d) - (0.0103 * d * d * d));
+      //d /= 12.0;
+      return units::degree_t(145.5779 - (3.16661 * d) + (0.03812543 * d * d) - (0.0002420577 * d * d * d) +
+                             (7.701486e-7 * d * d * d * d) - (9.625646e-10 * d * d * d * d * d));
     } else if (m_useTrigonometry) {
       return (units::degree_t)(180.0 / 3.14159265358) *
-             std::atan2(measure_up::shooter_targets::speakerOpeningHeightFromShooter.to<double>(),
-                        distance.value().to<double>());
+             std::atan((measure_up::shooter_targets::speakerOpeningHeightFromShooter.to<double>() /
+                        distance.value().to<double>()));
     } else {
       return m_shooterAngleMap.Map(distance.value());
     }
   }
 
   return std::nullopt;
+}
+
+std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
+  auto distance = GetDistanceToSpeaker();
+  if (distance) {
+    return (units::degree_t)(180.0 / 3.14159265358) *
+            std::atan((measure_up::shooter_targets::cameraOffsetFromShooter.to<double>() /
+                       distance.value().to<double>()));
+  }
 }
 
 std::optional<units::inch_t> VisionSubsystem::GetDistanceToSpeaker() {
