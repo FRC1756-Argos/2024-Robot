@@ -15,6 +15,7 @@
 #include "units/current.h"
 #include "units/time.h"
 #include "units/voltage.h"
+#include "utils/sensor_conversions.h"
 
 namespace motorConfig {
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,9 +51,10 @@ namespace motorConfig {
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
-        constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::frontLeftEncoder;
-        constexpr static auto remoteFilter0_type = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
-        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto selectedSensor_addr = address::comp_bot::encoders::frontLeftEncoder;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::FusedCANcoder;
+        constexpr static auto rotorToSensorRatio = sensor_conversions::swerve_drive::turn::turnGearRatio;
+        constexpr static auto sensorToMechanismRatio = sensor_conversions::swerve_drive::turn::sensorConversionFactor;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::drive::rotate::kD;
@@ -67,9 +69,10 @@ namespace motorConfig {
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
-        constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::frontRightEncoder;
-        constexpr static auto remoteFilter0_type = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
-        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto selectedSensor_addr = address::comp_bot::encoders::frontRightEncoder;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::FusedCANcoder;
+        constexpr static auto rotorToSensorRatio = sensor_conversions::swerve_drive::turn::turnGearRatio;
+        constexpr static auto sensorToMechanismRatio = sensor_conversions::swerve_drive::turn::sensorConversionFactor;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::drive::rotate::kD;
@@ -84,9 +87,10 @@ namespace motorConfig {
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
-        constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::backRightEncoder;
-        constexpr static auto remoteFilter0_type = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
-        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto selectedSensor_addr = address::comp_bot::encoders::backRightEncoder;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::FusedCANcoder;
+        constexpr static auto rotorToSensorRatio = sensor_conversions::swerve_drive::turn::turnGearRatio;
+        constexpr static auto sensorToMechanismRatio = sensor_conversions::swerve_drive::turn::sensorConversionFactor;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::drive::rotate::kD;
@@ -101,9 +105,10 @@ namespace motorConfig {
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;
-        constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::backLeftEncoder;
-        constexpr static auto remoteFilter0_type = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
-        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto selectedSensor_addr = address::comp_bot::encoders::backLeftEncoder;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::FusedCANcoder;
+        constexpr static auto rotorToSensorRatio = sensor_conversions::swerve_drive::turn::turnGearRatio;
+        constexpr static auto sensorToMechanismRatio = sensor_conversions::swerve_drive::turn::sensorConversionFactor;
         constexpr static auto pid0_kP = controlLoop::comp_bot::drive::rotate::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::drive::rotate::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::drive::rotate::kD;
@@ -118,6 +123,7 @@ namespace motorConfig {
       struct primaryMotor {
         constexpr static auto inverted = true;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor;
         constexpr static auto pid0_kP = controlLoop::comp_bot::shooter::shoot::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::shooter::shoot::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::shooter::shoot::kD;
@@ -194,8 +200,7 @@ namespace motorConfig {
         constexpr static auto inverted = false;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statorCurrentLimit = 30_A;
-        constexpr static auto remoteFilter0_addr = address::comp_bot::encoders::shooterEncoder;
-        constexpr static auto remoteFilter0_type = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto selectedSensor_addr = address::comp_bot::encoders::shooterEncoder;
         constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
         constexpr static auto pid0_kP = controlLoop::comp_bot::elevator::carriage::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::elevator::carriage::kI;
