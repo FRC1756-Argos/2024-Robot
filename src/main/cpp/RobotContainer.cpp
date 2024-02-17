@@ -59,7 +59,9 @@ RobotContainer::RobotContainer()
     , m_rotationalNudgeRate{4 / 1_s}
     , m_distanceNudgeRate{12 / 1_s}
     , m_alignLedDebouncer{50_ms}
-    , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem} {
+    , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem}
+    , m_ShooterCommand{&m_ShooterSubSystem}
+    , m_autoAimCommand{&m_swerveDrive, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_visionSubSystem} {
   // Initialize all of your commands and subsystems here
 
   AllianceChanged();
@@ -118,16 +120,18 @@ void RobotContainer::ConfigureBindings() {
 
   // INTAKE TRIGGERS
   auto intake = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
-  auto outtakeManual = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
+  auto outtakeManual = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
 
   // CLIMBER TRIGGERS
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto climberDown = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kDown);
 
   // SHOOT TRIGGERS
-  auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
+  auto shootManual = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
   auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
+  auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
+  auto aim = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
 
   auto closedLoopSet = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
 
@@ -160,10 +164,12 @@ void RobotContainer::ConfigureBindings() {
   // INTAKE TRIGGER ACTIVATION
   outtakeManual.OnTrue(
       frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(-0.8); }, {&m_intakeSubsystem}).ToPtr());
-  (intake || outtakeManual)
+  (outtakeManual)
       .OnFalse(frc2::InstantCommand([this]() { m_intakeSubsystem.Intake(0.0); }, {&m_intakeSubsystem}).ToPtr());
 
   intake.WhileTrue(&m_IntakeCommand);
+  shoot.WhileTrue(&m_ShooterCommand);
+  aim.WhileTrue(&m_autoAimCommand);
 
   // CLIMBER TRIGGER ACTIVATION
   climberUp.OnTrue(frc2::InstantCommand(
@@ -202,12 +208,12 @@ void RobotContainer::ConfigureBindings() {
       frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageMotorManualOverride(true); }, {}).ToPtr());
 
   // SHOOTER TRIGGER ACTIVATION
-  shoot.OnTrue(
+  shootManual.OnTrue(
       frc2::InstantCommand([this]() { m_ShooterSubSystem.ShooterGoToSpeed(5000_rpm); }, {&m_ShooterSubSystem}).ToPtr());
   feedForward.OnTrue(
       frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.5, true); }, {&m_ShooterSubSystem}).ToPtr());
   feedBackward.OnTrue(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(-0.5); }, {&m_ShooterSubSystem}).ToPtr());
-  shoot.OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.0); }, {&m_ShooterSubSystem}).ToPtr());
+  shootManual.OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Shoot(0.0); }, {&m_ShooterSubSystem}).ToPtr());
   (feedForward || feedBackward)
       .OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.0); }, {&m_ShooterSubSystem}).ToPtr());
 

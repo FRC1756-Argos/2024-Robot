@@ -15,7 +15,10 @@ void CameraInterface::RequestTargetFilterReset() {
 }
 
 VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, SwerveDriveSubsystem* pDriveSubsystem)
-    : m_instance(instance), m_pDriveSubsystem(pDriveSubsystem) {}
+    : m_instance(instance)
+    , m_shooterAngleMap{shooterRange::shooterAngle}
+    , m_pDriveSubsystem(pDriveSubsystem)
+    , m_usePolynomial(false) {}
 
 // This method will be called once per scheduler run
 void VisionSubsystem::Periodic() {
@@ -28,10 +31,12 @@ void VisionSubsystem::Periodic() {
 
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag ID", targetValues.tagID);
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera",
-                                   GetDistanceToTag().value().to<double>());
+                                   GetDistanceToSpeaker().value().to<double>());
 
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
                                    GetCalculatedDistanceToSpeaker().value().to<double>());
+
+    frc::SmartDashboard::PutNumber("(Vision - Periodic) Shooter Angle", getShooterAngle().value().to<double>());
   }
 }
 
@@ -49,8 +54,28 @@ std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
   return std::nullopt;
 }
 
-std::optional<units::inch_t> VisionSubsystem::GetDistanceToTag() {
-  return static_cast<units::inch_t>(GetCameraTargetValues().tagPose.Z());
+std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
+  units::degree_t angle = 0_deg;
+
+  if (GetDistanceToSpeaker() != std::nullopt) {
+    double d = GetDistanceToSpeaker().value().to<double>();
+    if (m_usePolynomial) {
+      d /= 12.0;
+      return units::degree_t(83.4 - (9.38 * d) + (0.531 * d * d) - (0.0103 * d * d * d));
+    } else {
+      return m_shooterAngleMap.Map(GetDistanceToSpeaker().value());
+    }
+  }
+
+  return std::nullopt;
+}
+
+std::optional<units::inch_t> VisionSubsystem::GetDistanceToSpeaker() {
+  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ? 7 : 4;
+  if (tagOfInterest == GetCameraTargetValues().tagID)
+    return static_cast<units::inch_t>(GetCameraTargetValues().tagPose.Z());
+  else
+    return std::nullopt;
 }
 
 std::optional<units::inch_t> VisionSubsystem::GetCalculatedDistanceToSpeaker() {

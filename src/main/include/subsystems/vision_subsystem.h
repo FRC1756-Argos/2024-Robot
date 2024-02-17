@@ -9,7 +9,9 @@
 #include <frc/geometry/Transform3d.h>
 #include <frc2/command/SubsystemBase.h>
 
+#include "constants/interpolation_maps.h"
 #include "argos_lib/config/config_types.h"
+#include "argos_lib/general/interpolation.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableEntry.h"
 #include "networktables/NetworkTableInstance.h"
@@ -111,7 +113,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
    *
    * @return Desired distance in inches.
    */
-  std::optional<units::inch_t> GetDistanceToTag();
+  std::optional<units::inch_t> GetDistanceToSpeaker();
 
   /**
    * @brief Get the distance to the tag calculated with the Ty (vertical offset)
@@ -153,6 +155,13 @@ class VisionSubsystem : public frc2::SubsystemBase {
   /// @brief it disables (duh)
   void Disable();
 
+  std::optional<units::degree_t> getShooterAngle();
+
+  argos_lib::InterpolationMap<decltype(shooterRange::shooterAngle.front().inVal),
+                              shooterRange::shooterAngle.size(),
+                              decltype(shooterRange::shooterAngle.front().outVal)>
+      m_shooterAngleMap;  ///< Maps a distance to a hood angle
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -161,4 +170,5 @@ class VisionSubsystem : public frc2::SubsystemBase {
   argos_lib::RobotInstance
       m_instance;  ///< Contains either the competition bot or practice bot. Differentiates between the two
   SwerveDriveSubsystem* m_pDriveSubsystem;  ///< Pointer to drivetrain for reading some odometry
+  bool m_usePolynomial;                     ///< specifies whether to use the calculation to obtain shooter angle
 };
