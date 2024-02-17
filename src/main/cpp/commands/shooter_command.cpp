@@ -6,8 +6,7 @@
 
 using namespace std::chrono_literals;
 
-ShooterCommand::ShooterCommand(ShooterSubsystem* shooter)
-    : m_pShooter{shooter} {
+ShooterCommand::ShooterCommand(ShooterSubsystem* shooter) : m_pShooter{shooter} {
   AddRequirements({m_pShooter});
   // Use addRequirements() here to declare subsystem dependencies.
 }
@@ -28,7 +27,6 @@ void ShooterCommand::Execute() {
 // Called once the command ends or is interrupted.
 void ShooterCommand::End(bool interrupted) {
   m_pShooter->Feed(0);
-  //m_pShooter->Disable();
 }
 
 // Returns true when the command should end.

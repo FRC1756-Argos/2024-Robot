@@ -62,14 +62,43 @@ namespace utils {
 }  // namespace utils
 
 namespace field_points {
+  struct AprilTag {
+    int id;
+    frc::Translation3d pose;
+    units::degree_t yaw;
+  };
+
   namespace blue_alliance {
     // Reference game_piece_positions in Docs directory for conventions
     namespace game_pieces {}  // namespace game_pieces
+
+    /// @todo update tag translations and angles
+    namespace april_tags {
+      constexpr AprilTag amp{6, {}, 0_deg};
+      constexpr AprilTag speakerCenter{7, {}, 0_deg};
+      constexpr AprilTag speakerInside{8, {}, 0_deg};
+      constexpr AprilTag sourceRight{9, {}, 0_deg};
+      constexpr AprilTag sourceLeft{10, {}, 0_deg};
+      constexpr AprilTag stageLeft{15, {}, 0_deg};
+      constexpr AprilTag stageRight{16, {}, 0_deg};
+      constexpr AprilTag stageCenter{14, {}, 0_deg};
+    }  // namespace april_tags
 
   }  // namespace blue_alliance
 
   namespace red_alliance {
     namespace game_pieces {}  // namespace game_pieces
+
+    namespace april_tags {
+      constexpr AprilTag amp{5, {}, 0_deg};
+      constexpr AprilTag speakerCenter{4, {}, 0_deg};
+      constexpr AprilTag speakerInside{3, {}, 0_deg};
+      constexpr AprilTag sourceRight{1, {}, 0_deg};
+      constexpr AprilTag sourceLeft{2, {}, 0_deg};
+      constexpr AprilTag stageLeft{11, {}, 0_deg};
+      constexpr AprilTag stageRight{12, {}, 0_deg};
+      constexpr AprilTag stageCenter{13, {}, 0_deg};
+    }  // namespace april_tags
 
   }  // namespace red_alliance
 }  // namespace field_points

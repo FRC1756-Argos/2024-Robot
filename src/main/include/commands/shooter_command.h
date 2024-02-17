@@ -19,7 +19,7 @@
  */
 class ShooterCommand : public frc2::CommandHelper<frc2::Command, ShooterCommand> {
  public:
-  ShooterCommand(ShooterSubsystem* shooter);
+  explicit ShooterCommand(ShooterSubsystem* shooter);
 
   void Initialize() override;
 

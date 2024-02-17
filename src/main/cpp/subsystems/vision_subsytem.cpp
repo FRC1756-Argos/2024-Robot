@@ -5,7 +5,7 @@
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-#include "Constants.h"
+#include "constants/field_points.h"
 #include "subsystems/vision_subsystem.h"
 
 CameraInterface::CameraInterface() = default;
@@ -16,9 +16,9 @@ void CameraInterface::RequestTargetFilterReset() {
 
 VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, SwerveDriveSubsystem* pDriveSubsystem)
     : m_instance(instance)
-    , m_shooterAngleMap{shooterRange::shooterAngle}
     , m_pDriveSubsystem(pDriveSubsystem)
-    , m_usePolynomial(false) {}
+    , m_usePolynomial(true)
+    , m_shooterAngleMap{shooterRange::shooterAngle} {}
 
 // This method will be called once per scheduler run
 void VisionSubsystem::Periodic() {
@@ -28,15 +28,23 @@ void VisionSubsystem::Periodic() {
     frc::SmartDashboard::PutBoolean("(Vision - Periodic) Is Target Present?", targetValues.hasTargets);
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Pitch", targetValues.m_pitch.to<double>());
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Yaw", targetValues.m_yaw.to<double>());
-
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag ID", targetValues.tagID);
-    frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera",
-                                   GetDistanceToSpeaker().value().to<double>());
 
-    frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
-                                   GetCalculatedDistanceToSpeaker().value().to<double>());
+    auto dist = GetDistanceToSpeaker();
+    if (dist != std::nullopt) {
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera", dist.value().to<double>());
+    }
 
-    frc::SmartDashboard::PutNumber("(Vision - Periodic) Shooter Angle", getShooterAngle().value().to<double>());
+    auto calcDist = GetCalculatedDistanceToSpeaker();
+    if (calcDist = std::nullopt) {
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
+                                     calcDist.value().to<double>());
+    }
+
+    auto angle = getShooterAngle();
+    if (angle != std::nullopt) {
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Shooter Angle", angle.value().to<double>());
+    }
   }
 }
 
@@ -55,15 +63,15 @@ std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
 }
 
 std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
-  units::degree_t angle = 0_deg;
+  auto distance = GetDistanceToSpeaker();
 
-  if (GetDistanceToSpeaker() != std::nullopt) {
-    double d = GetDistanceToSpeaker().value().to<double>();
+  if (distance) {
+    double d = distance.value().to<double>();
     if (m_usePolynomial) {
       d /= 12.0;
       return units::degree_t(83.4 - (9.38 * d) + (0.531 * d * d) - (0.0103 * d * d * d));
     } else {
-      return m_shooterAngleMap.Map(GetDistanceToSpeaker().value());
+      return m_shooterAngleMap.Map(distance.value());
     }
   }
 
@@ -71,21 +79,37 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
 }
 
 std::optional<units::inch_t> VisionSubsystem::GetDistanceToSpeaker() {
-  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ? 7 : 4;
-  if (tagOfInterest == GetCameraTargetValues().tagID)
-    return static_cast<units::inch_t>(GetCameraTargetValues().tagPose.Z());
+  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                          field_points::blue_alliance::april_tags::speakerCenter.id :
+                          field_points::red_alliance::april_tags::speakerCenter.id;
+  const auto targetValues = GetCameraTargetValues();
+  if (tagOfInterest == targetValues.tagID)
+    return static_cast<units::inch_t>(targetValues.tagPose.Z());
+  else
+    return std::nullopt;
+}
+
+std::optional<units::degree_t> VisionSubsystem::GetOrientationToSpeaker() {
+  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                          field_points::blue_alliance::april_tags::speakerCenter.id :
+                          field_points::red_alliance::april_tags::speakerCenter.id;
+  const auto targetValues = GetCameraTargetValues();
+  if (tagOfInterest == targetValues.tagID)
+    return static_cast<units::degree_t>(targetValues.tagPose.Rotation().Z());
   else
     return std::nullopt;
 }
 
 std::optional<units::inch_t> VisionSubsystem::GetCalculatedDistanceToSpeaker() {
-  // @todo: add checks here to make sure we are tracking the right ID based on the alliance color
-  // 4 or 7, else return null
-  // NOTE: pitch angle returned by the camera will be to the center of the speaker opening and not the tag
-  return (measure_up::shooter_targets::speakerTagHeight - measure_up::camera_front::cameraHeight) /
-         std::tan(
-             static_cast<units::radian_t>(measure_up::camera_front::cameraMountAngle + GetCameraTargetValues().m_pitch)
-                 .to<double>());
+  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ? 7 : 4;
+  if (tagOfInterest == GetCameraTargetValues().tagID) {
+    return (measure_up::shooter_targets::speakerTagHeight - measure_up::camera_front::cameraHeight) /
+           std::tan(static_cast<units::radian_t>(measure_up::camera_front::cameraMountAngle +
+                                                 GetCameraTargetValues().m_pitch)
+                        .to<double>());
+  } else {
+    return std::nullopt;
+  }
 }
 
 void VisionSubsystem::SetPipeline(uint16_t tag) {
@@ -93,16 +117,16 @@ void VisionSubsystem::SetPipeline(uint16_t tag) {
 
   uint16_t pipeline = 0;
   switch (tag) {
-    case 4:
+    case field_points::red_alliance::april_tags::speakerCenter.id:
       pipeline = 0;
       break;
-    case 5:
+    case field_points::red_alliance::april_tags::amp.id:
       pipeline = 2;
       break;
-    case 6:
+    case field_points::blue_alliance::april_tags::amp.id:
       pipeline = 3;
       break;
-    case 7:
+    case field_points::blue_alliance::april_tags::speakerCenter.id:
       pipeline = 1;
       break;
     default:
@@ -205,7 +229,7 @@ void LimelightTarget::ResetFilters() {
   m_zFilter.Reset();
   LimelightTarget::tValues currentValue = GetTarget(false);
   // Hackily rest filter with initial value
-  // TODO name the filter values
+  /// @todo name the filter values
   uint32_t samples = 0.7 / 0.02;
   for (size_t i = 0; i < samples; i++) {
     m_txFilter.Calculate(currentValue.m_yaw);
