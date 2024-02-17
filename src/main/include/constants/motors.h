@@ -201,7 +201,9 @@ namespace motorConfig {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statorCurrentLimit = 30_A;
         constexpr static auto selectedSensor_addr = address::comp_bot::encoders::shooterEncoder;
-        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::FusedCANcoder;
+        constexpr static auto rotorToSensorRatio = 1 / sensor_conversions::elevator::carriage::sensorConversionFactor;
+        constexpr static auto sensorToMechanismRatio = 1.0;
         constexpr static auto pid0_kP = controlLoop::comp_bot::elevator::carriage::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::elevator::carriage::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::elevator::carriage::kD;
