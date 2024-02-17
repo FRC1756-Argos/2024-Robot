@@ -3,6 +3,7 @@
 ///            the license file in the root directory of this project.
 
 #include "commands/auto_aim_command.h"
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "constants/measure_up.h"
 
@@ -23,13 +24,18 @@ void AutoAimCommand::Initialize() {
 void AutoAimCommand::Execute() {
   auto angle = m_pVision->getShooterAngle();
   if (angle != std::nullopt) {
+    frc::SmartDashboard::PutNumber("(AIM) angle", angle.value().to<double>());
     m_pElevator->SetCarriageAngle(angle.value());
   }
 
   auto horzOffset = m_pVision->GetHorizontalOffsetToTarget();
-  if (horzOffset != std::nullopt) {
+  auto orientationOffset = m_pVision->GetOrientationToSpeaker();
+
+  if (horzOffset != std::nullopt && orientationOffset != std::nullopt) {
+    frc::SmartDashboard::PutNumber("(AIM) offset", horzOffset.value().to<double>());
     double offset = horzOffset.value().to<double>();
-    m_pSwerveDrive->SwerveDrive(0.0, 0.0, -offset * 0.008);
+    offset -= 10.0;
+    m_pSwerveDrive->SwerveDrive(0.0, 0.0, -offset * 0.016);
   }
 }
 

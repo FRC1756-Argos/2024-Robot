@@ -17,7 +17,7 @@ void CameraInterface::RequestTargetFilterReset() {
 VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, SwerveDriveSubsystem* pDriveSubsystem)
     : m_instance(instance)
     , m_pDriveSubsystem(pDriveSubsystem)
-    , m_usePolynomial(false)
+    , m_usePolynomial(true)
     , m_shooterAngleMap{shooterRange::shooterAngle} {}
 
 // This method will be called once per scheduler run
@@ -30,18 +30,20 @@ void VisionSubsystem::Periodic() {
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Yaw", targetValues.m_yaw.to<double>());
     frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag ID", targetValues.tagID);
 
-    if (GetDistanceToSpeaker() != std::nullopt) {
-      frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera",
-                                     GetDistanceToSpeaker().value().to<double>());
+    auto dist = GetDistanceToSpeaker();
+    if (dist != std::nullopt) {
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera", dist.value().to<double>());
     }
 
-    if (GetCalculatedDistanceToSpeaker() != std::nullopt) {
+    auto calcDist = GetCalculatedDistanceToSpeaker();
+    if (calcDist = std::nullopt) {
       frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
-                                     GetCalculatedDistanceToSpeaker().value().to<double>());
+                                     calcDist.value().to<double>());
     }
 
-    if (getShooterAngle() != std::nullopt) {
-      frc::SmartDashboard::PutNumber("(Vision - Periodic) Shooter Angle", getShooterAngle().value().to<double>());
+    auto angle = getShooterAngle();
+    if (angle != std::nullopt) {
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Shooter Angle", angle.value().to<double>());
     }
   }
 }
@@ -83,6 +85,17 @@ std::optional<units::inch_t> VisionSubsystem::GetDistanceToSpeaker() {
   const auto targetValues = GetCameraTargetValues();
   if (tagOfInterest == targetValues.tagID)
     return static_cast<units::inch_t>(targetValues.tagPose.Z());
+  else
+    return std::nullopt;
+}
+
+std::optional<units::degree_t> VisionSubsystem::GetOrientationToSpeaker() {
+  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                          field_points::blue_alliance::april_tags::speakerCenter.id :
+                          field_points::red_alliance::april_tags::speakerCenter.id;
+  const auto targetValues = GetCameraTargetValues();
+  if (tagOfInterest == targetValues.tagID)
+    return static_cast<units::degree_t>(targetValues.tagPose.Rotation().Z());
   else
     return std::nullopt;
 }

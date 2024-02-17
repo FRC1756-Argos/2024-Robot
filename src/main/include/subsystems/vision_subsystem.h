@@ -116,6 +116,13 @@ class VisionSubsystem : public frc2::SubsystemBase {
   [[nodiscard]] std::optional<units::inch_t> GetDistanceToSpeaker();
 
   /**
+   * @brief Get the distance to the tag
+   *
+   * @return Desired distance in inches.
+   */
+  [[nodiscard]] std::optional<units::degree_t> GetOrientationToSpeaker();
+
+  /**
    * @brief Get the distance to the tag calculated with the Ty (vertical offset)
    *
    * @return Desired distance in inches.
