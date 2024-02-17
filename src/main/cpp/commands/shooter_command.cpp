@@ -13,19 +13,21 @@ ShooterCommand::ShooterCommand(ShooterSubsystem* shooter) : m_pShooter{shooter} 
 
 // Called when the command is initially scheduled.
 void ShooterCommand::Initialize() {
-  m_pShooter->NoteDetectionOverride(false);
-  m_pShooter->Feed(0.0);
+  m_pShooter->NoteDetectionOverride(true);
+  m_pShooter->Feed(1.0);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void ShooterCommand::Execute() {
   if (m_pShooter->ReadyToShoot()) {
+    m_pShooter->NoteDetectionOverride(true);
     m_pShooter->Feed(1);
   }
 }
 
 // Called once the command ends or is interrupted.
 void ShooterCommand::End(bool interrupted) {
+  m_pShooter->NoteDetectionOverride(false);
   m_pShooter->Feed(0);
 }
 
