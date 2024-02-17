@@ -101,7 +101,9 @@ std::optional<units::degree_t> VisionSubsystem::GetOrientationToSpeaker() {
 }
 
 std::optional<units::inch_t> VisionSubsystem::GetCalculatedDistanceToSpeaker() {
-  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ? 7 : 4;
+  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                          field_points::blue_alliance::april_tags::speakerCenter.id :
+                          field_points::red_alliance::april_tags::speakerCenter.id;
   if (tagOfInterest == GetCameraTargetValues().tagID) {
     return (measure_up::shooter_targets::speakerTagHeight - measure_up::camera_front::cameraHeight) /
            std::tan(static_cast<units::radian_t>(measure_up::camera_front::cameraMountAngle +
