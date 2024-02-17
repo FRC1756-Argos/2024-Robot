@@ -57,6 +57,7 @@ RobotContainer::RobotContainer()
     , m_ShooterCommand{&m_ShooterSubSystem}
     , m_autoAimCommand{&m_swerveDrive, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_visionSubSystem}
     , m_ClimberHomeCommand(m_climberSubsystem)
+    , m_GoToAmpPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}
@@ -127,7 +128,7 @@ void RobotContainer::ConfigureBindings() {
 
   // INTAKE TRIGGERS
   auto intake = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
-  auto outtakeManual = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
+  auto outtakeManual = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
 
   // CLIMBER TRIGGERS
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
@@ -140,7 +141,7 @@ void RobotContainer::ConfigureBindings() {
   auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
   auto aim = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
 
-  auto closedLoopSet = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
+  auto ampPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
 
   // ELEVATOR TRIGGERS
   auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
@@ -231,17 +232,18 @@ void RobotContainer::ConfigureBindings() {
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
       .WhileTrue(argos_lib::SwapControllersCommand(&m_controllers).ToPtr());
 
-  closedLoopSet.OnTrue(frc2::InstantCommand(
-                           [this]() {
-                             m_ShooterSubSystem.ShooterGoToSpeed(units::revolutions_per_minute_t(
-                                 frc::SmartDashboard::GetNumber("shooter/Speed (rpm)", 3000)));
-                             m_elevatorSubsystem.ElevatorMoveToHeight(
-                                 units::inch_t(frc::SmartDashboard::GetNumber("elevator/Height (in)", 5.0)));
-                             m_elevatorSubsystem.SetCarriageAngle(
-                                 units::degree_t(frc::SmartDashboard::GetNumber("elevator/Angle (deg)", 0.0)));
-                           },
-                           {&m_ShooterSubSystem, &m_elevatorSubsystem})
-                           .ToPtr());
+  // closedLoopSet.OnTrue(frc2::InstantCommand(
+  //                          [this]() {
+  //                            m_ShooterSubSystem.ShooterGoToSpeed(units::revolutions_per_minute_t(
+  //                                frc::SmartDashboard::GetNumber("shooter/Speed (rpm)", 3000)));
+  //                            m_elevatorSubsystem.ElevatorMoveToHeight(
+  //                                units::inch_t(frc::SmartDashboard::GetNumber("elevator/Height (in)", 5.0)));
+  //                            m_elevatorSubsystem.SetCarriageAngle(
+  //                                units::degree_t(frc::SmartDashboard::GetNumber("elevator/Angle (deg)", 0.0)));
+  //                          },
+  //                          {&m_ShooterSubSystem, &m_elevatorSubsystem})
+  //                          .ToPtr());
+  ampPositionTrigger.OnTrue(&m_GoToAmpPositionCommand);
 }
 
 void RobotContainer::Disable() {
