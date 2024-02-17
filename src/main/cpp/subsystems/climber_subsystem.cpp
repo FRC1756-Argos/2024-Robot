@@ -4,7 +4,11 @@
 
 #include "subsystems/climber_subsystem.h"
 
+#include <units/math.h>
+
 #include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix6/configs/Configs.hpp>
+#include <ctre/phoenix6/controls/PositionVoltage.hpp>
 
 #include "argos_lib/config/falcon_config.h"
 #include "constants/addresses.h"
@@ -19,7 +23,7 @@ ClimberSubsystem::ClimberSubsystem(argos_lib::RobotInstance robotInstance)
                                   address::practice_bot::climber::secondaryClimbing,
                                   robotInstance))
     , m_robotInstance(robotInstance)
-    , m_manualOverride(false) {
+    , m_climberManualOverride(false) {
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::climber::primaryClimbing,
                                          motorConfig::practice_bot::climber::primaryClimbing>(
       m_primaryMotor, 100_ms, robotInstance);
@@ -32,27 +36,81 @@ ClimberSubsystem::ClimberSubsystem(argos_lib::RobotInstance robotInstance)
 // This method will be called once per scheduler run
 void ClimberSubsystem::Periodic() {}
 
-void ClimberSubsystem::ClimberMove(double speed) {
-  if (m_manualOverride) {
+void ClimberSubsystem::ClimberMove(double speed, bool force) {
+  if (m_climberManualOverride || force) {
     m_primaryMotor.Set(speed);
   }
 }
 
 void ClimberSubsystem::SetHeight(units::inch_t height) {
-  SetManualOverride(false);
-  if (height > measure_up::climber::upperLimit) {
-    height = measure_up::climber::upperLimit;
-  } else if (height < measure_up::climber::lowerLimit) {
-    height = measure_up::climber::lowerLimit;
-  }
+  SetClimberManualOverride(false);
+  height = std::clamp<units::inch_t>(height, measure_up::climber::lowerLimit, measure_up::climber::upperLimit);
   m_primaryMotor.SetControl(
       ctre::phoenix6::controls::PositionVoltage(sensor_conversions::climber::ToSensorUnit(height)));
 }
 
-void ClimberSubsystem::SetManualOverride(bool state) {
-  m_manualOverride = state;
+void ClimberSubsystem::SetClimberManualOverride(bool overrideState) {
+  m_climberManualOverride = overrideState;
 }
 
 void ClimberSubsystem::Disable() {
   m_primaryMotor.Set(0.0);
+}
+
+bool ClimberSubsystem::IsClimberMoving() {
+  return units::math::abs(m_primaryMotor.GetRotorVelocity().GetValue()) > 0.5_tps;
+}
+
+void ClimberSubsystem::SetHomeFailed(bool failed) {
+  m_climberHomeFailed = failed;
+  if (failed) {
+    m_climberHomed = false;
+  }
+}
+
+bool ClimberSubsystem::GetHomeFailed() const {
+  return m_climberHomeFailed;
+}
+
+bool ClimberSubsystem::IsClimberHomed() const {
+  return m_climberHomed;
+}
+
+units::inch_t ClimberSubsystem::GetClimberExtension() {
+  return sensor_conversions::climber::ToHeight(m_primaryMotor.GetPosition().GetValue());
+}
+
+void ClimberSubsystem::Stop() {
+  m_primaryMotor.Set(0.0);
+}
+
+bool ClimberSubsystem::IsClimberManualOverride() const {
+  return m_climberManualOverride;
+}
+
+void ClimberSubsystem::UpdateClimberHome() {
+  m_primaryMotor.SetPosition(sensor_conversions::climber::ToSensorUnit(measure_up::climber::lowerLimit));
+  m_climberHomed = true;
+  m_climberHomeFailed = false;
+  EnableClimberSoftLimits();
+}
+
+void ClimberSubsystem::EnableClimberSoftLimits() {
+  if (m_climberHomed) {
+    ctre::phoenix6::configs::SoftwareLimitSwitchConfigs climberSoftLimits;
+    climberSoftLimits.ForwardSoftLimitThreshold =
+        sensor_conversions::climber::ToSensorUnit(measure_up::climber::upperLimit).to<double>();
+    climberSoftLimits.ReverseSoftLimitThreshold =
+        sensor_conversions::climber::ToSensorUnit(measure_up::climber::lowerLimit + 0.25_in).to<double>();
+    climberSoftLimits.ForwardSoftLimitEnable = true;
+    climberSoftLimits.ReverseSoftLimitEnable = true;
+    m_primaryMotor.GetConfigurator().Apply(climberSoftLimits);
+  }
+}
+
+void ClimberSubsystem::DisableClimberSoftLimits() {
+  ctre::phoenix6::configs::SoftwareLimitSwitchConfigs climberSoftLimits;
+  climberSoftLimits.ForwardSoftLimitEnable = false;
+  climberSoftLimits.ReverseSoftLimitEnable = false;
+  m_primaryMotor.GetConfigurator().Apply(climberSoftLimits);
 }
