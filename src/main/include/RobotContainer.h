@@ -16,6 +16,7 @@
 #include "Constants.h"
 #include "commands/auto_aim_command.h"
 #include "commands/go_to_amp_position_command.h"
+#include "commands/climber_homing_command.h"
 #include "commands/intake_command.h"
 #include "commands/shooter_command.h"
 #include "subsystems/climber_subsystem.h"
@@ -79,6 +80,7 @@ class RobotContainer {
   IntakeCommand m_IntakeCommand;
   ShooterCommand m_ShooterCommand;
   AutoAimCommand m_autoAimCommand;
+  ClimberHomingCommand m_ClimberHomeCommand;
   GoToAmpPositionCommand m_GoToAmpPositionCommand;
 
   // Autonomous

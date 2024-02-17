@@ -11,13 +11,6 @@
 
 #include "subsystems/swerve_drive_subsystem.h"
 
-/**
- * An example command.
- *
- * <p>Note that this extends CommandHelper, rather extending CommandBase
- * directly; this is crucially important, or else the decorator functions in
- * Command will *not* work!
- */
 class DriveByTimeCommand : public frc2::CommandHelper<frc2::Command, DriveByTimeCommand> {
  public:
   /// @brief Constructs DriveByTimeCommand that drives by a vector with angle robotYaw and power percentSpeed for driveTime milliseconds
