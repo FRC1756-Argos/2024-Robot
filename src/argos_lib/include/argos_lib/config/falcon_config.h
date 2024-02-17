@@ -36,25 +36,26 @@ namespace argos_lib {
     HAS_MEMBER(pid0_kA)
     HAS_MEMBER(pid0_kG)
     HAS_MEMBER(pid0_gravityType)
-    HAS_MEMBER(selectedSensor)
     HAS_MEMBER(pid1_kP)
     HAS_MEMBER(pid1_kI)
     HAS_MEMBER(pid1_kD)
     HAS_MEMBER(pid1_kS)
     HAS_MEMBER(pid1_kV)
     HAS_MEMBER(pid1_kA)
-    HAS_MEMBER(pid1_kG)
     HAS_MEMBER(pid1_gravityType)
-    HAS_MEMBER(remoteFilter0_addr)
-    HAS_MEMBER(remoteFilter0_type)
+    HAS_MEMBER(pid1_kG)
     HAS_MEMBER(reverseLimit_deviceID)
     HAS_MEMBER(reverseLimit_normalState)
     HAS_MEMBER(reverseLimit_source)
+    HAS_MEMBER(rotorToSensorRatio)
+    HAS_MEMBER(selectedSensor)
+    HAS_MEMBER(selectedSensor_addr)
+    HAS_MEMBER(sensorToMechanismRatio)
+    HAS_MEMBER(statorCurrentLimit)
+    HAS_MEMBER(statusFrameMotorMode)
     HAS_MEMBER(supplyCurrentLimit)
     HAS_MEMBER(supplyCurrentThreshold)
     HAS_MEMBER(supplyCurrentThresholdTime)
-    HAS_MEMBER(statorCurrentLimit)
-    HAS_MEMBER(statusFrameMotorMode)
 
     /**
      * @brief Configures a CTRE Falcon with only the fields provided.  All other fields
@@ -77,7 +78,6 @@ namespace argos_lib {
      *           - pid0_kA
      *           - pid0_kG
      *           - pid0_gravityType
-     *           - selectedSensor
      *           - pid1_kP
      *           - pid1_kI
      *           - pid1_kD
@@ -86,16 +86,18 @@ namespace argos_lib {
      *           - pid1_kA
      *           - pid1_kG
      *           - pid1_gravityType
-     *           - remoteFilter0_addr
-     *           - remoteFilter0_type
      *           - reverseLimit_deviceID
      *           - reverseLimit_normalState
      *           - reverseLimit_source
+     *           - rotorToSensorRatio
+     *           - selectedSensor
+     *           - selectedSensor_addr
+     *           - sensorToMechanismRatio
+     *           - statorCurrentLimit
+     *           - statusFrameMotorMode
      *           - supplyCurrentLimit
      *           - supplyCurrentThreshold
      *           - supplyCurrentThresholdTime
-     *           - statorCurrentLimit
-     *           - statusFrameMotorMode
      * @param motorController Falcon object to configure
      * @param configTimeout Time to wait for response from Falcon
      * @return true Configuration succeeded
@@ -111,9 +113,12 @@ namespace argos_lib {
       if constexpr (has_neutralMode<T>{}) {
         config.MotorOutput.NeutralMode = T::neutralMode;
       }
-      if constexpr (has_remoteFilter0_addr<T>{} && has_remoteFilter0_type<T>{}) {
-        config.Feedback.FeedbackRemoteSensorID = T::remoteFilter0_addr.address;
-        config.Feedback.FeedbackSensorSource = T::remoteFilter0_type;
+      if constexpr (has_selectedSensor_addr<T>{}) {
+        static_assert(has_selectedSensor<T>{} &&
+                          T::selectedSensor != ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor,
+                      "Remote sensor required when address provided");
+        static_assert(T::selectedSensor_addr.address >= 0, "Remote sensor address must be non-negative");
+        config.Feedback.FeedbackRemoteSensorID = T::selectedSensor_addr.address;
       }
       if constexpr (has_peakOutputForward<T>{}) {
         config.MotorOutput.PeakForwardDutyCycle = T::peakOutputForward;
@@ -123,6 +128,14 @@ namespace argos_lib {
       }
       if constexpr (has_selectedSensor<T>{}) {
         config.Feedback.FeedbackSensorSource = T::selectedSensor;
+        if constexpr (T::selectedSensor == ctre::phoenix6::signals::FeedbackSensorSourceValue::FusedCANcoder) {
+          static_assert(has_sensorToMechanismRatio<T>{}, "Fused CANcoder mode requires sensor to mechanism ratio");
+          static_assert(has_rotorToSensorRatio<T>{}, "Fused CANcoder mode requires rotor to sensor ratio");
+          static_assert(T::sensorToMechanismRatio > 0, "sensorToMechanismRatio must be a positive value");
+          static_assert(T::rotorToSensorRatio > 0, "rotorToSensorRatio must be a positive value");
+          config.Feedback.SensorToMechanismRatio = T::sensorToMechanismRatio;
+          config.Feedback.RotorToSensorRatio = T::rotorToSensorRatio;
+        }
       }
       if constexpr (has_pid0_kP<T>{}) {
         config.Slot0.kP = T::pid0_kP;
