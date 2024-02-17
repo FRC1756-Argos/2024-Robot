@@ -42,9 +42,9 @@ namespace shooterRange {
                                                      InterpMapPoint{228_in, 5000_rpm}};
 
   [[maybe_unused]] constexpr std::array shooterAngle{InterpMapPoint{36.0_in, 60.0_deg},
-                                                     InterpMapPoint{60.0_in, 48.0_deg},
+                                                     InterpMapPoint{60.0_in, 49.0_deg},
                                                      InterpMapPoint{84.0_in, 43.0_deg},
-                                                     InterpMapPoint{120.0_in, 33.0_deg},
-                                                     InterpMapPoint{180.0_in, 27.0_deg},
-                                                     InterpMapPoint{228_in, 26.3_deg}};
+                                                     InterpMapPoint{120.0_in, 32.5_deg},
+                                                     InterpMapPoint{180.0_in, 25.5_deg},
+                                                     InterpMapPoint{228_in, 24.7_deg}};
 }  // namespace shooterRange

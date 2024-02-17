@@ -30,6 +30,7 @@ namespace measure_up {
   }  // namespace swerve_offsets
   namespace shooter_targets {
     constexpr auto speakerTagHeight = 58_in;  // needs update
+    constexpr auto speakerOpeningHeightFromShooter = 59.097_in;
     constexpr auto trapOpeningHeight = 36.25_in;
   }  // namespace shooter_targets
   namespace camera_front {

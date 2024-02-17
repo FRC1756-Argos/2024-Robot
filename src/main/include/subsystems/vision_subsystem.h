@@ -166,7 +166,8 @@ class VisionSubsystem : public frc2::SubsystemBase {
       m_instance;  ///< Contains either the competition bot or practice bot. Differentiates between the two
   SwerveDriveSubsystem* m_pDriveSubsystem;     ///< Pointer to drivetrain for reading some odometry
   LimelightTarget::tValues m_oldTargetValues;  ///< The old robot poses and latencies
-  bool m_usePolynomial;                        ///< specifies whether to use the calculation to obtain shooter angle
+  bool m_usePolynomial;                        ///< specifies whether to use the polynomial to obtain shooter angle
+  bool m_useTrigonometry;                      ///< specifies whether to use the trigonometry to obtain shooter angle
 
   argos_lib::InterpolationMap<decltype(shooterRange::shooterAngle.front().inVal),
                               shooterRange::shooterAngle.size(),

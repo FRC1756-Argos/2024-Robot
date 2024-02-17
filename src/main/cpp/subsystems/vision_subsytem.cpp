@@ -4,6 +4,7 @@
 
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <cmath>
 
 #include "constants/field_points.h"
 #include "subsystems/vision_subsystem.h"
@@ -17,7 +18,8 @@ void CameraInterface::RequestTargetFilterReset() {
 VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, SwerveDriveSubsystem* pDriveSubsystem)
     : m_instance(instance)
     , m_pDriveSubsystem(pDriveSubsystem)
-    , m_usePolynomial(true)
+    , m_usePolynomial(false)
+    , m_useTrigonometry(false)
     , m_shooterAngleMap{shooterRange::shooterAngle} {}
 
 // This method will be called once per scheduler run
@@ -70,6 +72,10 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
     if (m_usePolynomial) {
       d /= 12.0;
       return units::degree_t(83.4 - (9.38 * d) + (0.531 * d * d) - (0.0103 * d * d * d));
+    } else if (m_useTrigonometry) {
+      return (units::degree_t)(180.0 / 3.14159265358) *
+             std::atan2(measure_up::shooter_targets::speakerOpeningHeightFromShooter.to<double>(),
+                        distance.value().to<double>());
     } else {
       return m_shooterAngleMap.Map(distance.value());
     }
