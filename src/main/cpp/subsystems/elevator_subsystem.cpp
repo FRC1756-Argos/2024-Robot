@@ -25,7 +25,9 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
                                  robotInstance))
     , m_robotInstance(robotInstance)
     , m_elevatorManualOverride{false}
-    , m_carriageMotorManualOverride{false} {
+    , m_carriageMotorManualOverride{false}
+    , m_elevatorHomed{true}
+    , m_carriageHomed{true} {
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::elevator::primaryElevator,
                                          motorConfig::practice_bot::elevator::primaryElevator>(
       m_primaryMotor, 100_ms, robotInstance);
@@ -150,12 +152,12 @@ void ElevatorSubsystem::EnableCarriageSoftLimits() {
   if (m_carriageHomed) {
     ctre::phoenix6::configs::SoftwareLimitSwitchConfigs carriageSoftLimits;
     carriageSoftLimits.ForwardSoftLimitThreshold =
-        sensor_conversions::elevator::carriage::ToSensorUnit(measure_up::elevator::carriage::maxAngle).to<double>();
+        units::angle::turn_t{measure_up::elevator::carriage::maxAngle}.to<double>();
     carriageSoftLimits.ReverseSoftLimitThreshold =
-        sensor_conversions::elevator::carriage::ToSensorUnit(measure_up::elevator::carriage::minAngle).to<double>();
+        units::angle::turn_t{measure_up::elevator::carriage::minAngle}.to<double>();
     carriageSoftLimits.ForwardSoftLimitEnable = true;
     carriageSoftLimits.ReverseSoftLimitEnable = true;
-    m_primaryMotor.GetConfigurator().Apply(carriageSoftLimits);
+    m_carriageMotor.GetConfigurator().Apply(carriageSoftLimits);
   }
 }
 
@@ -163,5 +165,5 @@ void ElevatorSubsystem::DisableCarriageSoftLimits() {
   ctre::phoenix6::configs::SoftwareLimitSwitchConfigs carriageSoftLimits;
   carriageSoftLimits.ForwardSoftLimitEnable = false;
   carriageSoftLimits.ReverseSoftLimitEnable = false;
-  m_primaryMotor.GetConfigurator().Apply(carriageSoftLimits);
+  m_carriageMotor.GetConfigurator().Apply(carriageSoftLimits);
 }

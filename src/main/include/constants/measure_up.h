@@ -50,7 +50,7 @@ namespace measure_up {
   namespace elevator {
     namespace lift {
       constexpr auto minHeight = 21.5_in;
-      constexpr auto maxHeight = 42.5_in;
+      constexpr auto maxHeight = 41.5_in;
       constexpr auto intakeHeight = 21.5_in;
     }  // namespace lift
     namespace carriage {

@@ -203,7 +203,7 @@ void RobotContainer::ConfigureBindings() {
       frc2::InstantCommand([this]() { m_elevatorSubsystem.SetElevatorLiftManualOverride(true); }, {}).ToPtr());
   m_elevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
                                             [this] {
-                                              double elevatorSpeed = m_controllers.OperatorController().GetY(
+                                              double elevatorSpeed = -m_controllers.OperatorController().GetY(
                                                   argos_lib::XboxController::JoystickHand::kLeftHand);
                                               double carriageSpeed = m_controllers.OperatorController().GetY(
                                                   argos_lib::XboxController::JoystickHand::kRightHand);
