@@ -31,6 +31,7 @@ namespace measure_up {
   namespace shooter_targets {
     constexpr auto speakerTagHeight = 58_in;  // needs update
     constexpr auto trapOpeningHeight = 36.25_in;
+
   }  // namespace shooter_targets
   namespace camera_front {
     constexpr auto cameraX = 0_in;  /// @todo real mounting offsets
@@ -53,12 +54,16 @@ namespace measure_up {
       constexpr auto maxHeight = 41.5_in;
       constexpr auto intakeHeight = 21.5_in;
       constexpr auto ampHeight = 40_in;
+      constexpr auto podiumLowHeight = intakeHeight;
+      constexpr auto podiumHighHeight = 31.6;
     }  // namespace lift
     namespace carriage {
       constexpr auto minAngle = -45_deg;
       constexpr auto maxAngle = 270_deg;
       constexpr auto intakeAngle = 40_deg;
       constexpr auto ampAngle = 135_deg;
+      constexpr auto podiumHighAngle = placeholder;
+      constexpr auto podiumLowAngle = 33.0_deg;
     }  // namespace carriage
   }    // namespace elevator
 
