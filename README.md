@@ -101,10 +101,10 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | B               | Unused |
 | X               | Unused |
 | Y               | Field Home (hold) |
-| LB              | Unused |
-| RB              | Manual Reverse Intake |
-| LT              | Shoot |
-| RT              | Manual Intake |
+| LB              | Manual Reverse Intake |
+| RB              | Intake |
+| LT              | Aim |
+| RT              | Shoot |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |
@@ -117,18 +117,18 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | Left JS Y       | Elevator Up/Down |
 | Right JS X      | Unused |
 | Right JS Y      | Shooter Pivot Forwards/Backwards |
-| A               | Unused |
-| B               | Trap Position |
-| X               | Carriage Down |
-| Y               | Unused |
+| A               | Amp Shooter Position |
+| B               | High Elevator Set Point Modifier (temporarily trap position) |
+| X               | Stage Safe Shot (temporarily carriage down position|
+| Y               | Against Speaker Shooter Position |
 | DPad Up         | Climber Up |
 | DPad Right      | Unused |
 | DPad Down       | Climber Down |
 | DPad Left       | Unused |
-| LB              | Unused |
-| RB              | Unused |
-| LT              | Intake |
-| RT              | Aim |
+| LB              | Backwards Trap Sequence |
+| RB              | Trap Sequence |
+| LT              | Unused |
+| RT              | Unused |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |
