@@ -92,11 +92,11 @@ std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
            std::atan(
                (measure_up::shooter_targets::cameraOffsetFromShooter.to<double>() / distance.value().to<double>()));
   } else if (distance) {
-    units::degree_t accountLongerSpin = (units::degree_t)(2.0*(distance.value().to<double>()/80.0));
+    units::degree_t accountLongerSpin = (units::degree_t)(2.0 * (distance.value().to<double>() / 80.0));
     const auto targetValues = GetCameraTargetValues();
-    if(targetValues.tagPose.Rotation().Z() > 50_deg){
+    if (targetValues.tagPose.Rotation().Z() > 50_deg) {
       accountLongerSpin += 0.8_deg;
-    } else if(targetValues.tagPose.Rotation().Z() < 0_deg){
+    } else if (targetValues.tagPose.Rotation().Z() < 0_deg) {
       accountLongerSpin = 0.0_deg;
     }
     return accountLongerSpin + (units::degree_t)(180.0 / 3.14159265358) *
