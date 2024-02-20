@@ -161,7 +161,7 @@ namespace motorConfig {
     }  // namespace intake
     namespace climber {
       struct primaryClimbing {
-        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto inverted = true;
         constexpr static auto statorCurrentLimit = 30_A;
         constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor;
@@ -175,7 +175,7 @@ namespace motorConfig {
         constexpr static auto pid0_gravityType = controlLoop::comp_bot::climber::climber::gravityType;
       };
       struct secondaryClimbing {
-        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto inverted = false;
       };
     }  // namespace climber
