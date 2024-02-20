@@ -72,8 +72,7 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
     double d = distance.value().to<double>();
     if (m_usePolynomial) {
       // d /= 12.0;
-      return units::degree_t(145.5779 - (3.16661 * d) + (0.03812543 * d * d) - (0.0002420577 * d * d * d) +
-                             (7.701486e-7 * d * d * d * d) - (9.625646e-10 * d * d * d * d * d));
+      return units::degree_t(88 - (0.78 * d) + (0.00335 * d * d) - (0.00000505 * d * d * d));
     } else if (m_useTrigonometry) {
       return (units::degree_t)(180.0 / 3.14159265358) *
              std::atan((measure_up::shooter_targets::speakerOpeningHeightFromShooter.to<double>() /
@@ -88,10 +87,21 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
 
 std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
   auto distance = GetDistanceToSpeaker();
-  if (distance) {
+  if (distance && distance.value() < 140_in) {
     return (units::degree_t)(180.0 / 3.14159265358) *
            std::atan(
                (measure_up::shooter_targets::cameraOffsetFromShooter.to<double>() / distance.value().to<double>()));
+  } else if (distance) {
+    units::degree_t accountLongerSpin = (units::degree_t)(2.0*(distance.value().to<double>()/80.0));
+    const auto targetValues = GetCameraTargetValues();
+    if(targetValues.tagPose.Rotation().Z() > 50_deg){
+      accountLongerSpin += 0.8_deg;
+    } else if(targetValues.tagPose.Rotation().Z() < 0_deg){
+      accountLongerSpin = 0.0_deg;
+    }
+    return accountLongerSpin + (units::degree_t)(180.0 / 3.14159265358) *
+                                   std::atan((measure_up::shooter_targets::cameraOffsetFromShooter.to<double>() /
+                                              distance.value().to<double>()));
   }
 }
 
