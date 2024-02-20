@@ -14,7 +14,11 @@
 #include <frc2/command/button/CommandXboxController.h>
 
 #include "Constants.h"
+#include "commands/auto_aim_command.h"
+#include "commands/climber_homing_command.h"
+#include "commands/go_to_amp_position_command.h"
 #include "commands/intake_command.h"
+#include "commands/shooter_command.h"
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/intake_subsystem.h"
@@ -74,6 +78,10 @@ class RobotContainer {
   ElevatorSubsystem m_elevatorSubsystem;
 
   IntakeCommand m_IntakeCommand;
+  ShooterCommand m_ShooterCommand;
+  AutoAimCommand m_autoAimCommand;
+  ClimberHomingCommand m_ClimberHomeCommand;
+  GoToAmpPositionCommand m_GoToAmpPositionCommand;
 
   // Autonomous
   AutonomousNothing m_autoNothing;

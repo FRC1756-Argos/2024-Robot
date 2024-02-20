@@ -10,6 +10,8 @@
 #include <frc2/command/SubsystemBase.h>
 
 #include "argos_lib/config/config_types.h"
+#include "argos_lib/general/interpolation.h"
+#include "constants/interpolation_maps.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableEntry.h"
 #include "networktables/NetworkTableInstance.h"
@@ -111,35 +113,35 @@ class VisionSubsystem : public frc2::SubsystemBase {
    *
    * @return Desired distance in inches.
    */
-  std::optional<units::inch_t> GetDistanceToTag();
+  [[nodiscard]] std::optional<units::inch_t> GetDistanceToSpeaker();
+
+  /**
+   * @brief Get the distance to the tag
+   *
+   * @return Desired distance in inches.
+   */
+  [[nodiscard]] std::optional<units::degree_t> GetOrientationToSpeaker();
 
   /**
    * @brief Get the distance to the tag calculated with the Ty (vertical offset)
    *
    * @return Desired distance in inches.
    */
-  std::optional<units::inch_t> GetCalculatedDistanceToSpeaker();
+  [[nodiscard]] std::optional<units::inch_t> GetCalculatedDistanceToSpeaker();
 
   /**
    * @brief Get the robot poses and latencies
    *
    * @return LimelightTarget::tValues
    */
-  LimelightTarget::tValues GetCameraTargetValues();
-
-  /**
-   * @brief Get the old robot poses and latencies
-   *
-   * @return LimelightTarget::tValues
-   */
-  LimelightTarget::tValues m_oldTargetValues;
+  [[nodiscard]] LimelightTarget::tValues GetCameraTargetValues();
 
   /**
    * @brief Get the current offset to the retroreflective tape
    *
    * @return units::degree_t
    */
-  std::optional<units::degree_t> GetHorizontalOffsetToTarget();
+  [[nodiscard]] std::optional<units::degree_t> GetHorizontalOffsetToTarget();
 
   void SetPipeline(uint16_t tag);
 
@@ -153,6 +155,8 @@ class VisionSubsystem : public frc2::SubsystemBase {
   /// @brief it disables (duh)
   void Disable();
 
+  [[nodiscard]] std::optional<units::degree_t> getShooterAngle();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -160,5 +164,12 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   argos_lib::RobotInstance
       m_instance;  ///< Contains either the competition bot or practice bot. Differentiates between the two
-  SwerveDriveSubsystem* m_pDriveSubsystem;  ///< Pointer to drivetrain for reading some odometry
+  SwerveDriveSubsystem* m_pDriveSubsystem;     ///< Pointer to drivetrain for reading some odometry
+  LimelightTarget::tValues m_oldTargetValues;  ///< The old robot poses and latencies
+  bool m_usePolynomial;                        ///< specifies whether to use the calculation to obtain shooter angle
+
+  argos_lib::InterpolationMap<decltype(shooterRange::shooterAngle.front().inVal),
+                              shooterRange::shooterAngle.size(),
+                              decltype(shooterRange::shooterAngle.front().outVal)>
+      m_shooterAngleMap;  ///< Maps a distance to a shooter pitch angle
 };

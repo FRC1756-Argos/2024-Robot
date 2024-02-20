@@ -8,12 +8,16 @@
 #include <frc2/command/CommandHelper.h>
 
 #include "subsystems/elevator_subsystem.h"
-#include "subsystems/intake_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
+#include "subsystems/swerve_drive_subsystem.h"
+#include "subsystems/vision_subsystem.h"
 
-class IntakeCommand : public frc2::CommandHelper<frc2::Command, IntakeCommand> {
+class AutoAimCommand : public frc2::CommandHelper<frc2::Command, AutoAimCommand> {
  public:
-  IntakeCommand(IntakeSubsystem* intake, ShooterSubsystem* shooter, ElevatorSubsystem* elevator);
+  AutoAimCommand(SwerveDriveSubsystem* swerveDrive,
+                 ShooterSubsystem* shooter,
+                 ElevatorSubsystem* elevator,
+                 VisionSubsystem* vision);
 
   void Initialize() override;
 
@@ -24,7 +28,8 @@ class IntakeCommand : public frc2::CommandHelper<frc2::Command, IntakeCommand> {
   bool IsFinished() override;
 
  private:
-  IntakeSubsystem* m_pIntake;
+  SwerveDriveSubsystem* m_pSwerveDrive;
   ShooterSubsystem* m_pShooter;
   ElevatorSubsystem* m_pElevator;
+  VisionSubsystem* m_pVision;
 };

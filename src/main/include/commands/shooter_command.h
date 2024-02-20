@@ -7,13 +7,12 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-#include "subsystems/elevator_subsystem.h"
-#include "subsystems/intake_subsystem.h"
+#include "constants/measure_up.h"
 #include "subsystems/shooter_subsystem.h"
 
-class IntakeCommand : public frc2::CommandHelper<frc2::Command, IntakeCommand> {
+class ShooterCommand : public frc2::CommandHelper<frc2::Command, ShooterCommand> {
  public:
-  IntakeCommand(IntakeSubsystem* intake, ShooterSubsystem* shooter, ElevatorSubsystem* elevator);
+  explicit ShooterCommand(ShooterSubsystem* shooter);
 
   void Initialize() override;
 
@@ -24,7 +23,5 @@ class IntakeCommand : public frc2::CommandHelper<frc2::Command, IntakeCommand> {
   bool IsFinished() override;
 
  private:
-  IntakeSubsystem* m_pIntake;
   ShooterSubsystem* m_pShooter;
-  ElevatorSubsystem* m_pElevator;
 };

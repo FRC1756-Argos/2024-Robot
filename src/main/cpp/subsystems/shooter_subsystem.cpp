@@ -19,7 +19,8 @@ ShooterSubsystem::ShooterSubsystem(const argos_lib::RobotInstance robotInstance)
     , m_feedMotor(
           GetCANAddr(address::comp_bot::shooter::feedMotor, address::practice_bot::shooter::feedMotor, robotInstance))
     , m_robotInstance(robotInstance)
-    , m_velocityControl{0_tps} {
+    , m_velocityControl{0_tps}
+    , m_ampAndTrapMode(false) {
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::shooter::primaryMotor,
                                          motorConfig::practice_bot::shooter::primaryMotor>(
       m_primaryMotor, 100_ms, robotInstance);
@@ -39,6 +40,18 @@ void ShooterSubsystem::Shoot(double speed) {
   m_primaryMotor.Set(speed);
 }
 
+void ShooterSubsystem::Shoot() {
+  if (m_ampAndTrapMode) {
+    m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.3);
+  } else {
+    m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 1.0);
+  }
+}
+
+void ShooterSubsystem::StopShoot() {
+  m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+}
+
 void ShooterSubsystem::ShooterGoToSpeed(units::turns_per_second_t speed) {
   speed = std::clamp<units::turns_per_second_t>(speed, measure_up::shooter::minSpeed, measure_up::shooter::maxSpeed);
   m_primaryMotor.SetControl(m_velocityControl.WithVelocity(speed));
@@ -50,7 +63,6 @@ void ShooterSubsystem::Feed(double speed, bool force) {
 }
 
 void ShooterSubsystem::Disable() {
-  m_primaryMotor.Set(0.0);
   m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
 }
 
@@ -64,4 +76,8 @@ bool ShooterSubsystem::ReadyToShoot() {
 
 void ShooterSubsystem::NoteDetectionOverride(bool override) {
   m_feedMotor.OverrideLimitSwitchesEnable(!override);
+}
+
+void ShooterSubsystem::SetAmpAndTrapMode(bool ampAndTrapMode) {
+  m_ampAndTrapMode = ampAndTrapMode;
 }
