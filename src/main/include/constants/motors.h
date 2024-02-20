@@ -145,7 +145,7 @@ namespace motorConfig {
 
     namespace intake {
       struct primaryIntake {
-        constexpr static auto inverted = true;
+        constexpr static auto inverted = false;
         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Brake;
         constexpr static auto forwardLimitSwitchSource =
             ctre::phoenix::motorcontrol::LimitSwitchSource::LimitSwitchSource_FeedbackConnector;

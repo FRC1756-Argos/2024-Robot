@@ -118,8 +118,8 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | Right JS X      | Unused |
 | Right JS Y      | Shooter Pivot Forwards/Backwards |
 | A               | Unused |
-| B               | Unused |
-| X               | Unused |
+| B               | Trap Position |
+| X               | Carriage Down |
 | Y               | Unused |
 | DPad Up         | Climber Up |
 | DPad Right      | Unused |
