@@ -19,6 +19,7 @@ void IntakeCommand::Initialize() {
   m_pShooter->NoteDetectionOverride(false);
   m_pIntake->Intake(1);
   m_pShooter->Feed(0.3);
+  m_pShooter->SetAmpAndTrapMode(false);
 }
 
 // Called repeatedly when this Command is scheduled to run
