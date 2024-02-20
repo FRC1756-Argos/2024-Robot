@@ -185,7 +185,8 @@ void RobotContainer::ConfigureBindings() {
   // CLIMBER TRIGGER ACTIVATION
   startupClimberHomeTrigger.OnTrue(&m_ClimberHomeCommand);
 
-  climberZero.OnTrue(frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(90_deg);}, {&m_elevatorSubsystem}).ToPtr());
+  climberZero.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(90_deg); }, {&m_elevatorSubsystem}).ToPtr());
 
   climberUp.OnTrue(frc2::InstantCommand(
                        [this]() {

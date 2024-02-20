@@ -43,9 +43,9 @@ namespace measure_up {
   namespace camera_back {}  // namespace camera_back
 
   namespace climber {
-    constexpr auto lowerLimit = 3.375_in;   // from floor to bottom of linear rail carrige
-    constexpr auto upperLimit = 24.5_in;  // approx 19.5in of travel, get better value later
-  }                                         // namespace climber
+    constexpr auto lowerLimit = 3.375_in;  // from floor to bottom of linear rail carrige
+    constexpr auto upperLimit = 24.5_in;   // approx 19.5in of travel, get better value later
+  }                                        // namespace climber
 
   namespace elevator {
     namespace lift {

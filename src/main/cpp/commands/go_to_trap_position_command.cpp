@@ -1,14 +1,14 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/// \copyright Copyright (c) Argos FRC Team 1756.
+///            Open Source Software; you can modify and/or share it under the terms of
+///            the license file in the root directory of this project.
 
 #include "commands/go_to_trap_position_command.h"
 
-#include <frc2/command/WaitUntilCommand.h>
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/WaitCommand.h>
+#include <frc2/command/WaitUntilCommand.h>
 
 #include "constants/measure_up.h"
 
@@ -27,15 +27,15 @@ void GoToTrapPositionCommand::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void GoToTrapPositionCommand::Execute() {
-    if(!is_0_deg && m_pElevator->IsCarriageAtSetPoint()){
-      m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::trapHeight);
-      is_0_deg = true;
-    }
-    if(is_0_deg && m_pElevator->IsLiftAtSetPoint()){
-      m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::trapAngle);
-    }
+  if (!is_0_deg && m_pElevator->IsCarriageAtSetPoint()) {
+    m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::trapHeight);
+    is_0_deg = true;
+  }
+  if (is_0_deg && m_pElevator->IsLiftAtSetPoint()) {
+    m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::trapAngle);
+  }
 
-    if (m_pElevator->GetElevatorLiftManualOverride() || m_pElevator->IsCarriageMotorManualOverride()) {
+  if (m_pElevator->GetElevatorLiftManualOverride() || m_pElevator->IsCarriageMotorManualOverride()) {
     Cancel();
   }
 }
