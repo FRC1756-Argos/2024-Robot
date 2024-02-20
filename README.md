@@ -101,10 +101,10 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | B               | Unused |
 | X               | Unused |
 | Y               | Field Home (hold) |
-| LB              | Unused |
-| RB              | Manual Reverse Intake |
-| LT              | Shoot |
-| RT              | Manual Intake |
+| LB              | Manual Reverse Intake |
+| RB              | Intake |
+| LT              | Aim |
+| RT              | Shoot |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |
@@ -117,18 +117,18 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | Left JS Y       | Elevator Up/Down |
 | Right JS X      | Unused |
 | Right JS Y      | Shooter Pivot Forwards/Backwards |
-| A               | Unused |
-| B               | Unused |
-| X               | Unused |
-| Y               | Unused |
+| A               | Amp Shooter Position |
+| B               | High Elevator Set Point Modifier |
+| X               | Stage Safe Shot |
+| Y               | Against Speaker Shooter Position |
 | DPad Up         | Climber Up |
 | DPad Right      | Unused |
 | DPad Down       | Climber Down |
 | DPad Left       | Unused |
-| LB              | Unused |
-| RB              | Unused |
-| LT              | Intake |
-| RT              | Aim |
+| LB              | Backwards Trap Sequence |
+| RB              | Trap Sequence |
+| LT              | Unused |
+| RT              | Unused |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |
@@ -143,7 +143,7 @@ We're using the following dependencies:
  * [CTRE Phoenix 24.2.0](https://github.com/CrossTheRoadElec/Phoenix-Releases/releases/tag/v24.2.0)
  * [Playing With Fusion 2024.01.10](https://www.playingwithfusion.com/docview.php?docid=1205)
  * [REVLib 2024.2.0](https://docs.revrobotics.com/brushless/spark-max/revlib)
- * [WPILib 2024.2.1](https://github.com/wpilibsuite/allwpilib/releases/tag/v2024.2.1)
+ * [WPILib 2024.3.1](https://github.com/wpilibsuite/allwpilib/releases/tag/v2024.3.1)
  * [Choreo v2024.1.3](https://github.com/SleipnirGroup/Choreo/releases/tag/v2024.1.3)
 
 ## Special Thanks
