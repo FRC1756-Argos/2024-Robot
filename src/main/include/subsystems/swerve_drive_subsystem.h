@@ -15,6 +15,7 @@
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc2/command/SubsystemBase.h>
+#include <units/voltage.h>
 
 #include <memory>
 
@@ -92,6 +93,16 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   /// @param velAngle Angle of velocity vector, [0, 360] with 0 degrees being field-centric home
   /// @param velocity Magnitude of velocity on [0, 1] to apply
   void SwerveDrive(const units::degree_t& velAngle, const double& velocity);
+
+  /// @brief Drive in a straight line with constant applied voltage for system characterization
+  /// @param driveVoltage Voltage to apply to all drive motors
+  /// @param foc true enables foc mode
+  void VoltageDrive(const units::volt_t& driveVoltage, const bool foc = true);
+
+  /// @brief Spin in place with constant applied voltage for system characterization
+  /// @param driveVoltage Voltage to apply to all drive motors
+  /// @param foc true enables foc mode
+  void VoltageSpin(const units::volt_t& driveVoltage, const bool foc = true);
 
   /**
    * @brief Stop all motors
