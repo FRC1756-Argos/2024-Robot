@@ -94,6 +94,7 @@
     "holonomic",
     "odometry",
     "sensorunit",
+    "subwoofer",
     "talonsrx",
     "teleop"
   ],
