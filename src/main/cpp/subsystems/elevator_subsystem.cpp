@@ -35,6 +35,7 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
                                          motorConfig::comp_bot::elevator::carriageRotation>(
       m_carriageMotor, 100_ms, robotInstance);
 
+  m_primaryMotor.SetPosition(sensor_conversions::elevator::lift::ToSensorUnit(measure_up::elevator::lift::minHeight));
   /// @todo Actually home elevator height instead of assuming elevator starts at bottom
   EnableCarriageSoftLimits();
   EnableElevatorSoftLimits();
