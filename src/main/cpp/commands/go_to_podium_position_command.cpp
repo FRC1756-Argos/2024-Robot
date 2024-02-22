@@ -6,16 +6,24 @@
 
 #include "constants/measure_up.h"
 
-GoToPodiumPositionCommand::GoToPodiumPositionCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator)
-    : m_pShooter{shooter}, m_pElevator{elevator} {
+GoToPodiumPositionCommand::GoToPodiumPositionCommand(ShooterSubsystem* shooter,
+                                                     ElevatorSubsystem* elevator,
+                                                     bool highPodiumShot)
+    : m_pShooter{shooter}, m_pElevator{elevator}, m_highPodiumShot{highPodiumShot} {
   AddRequirements({m_pShooter, m_pElevator});
 }
 
 // Called when the command is initially scheduled.
 void GoToPodiumPositionCommand::Initialize() {
   m_pShooter->SetAmpAndTrapMode(false);
-  m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::ampHeight);
-  m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::ampAngle);
+  m_pShooter->ShooterGoToSpeed(5000_rpm);
+  if (m_highPodiumShot) {
+    m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::podiumHighHeight);
+    m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::podiumHighAngle);
+  } else {
+    m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::podiumLowHeight);
+    m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::podiumLowAngle);
+  }
 }
 
 // Called repeatedly when this Command is scheduled to run

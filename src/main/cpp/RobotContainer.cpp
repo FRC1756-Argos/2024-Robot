@@ -58,6 +58,8 @@ RobotContainer::RobotContainer()
     , m_autoAimCommand{&m_swerveDrive, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_visionSubSystem}
     , m_ClimberHomeCommand(m_climberSubsystem)
     , m_GoToAmpPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
+    , m_GoToHighPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, true}
+    , m_GoToLowPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, false}
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}
@@ -141,6 +143,8 @@ void RobotContainer::ConfigureBindings() {
   auto aim = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
 
   auto ampPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
+  auto highPodiumPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kX);
+  auto lowPodiumPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kB);
 
   // ELEVATOR TRIGGERS
   auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
@@ -240,6 +244,8 @@ void RobotContainer::ConfigureBindings() {
   //                          {&m_ShooterSubSystem, &m_elevatorSubsystem})
   //                          .ToPtr());
   ampPositionTrigger.OnTrue(&m_GoToAmpPositionCommand);
+  highPodiumPositionTrigger.OnTrue(&m_GoToHighPodiumPositionCommand);
+  lowPodiumPositionTrigger.OnTrue(&m_GoToLowPodiumPositionCommand);
 }
 
 void RobotContainer::Disable() {

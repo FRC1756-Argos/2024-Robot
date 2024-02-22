@@ -12,7 +12,7 @@
 
 class GoToPodiumPositionCommand : public frc2::CommandHelper<frc2::Command, GoToPodiumPositionCommand> {
  public:
-  GoToPodiumPositionCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator);
+  GoToPodiumPositionCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator, bool highPodiumShot);
 
   void Initialize() override;
 
@@ -25,4 +25,5 @@ class GoToPodiumPositionCommand : public frc2::CommandHelper<frc2::Command, GoTo
  private:
   ShooterSubsystem* m_pShooter;
   ElevatorSubsystem* m_pElevator;
+  bool m_highPodiumShot;
 };
