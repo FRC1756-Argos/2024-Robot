@@ -64,6 +64,7 @@ void ShooterSubsystem::Feed(double speed, bool force) {
 
 void ShooterSubsystem::Disable() {
   m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  m_primaryMotor.Set(0);
 }
 
 bool ShooterSubsystem::IsNotePresent() {

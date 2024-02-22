@@ -59,6 +59,7 @@ RobotContainer::RobotContainer()
     , m_ClimberHomeCommand(m_climberSubsystem)
     , m_GoToAmpPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToSubwooferPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
+    , m_GoToTrapPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}
@@ -134,6 +135,7 @@ void RobotContainer::ConfigureBindings() {
   // CLIMBER TRIGGERS
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto climberDown = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kDown);
+  auto climberZero = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kX);
 
   // SHOOT TRIGGERS
   auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
@@ -143,6 +145,7 @@ void RobotContainer::ConfigureBindings() {
 
   auto ampPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
   auto subwooferPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kY);
+  auto trapPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kB);
 
   // ELEVATOR TRIGGERS
   auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
@@ -183,6 +186,9 @@ void RobotContainer::ConfigureBindings() {
   // CLIMBER TRIGGER ACTIVATION
   startupClimberHomeTrigger.OnTrue(&m_ClimberHomeCommand);
 
+  climberZero.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(90_deg); }, {&m_elevatorSubsystem}).ToPtr());
+
   climberUp.OnTrue(frc2::InstantCommand(
                        [this]() {
                          m_climberSubsystem.SetClimberManualOverride(true);
@@ -193,7 +199,7 @@ void RobotContainer::ConfigureBindings() {
   climberDown.OnTrue(frc2::InstantCommand(
                          [this]() {
                            m_climberSubsystem.SetClimberManualOverride(true);
-                           m_climberSubsystem.ClimberMove(-0.2);
+                           m_climberSubsystem.ClimberMove(-0.4);
                          },
                          {&m_climberSubsystem})
                          .ToPtr());
@@ -243,6 +249,7 @@ void RobotContainer::ConfigureBindings() {
   //                          .ToPtr());
   ampPositionTrigger.OnTrue(&m_GoToAmpPositionCommand);
   subwooferPositionTrigger.OnTrue(&m_GoToSubwooferPositionCommand);
+  trapPositionTrigger.OnTrue(&m_GoToTrapPositionCommand);
 }
 
 void RobotContainer::Disable() {
