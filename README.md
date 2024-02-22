@@ -118,17 +118,17 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | Right JS X      | Unused |
 | Right JS Y      | Shooter Pivot Forwards/Backwards |
 | A               | Amp Shooter Position |
-| B               | High Elevator Set Point Modifier (temporarily trap position) |
-| X               | Stage Safe Shot (temporarily carriage down position)|
-| Y               | Against Speaker Shooter Position |
+| B               | Low Podium Shooter Position |
+| X               | High Podium Shooter Position |
+| Y               | Subwoofer Shooter Position |
 | DPad Up         | Climber Up |
 | DPad Right      | Unused |
 | DPad Down       | Climber Down |
 | DPad Left       | Unused |
 | LB              | Backwards Trap Sequence |
 | RB              | Trap Sequence |
-| LT              | Unused |
-| RT              | Unused |
+| LT              | Trap |
+| RT              | Shooter Up Position |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |
