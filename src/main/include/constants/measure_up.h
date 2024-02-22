@@ -30,13 +30,16 @@ namespace measure_up {
   }  // namespace swerve_offsets
   namespace shooter_targets {
     constexpr auto speakerTagHeight = 58_in;  // needs update
+    constexpr auto speakerOpeningHeightFromShooter = 82.5_in;
     constexpr auto trapOpeningHeight = 36.25_in;
-
+    constexpr auto cameraOffsetFromShooter = 21.0_in;
+    constexpr auto offsetDistanceThreshold = 140_in;
+    constexpr auto offsetRotationThreshold = 50_deg;
   }  // namespace shooter_targets
   namespace camera_front {
     constexpr auto cameraX = 0_in;  /// @todo real mounting offsets
     constexpr auto cameraZ = 7.25_in;
-    constexpr auto cameraMountAngle = 29.9_deg;
+    constexpr auto cameraMountAngle = 24.9_deg;
     constexpr auto cameraHeight = 28.5_in;
     constexpr auto vFov = 24.85_deg * 2;
     constexpr auto hFov = 29.8_deg * 2;
@@ -44,9 +47,9 @@ namespace measure_up {
   namespace camera_back {}  // namespace camera_back
 
   namespace climber {
-    constexpr auto lowerLimit = 3.375_in;   // from floor to bottom of linear rail carrige
-    constexpr auto upperLimit = 22.875_in;  // approx 19.5in of travel, get better value later
-  }                                         // namespace climber
+    constexpr auto lowerLimit = 3.375_in;  // from floor to bottom of linear rail carrige
+    constexpr auto upperLimit = 24.5_in;   // approx 19.5in of travel, get better value later
+  }                                        // namespace climber
 
   namespace elevator {
     namespace lift {
@@ -56,14 +59,18 @@ namespace measure_up {
       constexpr auto ampHeight = 40_in;
       constexpr auto podiumLowHeight = intakeHeight;
       constexpr auto podiumHighHeight = 40_in;
+      constexpr auto subwooferHeight = intakeHeight;
+      constexpr auto trapHeight = 36_in;
     }  // namespace lift
     namespace carriage {
-      constexpr auto minAngle = -45_deg;
+      constexpr auto minAngle = -110_deg;
       constexpr auto maxAngle = 270_deg;
       constexpr auto intakeAngle = 40_deg;
       constexpr auto ampAngle = 135_deg;
       constexpr auto podiumHighAngle = 27_deg;
       constexpr auto podiumLowAngle = 33_deg;
+      constexpr auto subwooferAngle = 56.2_deg;
+      constexpr auto trapAngle = -110_deg;
     }  // namespace carriage
   }    // namespace elevator
 

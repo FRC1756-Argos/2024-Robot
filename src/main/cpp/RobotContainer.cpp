@@ -60,6 +60,8 @@ RobotContainer::RobotContainer()
     , m_GoToAmpPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToHighPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, true}
     , m_GoToLowPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, false}
+    , m_GoToSubwooferPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
+    , m_GoToTrapPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}
@@ -135,6 +137,7 @@ void RobotContainer::ConfigureBindings() {
   // CLIMBER TRIGGERS
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto climberDown = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kDown);
+  auto climberZero = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kTriggerRight);
 
   // SHOOT TRIGGERS
   auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
@@ -145,6 +148,8 @@ void RobotContainer::ConfigureBindings() {
   auto ampPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
   auto highPodiumPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kX);
   auto lowPodiumPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kB);
+  auto subwooferPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kY);
+  auto trapPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kTriggerLeft);
 
   // ELEVATOR TRIGGERS
   auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
@@ -185,6 +190,9 @@ void RobotContainer::ConfigureBindings() {
   // CLIMBER TRIGGER ACTIVATION
   startupClimberHomeTrigger.OnTrue(&m_ClimberHomeCommand);
 
+  climberZero.OnTrue(
+      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(90_deg); }, {&m_elevatorSubsystem}).ToPtr());
+
   climberUp.OnTrue(frc2::InstantCommand(
                        [this]() {
                          m_climberSubsystem.SetClimberManualOverride(true);
@@ -195,7 +203,7 @@ void RobotContainer::ConfigureBindings() {
   climberDown.OnTrue(frc2::InstantCommand(
                          [this]() {
                            m_climberSubsystem.SetClimberManualOverride(true);
-                           m_climberSubsystem.ClimberMove(-0.2);
+                           m_climberSubsystem.ClimberMove(-0.4);
                          },
                          {&m_climberSubsystem})
                          .ToPtr());
@@ -246,6 +254,8 @@ void RobotContainer::ConfigureBindings() {
   ampPositionTrigger.OnTrue(&m_GoToAmpPositionCommand);
   highPodiumPositionTrigger.OnTrue(&m_GoToHighPodiumPositionCommand);
   lowPodiumPositionTrigger.OnTrue(&m_GoToLowPodiumPositionCommand);
+  subwooferPositionTrigger.OnTrue(&m_GoToSubwooferPositionCommand);
+  trapPositionTrigger.OnTrue(&m_GoToTrapPositionCommand);
 }
 
 void RobotContainer::Disable() {

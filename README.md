@@ -127,8 +127,8 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | DPad Left       | Unused |
 | LB              | Backwards Trap Sequence |
 | RB              | Trap Sequence |
-| LT              | Unused |
-| RT              | Unused |
+| LT              | Trap |
+| RT              | Shooter Up Position |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |
