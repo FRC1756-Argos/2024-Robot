@@ -13,7 +13,7 @@ GoToSubwooferPositionCommand::GoToSubwooferPositionCommand(ShooterSubsystem* sho
 
 // Called when the command is initially scheduled.
 void GoToSubwooferPositionCommand::Initialize() {
-  m_pShooter->SetAmpAndTrapMode(true);
+  m_pShooter->SetAmpAndTrapMode(false);
   m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::subwooferHeight);
   m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::subwooferAngle);
   m_pShooter->ShooterGoToSpeed(5000_rpm);
