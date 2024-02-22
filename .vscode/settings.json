@@ -83,16 +83,37 @@
     "cinttypes": "cpp",
     "typeinfo": "cpp",
     "core": "cpp",
-    "future": "cpp"
+    "future": "cpp",
+    "any": "cpp",
+    "bitset": "cpp",
+    "cfenv": "cpp",
+    "codecvt": "cpp",
+    "compare": "cpp",
+    "complex": "cpp",
+    "concepts": "cpp",
+    "forward_list": "cpp",
+    "list": "cpp",
+    "unordered_set": "cpp",
+    "regex": "cpp",
+    "numbers": "cpp",
+    "ranges": "cpp",
+    "semaphore": "cpp",
+    "span": "cpp",
+    "stop_token": "cpp",
+    "typeindex": "cpp",
+    "valarray": "cpp",
+    "variant": "cpp"
   },
   "[cpp]": {
     "editor.defaultFormatter": "xaver.clang-format"
   },
   "cSpell.words": [
     "ctre",
+    "Debouncer",
     "holonomic",
     "odometry",
     "sensorunit",
+    "subwoofer",
     "talonsrx",
     "teleop"
   ],

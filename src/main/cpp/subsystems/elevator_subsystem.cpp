@@ -7,6 +7,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/math.h>
 
+#include <ctre/phoenix6/configs/Configs.hpp>
 #include <ctre/phoenix6/controls/PositionVoltage.hpp>
 
 #include "argos_lib/config/falcon_config.h"
@@ -24,7 +25,9 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
                                  robotInstance))
     , m_robotInstance(robotInstance)
     , m_elevatorManualOverride{false}
-    , m_carriageMotorManualOverride{false} {
+    , m_carriageMotorManualOverride{false}
+    , m_elevatorHomed{true}
+    , m_carriageHomed{true} {
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::elevator::primaryElevator,
                                          motorConfig::practice_bot::elevator::primaryElevator>(
       m_primaryMotor, 100_ms, robotInstance);
@@ -32,25 +35,10 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
                                          motorConfig::comp_bot::elevator::carriageRotation>(
       m_carriageMotor, 100_ms, robotInstance);
 
-  /// @todo Actually home elevator height instead of assuming elevator starts at bottom
   m_primaryMotor.SetPosition(sensor_conversions::elevator::lift::ToSensorUnit(measure_up::elevator::lift::minHeight));
-  ctre::phoenix6::configs::SoftwareLimitSwitchConfigs elevatorLiftSoftLimits;
-  elevatorLiftSoftLimits.ForwardSoftLimitThreshold =
-      sensor_conversions::elevator::lift::ToSensorUnit(measure_up::elevator::lift::maxHeight).to<double>();
-  elevatorLiftSoftLimits.ReverseSoftLimitThreshold =
-      sensor_conversions::elevator::lift::ToSensorUnit(measure_up::elevator::lift::minHeight).to<double>();
-  elevatorLiftSoftLimits.ForwardSoftLimitEnable = true;
-  elevatorLiftSoftLimits.ReverseSoftLimitEnable = true;
-  // m_primaryMotor.GetConfigurator().Apply(elevatorLiftSoftLimits);
-
-  ctre::phoenix6::configs::SoftwareLimitSwitchConfigs carriageRotationSoftLimits;
-  carriageRotationSoftLimits.ForwardSoftLimitEnable = true;
-  carriageRotationSoftLimits.ReverseSoftLimitEnable = true;
-  carriageRotationSoftLimits.ForwardSoftLimitThreshold =
-      units::turn_t{measure_up::elevator::carriage::maxAngle}.to<double>();
-  carriageRotationSoftLimits.ReverseSoftLimitThreshold =
-      units::turn_t{measure_up::elevator::carriage::minAngle}.to<double>();
-  //   m_carriageMotor.GetConfigurator().Apply(carriageRotationSoftLimits);
+  /// @todo Actually home elevator height instead of assuming elevator starts at bottom
+  EnableCarriageSoftLimits();
+  EnableElevatorSoftLimits();
 }
 
 // This method will be called once per scheduler run
@@ -140,4 +128,43 @@ bool ElevatorSubsystem::IsCarriageAtSetPoint() {
 
 bool ElevatorSubsystem::IsElevatorAtSetPoint() {
   return IsLiftAtSetPoint() && IsCarriageAtSetPoint();
+}
+void ElevatorSubsystem::EnableElevatorSoftLimits() {
+  if (m_elevatorHomed) {
+    ctre::phoenix6::configs::SoftwareLimitSwitchConfigs ElevatorSoftLimits;
+    ElevatorSoftLimits.ForwardSoftLimitThreshold =
+        sensor_conversions::elevator::lift::ToSensorUnit(measure_up::elevator::lift::maxHeight).to<double>();
+    ElevatorSoftLimits.ReverseSoftLimitThreshold =
+        sensor_conversions::elevator::lift::ToSensorUnit(measure_up::elevator::lift::minHeight + 0.25_in).to<double>();
+    ElevatorSoftLimits.ForwardSoftLimitEnable = true;
+    ElevatorSoftLimits.ReverseSoftLimitEnable = true;
+    m_primaryMotor.GetConfigurator().Apply(ElevatorSoftLimits);
+  }
+}
+
+void ElevatorSubsystem::DisableElevatorSoftLimits() {
+  ctre::phoenix6::configs::SoftwareLimitSwitchConfigs ElevatorSoftLimits;
+  ElevatorSoftLimits.ForwardSoftLimitEnable = false;
+  ElevatorSoftLimits.ReverseSoftLimitEnable = false;
+  m_primaryMotor.GetConfigurator().Apply(ElevatorSoftLimits);
+}
+
+void ElevatorSubsystem::EnableCarriageSoftLimits() {
+  if (m_carriageHomed) {
+    ctre::phoenix6::configs::SoftwareLimitSwitchConfigs carriageSoftLimits;
+    carriageSoftLimits.ForwardSoftLimitThreshold =
+        units::angle::turn_t{measure_up::elevator::carriage::maxAngle}.to<double>();
+    carriageSoftLimits.ReverseSoftLimitThreshold =
+        units::angle::turn_t{measure_up::elevator::carriage::minAngle}.to<double>();
+    carriageSoftLimits.ForwardSoftLimitEnable = true;
+    carriageSoftLimits.ReverseSoftLimitEnable = true;
+    m_carriageMotor.GetConfigurator().Apply(carriageSoftLimits);
+  }
+}
+
+void ElevatorSubsystem::DisableCarriageSoftLimits() {
+  ctre::phoenix6::configs::SoftwareLimitSwitchConfigs carriageSoftLimits;
+  carriageSoftLimits.ForwardSoftLimitEnable = false;
+  carriageSoftLimits.ReverseSoftLimitEnable = false;
+  m_carriageMotor.GetConfigurator().Apply(carriageSoftLimits);
 }

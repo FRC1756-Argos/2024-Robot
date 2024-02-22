@@ -20,8 +20,8 @@ jobs:
         build_target: [
           installFrcUserProgramLinuxathenaDebugExecutable,
           installFrcUserProgramLinuxathenaReleaseExecutable,
-          installFrcUserProgramLinuxx86-64DebugExecutable,
-          installFrcUserProgramLinuxx86-64ReleaseExecutable,
+          # installFrcUserProgramLinuxx86-64DebugExecutable,
+          # installFrcUserProgramLinuxx86-64ReleaseExecutable,
           checkFrcUserProgramTestLinuxx86-64DebugGoogleTestExe,
           checkFrcUserProgramTestLinuxx86-64ReleaseGoogleTestExe
         ]
@@ -56,7 +56,7 @@ jobs:
           # installFrcUserProgramLinuxathenaDebugExecutable,
           installFrcUserProgramLinuxathenaReleaseExecutable,
           # installFrcUserProgramWindowsx86-64DebugExecutable,
-          installFrcUserProgramWindowsx86-64ReleaseExecutable,
+          # installFrcUserProgramWindowsx86-64ReleaseExecutable,
           # checkFrcUserProgramTestWindowsx86-64DebugGoogleTestExe,
           checkFrcUserProgramTestWindowsx86-64ReleaseGoogleTestExe
         ]

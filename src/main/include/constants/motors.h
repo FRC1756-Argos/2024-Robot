@@ -135,6 +135,7 @@ namespace motorConfig {
       };
       struct feedMotor {
         constexpr static auto inverted = false;
+        constexpr static auto continuousCurrentLimit = 20_A;
         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Brake;
         constexpr static auto forwardLimitSwitchSource =
             ctre::phoenix::motorcontrol::LimitSwitchSource::LimitSwitchSource_FeedbackConnector;
@@ -145,7 +146,8 @@ namespace motorConfig {
 
     namespace intake {
       struct primaryIntake {
-        constexpr static auto inverted = true;
+        constexpr static auto inverted = false;
+        constexpr static auto continuousCurrentLimit = 30_A;
         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Brake;
         constexpr static auto forwardLimitSwitchSource =
             ctre::phoenix::motorcontrol::LimitSwitchSource::LimitSwitchSource_FeedbackConnector;
@@ -159,7 +161,7 @@ namespace motorConfig {
     }  // namespace intake
     namespace climber {
       struct primaryClimbing {
-        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto inverted = true;
         constexpr static auto statorCurrentLimit = 30_A;
         constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor;
@@ -173,7 +175,7 @@ namespace motorConfig {
         constexpr static auto pid0_gravityType = controlLoop::comp_bot::climber::climber::gravityType;
       };
       struct secondaryClimbing {
-        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto inverted = false;
       };
     }  // namespace climber
@@ -201,7 +203,9 @@ namespace motorConfig {
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statorCurrentLimit = 30_A;
         constexpr static auto selectedSensor_addr = address::comp_bot::encoders::shooterEncoder;
-        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::FusedCANcoder;
+        constexpr static auto rotorToSensorRatio = 1 / sensor_conversions::elevator::carriage::sensorConversionFactor;
+        constexpr static auto sensorToMechanismRatio = 1.0;
         constexpr static auto pid0_kP = controlLoop::comp_bot::elevator::carriage::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::elevator::carriage::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::elevator::carriage::kD;

@@ -8,12 +8,11 @@
 #include <frc2/command/CommandHelper.h>
 
 #include "subsystems/elevator_subsystem.h"
-#include "subsystems/intake_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
 
-class IntakeCommand : public frc2::CommandHelper<frc2::Command, IntakeCommand> {
+class GoToSubwooferPositionCommand : public frc2::CommandHelper<frc2::Command, GoToSubwooferPositionCommand> {
  public:
-  IntakeCommand(IntakeSubsystem* intake, ShooterSubsystem* shooter, ElevatorSubsystem* elevator);
+  GoToSubwooferPositionCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator);
 
   void Initialize() override;
 
@@ -24,7 +23,6 @@ class IntakeCommand : public frc2::CommandHelper<frc2::Command, IntakeCommand> {
   bool IsFinished() override;
 
  private:
-  IntakeSubsystem* m_pIntake;
   ShooterSubsystem* m_pShooter;
   ElevatorSubsystem* m_pElevator;
 };
