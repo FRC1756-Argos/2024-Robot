@@ -31,12 +31,12 @@ void AutoAimCommand::Execute() {
   }
 
   auto horzOffset = m_pVision->GetHorizontalOffsetToTarget();
-  auto orientationOffset = m_pVision->GetOrientationToSpeaker();
+  auto cameraOffset = m_pVision->getShooterOffset();
 
-  if (horzOffset != std::nullopt && orientationOffset != std::nullopt) {
+  if (horzOffset != std::nullopt && cameraOffset != std::nullopt) {
     frc::SmartDashboard::PutNumber("(AIM) offset", horzOffset.value().to<double>());
     double offset = horzOffset.value().to<double>();
-    offset -= 10.0;
+    offset -= cameraOffset.value().to<double>();
     m_pSwerveDrive->SwerveDrive(0.0, 0.0, -offset * 0.016);
   }
 }

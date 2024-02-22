@@ -30,12 +30,16 @@ namespace measure_up {
   }  // namespace swerve_offsets
   namespace shooter_targets {
     constexpr auto speakerTagHeight = 58_in;  // needs update
+    constexpr auto speakerOpeningHeightFromShooter = 82.5_in;
     constexpr auto trapOpeningHeight = 36.25_in;
+    constexpr auto cameraOffsetFromShooter = 21.0_in;
+    constexpr auto offsetDistanceThreshold = 140_in;
+    constexpr auto offsetRotationThreshold = 50_deg;
   }  // namespace shooter_targets
   namespace camera_front {
     constexpr auto cameraX = 0_in;  /// @todo real mounting offsets
     constexpr auto cameraZ = 7.25_in;
-    constexpr auto cameraMountAngle = 29.9_deg;
+    constexpr auto cameraMountAngle = 24.9_deg;
     constexpr auto cameraHeight = 28.5_in;
     constexpr auto vFov = 24.85_deg * 2;
     constexpr auto hFov = 29.8_deg * 2;
