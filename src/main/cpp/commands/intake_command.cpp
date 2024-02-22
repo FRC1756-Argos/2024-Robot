@@ -26,6 +26,9 @@ void IntakeCommand::Initialize() {
 void IntakeCommand::Execute() {
   if (m_pShooter->IsNotePresent()) {
     m_pIntake->Intake(0);
+  } else if (m_pIntake->IsNotePresent()) {
+    // Reduce intake speed during handoff to be gentler to notes
+    m_pIntake->Intake(0.5);
   } else {
     m_pIntake->Intake(1);
   }
