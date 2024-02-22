@@ -120,7 +120,7 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | A               | Amp Shooter Position |
 | B               | High Elevator Set Point Modifier |
 | X               | Stage Safe Shot |
-| Y               | Against Speaker Shooter Position |
+| Y               | Subwoofer Shooter Position |
 | DPad Up         | Climber Up |
 | DPad Right      | Unused |
 | DPad Down       | Climber Down |

@@ -58,6 +58,7 @@ RobotContainer::RobotContainer()
     , m_autoAimCommand{&m_swerveDrive, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_visionSubSystem}
     , m_ClimberHomeCommand(m_climberSubsystem)
     , m_GoToAmpPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
+    , m_GoToSubwooferPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}
@@ -141,6 +142,7 @@ void RobotContainer::ConfigureBindings() {
   auto aim = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
 
   auto ampPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
+  auto subwooferPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kY);
 
   // ELEVATOR TRIGGERS
   auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
@@ -240,6 +242,7 @@ void RobotContainer::ConfigureBindings() {
   //                          {&m_ShooterSubSystem, &m_elevatorSubsystem})
   //                          .ToPtr());
   ampPositionTrigger.OnTrue(&m_GoToAmpPositionCommand);
+  subwooferPositionTrigger.OnTrue(&m_GoToSubwooferPositionCommand);
 }
 
 void RobotContainer::Disable() {
