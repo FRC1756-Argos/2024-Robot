@@ -5,7 +5,7 @@
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-#include <cmath>
+#include <units/math.h>
 
 #include "constants/field_points.h"
 #include "subsystems/vision_subsystem.h"
@@ -54,12 +54,16 @@ void VisionSubsystem::Periodic() {
 std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
   // Updates and retrieves new target values
   LimelightTarget::tValues targetValues = GetCameraTargetValues();
-
-  // add more target validation after testing e.g. area, margin, skew etc
-  // for now has target is enough as we will be fairly close to target
-  // and will tune the pipeline not to combine detections and choose the highest area
-  if (targetValues.hasTargets) {
-    return targetValues.m_yaw;
+  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                          field_points::blue_alliance::april_tags::speakerCenter.id :
+                          field_points::red_alliance::april_tags::speakerCenter.id;
+  if (tagOfInterest == targetValues.tagID) {
+    // add more target validation after testing e.g. area, margin, skew etc
+    // for now has target is enough as we will be fairly close to target
+    // and will tune the pipeline not to combine detections and choose the highest area
+    if (targetValues.hasTargets) {
+      return targetValues.m_yaw;
+    }
   }
 
   return std::nullopt;
@@ -74,9 +78,7 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
       // d /= 12.0;
       return units::degree_t(88 - (0.78 * d) + (0.00335 * d * d) - (0.00000505 * d * d * d));
     } else if (m_useTrigonometry) {
-      return (units::degree_t)(180.0 / 3.14159265358) *
-             std::atan((measure_up::shooter_targets::speakerOpeningHeightFromShooter.to<double>() /
-                        distance.value().to<double>()));
+      return (units::math::atan2(measure_up::shooter_targets::speakerOpeningHeightFromShooter, distance.value()));
     } else {
       return m_shooterAngleMap.Map(distance.value());
     }
@@ -87,21 +89,18 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
 
 std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
   auto distance = GetDistanceToSpeaker();
-  if (distance && distance.value() < 140_in) {
-    return (units::degree_t)(180.0 / 3.14159265358) *
-           std::atan(
-               (measure_up::shooter_targets::cameraOffsetFromShooter.to<double>() / distance.value().to<double>()));
+  if (distance && distance.value() < measure_up::shooter_targets::offsetDistanceThreshold) {
+    return units::math::atan2(measure_up::shooter_targets::cameraOffsetFromShooter, distance.value());
   } else if (distance) {
     units::degree_t accountLongerSpin = (units::degree_t)(2.0 * (distance.value().to<double>() / 80.0));
     const auto targetValues = GetCameraTargetValues();
-    if (targetValues.tagPose.Rotation().Z() > 50_deg) {
+    if (targetValues.tagPose.Rotation().Z() > measure_up::shooter_targets::offsetRotationThreshold) {
       accountLongerSpin += 0.8_deg;
     } else if (targetValues.tagPose.Rotation().Z() < 0_deg) {
       accountLongerSpin = 0.0_deg;
     }
-    return accountLongerSpin + (units::degree_t)(180.0 / 3.14159265358) *
-                                   std::atan((measure_up::shooter_targets::cameraOffsetFromShooter.to<double>() /
-                                              distance.value().to<double>()));
+    return accountLongerSpin +
+           units::math::atan2(measure_up::shooter_targets::cameraOffsetFromShooter, distance.value());
   }
 }
 
@@ -109,6 +108,7 @@ std::optional<units::inch_t> VisionSubsystem::GetDistanceToSpeaker() {
   int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
                           field_points::blue_alliance::april_tags::speakerCenter.id :
                           field_points::red_alliance::april_tags::speakerCenter.id;
+
   const auto targetValues = GetCameraTargetValues();
   if (tagOfInterest == targetValues.tagID)
     return static_cast<units::inch_t>(targetValues.tagPose.Z());
