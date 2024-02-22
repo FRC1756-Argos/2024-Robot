@@ -99,6 +99,11 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   void StopDrive();
 
   /**
+   * @brief Stop all motors
+   */
+  void SwerveRotate(const double rotVelocity);
+
+  /**
    * @brief Save homes to persistent storage and updates module motors
    *
    * @param angle Current angle of all the swerve modules.  They should all be oriented the same during homing.
@@ -303,6 +308,10 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   argos_lib::NTSubscriber m_rotationalFollowerTuner_D;
   argos_lib::NTSubscriber m_rotationalFollowerConstraintTuner_vel;
   argos_lib::NTSubscriber m_rotationalFollowerConstraintTuner_accel;
+
+  double m_currentFwVel;    ///< Gets Current Commanded Forward Velocity
+  double m_currentSideVel;  ///< Gets Current Commanded Side Velocity
+  double m_currentRotVel;   ///< Gets Current Commanded Rotation Velocity
 
   /**
  * @brief Get the Raw Module States object and switch between robot-centric and field-centric

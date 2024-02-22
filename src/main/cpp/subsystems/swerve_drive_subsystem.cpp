@@ -281,6 +281,25 @@ wpi::array<frc::SwerveModulePosition, 4> SwerveDriveSubsystem::GetCurrentModuleP
   return {m_frontLeft.GetPosition(), m_frontRight.GetPosition(), m_backRight.GetPosition(), m_backLeft.GetPosition()};
 }
 
+void SwerveDriveSubsystem::SwerveRotate(const double rotVelocity) {
+  SwerveDriveSubsystem::Velocities velocities{m_currentFwVel, m_currentSideVel, rotVelocity};
+  if (rotVelocity > 0.0) {
+    auto moduleStates = GetRawModuleStates(velocities);
+
+    m_frontLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
+        moduleStates.at(indexes::swerveModules::frontLeftIndex).angle.Degrees())));
+
+    m_frontRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
+        moduleStates.at(indexes::swerveModules::frontRightIndex).angle.Degrees())));
+
+    m_backRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
+        moduleStates.at(indexes::swerveModules::backRightIndex).angle.Degrees())));
+
+    m_backLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
+        moduleStates.at(indexes::swerveModules::backLeftIndex).angle.Degrees())));
+  }
+}
+
 void SwerveDriveSubsystem::SwerveDrive(const double fwVelocity, const double sideVelocity, const double rotVelocity) {
   UpdateEstimatedPose();
   if (fwVelocity == 0 && sideVelocity == 0 && rotVelocity == 0) {
