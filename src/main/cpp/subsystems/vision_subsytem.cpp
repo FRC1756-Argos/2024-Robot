@@ -4,7 +4,6 @@
 
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-
 #include <units/math.h>
 
 #include "constants/field_points.h"
