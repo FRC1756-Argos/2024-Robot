@@ -39,7 +39,6 @@ SimpleLedSubsystem::SimpleLedSubsystem(argos_lib::RobotInstance instance)
 
 void SimpleLedSubsystem::Enable() {
   m_enabled = true;
-
 }
 void SimpleLedSubsystem::Disable() {
   m_enabled = false;
@@ -166,8 +165,7 @@ void SimpleLedSubsystem::SetAllGroupsColor(argos_lib::ArgosColor color, bool res
   }
 
   StopAllAnimations(false);
-  int len =
-      length_backLeft + length_backRight + length_front;
+  int len = length_backLeft + length_backRight + length_front;
   ctre::phoenix::ErrorCode rslt;
   rslt = m_CANdle.value().SetLEDs(color.r, color.g, color.b, 0, startIndex_backLeft, len);
   if (rslt != ctre::phoenix::ErrorCode::OKAY) {
@@ -186,14 +184,10 @@ void SimpleLedSubsystem::SetAllGroupsFade(argos_lib::ArgosColor color, bool rest
 
   const int tipSize = 0;
 
-  std::array<int, 3> lengths = {length_backLeft - tipSize,
-                                length_backRight - tipSize,
-                                length_front - tipSize
-                                };
+  std::array<int, 3> lengths = {length_backLeft - tipSize, length_backRight - tipSize, length_front - tipSize};
   std::array<int, 3> offsets = {(inverted_backLeft ? tipSize : 0) + startIndex_backLeft,
                                 (inverted_backRight ? tipSize : 0) + startIndex_backRight,
-                                (inverted_front ? tipSize : 0) + startIndex_front
-                                };
+                                (inverted_front ? tipSize : 0) + startIndex_front};
   for (size_t i = 0; i < lengths.size(); ++i) {
     auto fadeAnimation =
         ctre::phoenix::led::SingleFadeAnimation(color.r, color.g, color.b, 0, 0.7, lengths.at(i), offsets.at(i));
