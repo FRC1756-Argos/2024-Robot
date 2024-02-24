@@ -11,8 +11,15 @@
 AutoAimCommand::AutoAimCommand(SwerveDriveSubsystem* swerveDrive,
                                ShooterSubsystem* shooter,
                                ElevatorSubsystem* elevator,
-                               VisionSubsystem* vision)
-    : m_pSwerveDrive{swerveDrive}, m_pShooter{shooter}, m_pElevator{elevator}, m_pVision{vision} {
+                               VisionSubsystem* vision,
+                               argos_lib::SwappableControllersSubsystem* controllers,
+                               SimpleLedSubsystem* leds)
+    : m_pSwerveDrive{swerveDrive}
+    , m_pShooter{shooter}
+    , m_pElevator{elevator}
+    , m_pVision{vision}
+    , m_pControllers{controllers}
+    , m_pLeds{leds} {
   AddRequirements({m_pSwerveDrive, m_pShooter, m_pElevator});
 }
 
@@ -39,11 +46,36 @@ void AutoAimCommand::Execute() {
     double offset = horzOffset.value().to<double>();
     offset -= cameraOffset.value().to<double>();
     m_pSwerveDrive->SwerveDrive(0.0, 0.0, -offset * 0.016);
+    frc::SmartDashboard::PutNumber("(AIM) offset2", offset);
+
+    if (m_pLeds) {
+      if (std::abs(offset) < 5 && m_pShooter->ShooterAtSpeed()) {
+        m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kReallyGreen, false); },
+                                  200_ms);
+      }
+    }
+    if (m_pShooter->ShooterAtSpeed() && std::abs(offset) < 5) {
+      if (m_pControllers) {
+        m_pControllers->DriverController().SetVibration(argos_lib::VibrationAlternatePulse(500_ms, 1.0, 0.0));
+      }
+      if (m_pLeds) {
+        m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kReallyGreen, false); },
+                                  200_ms);
+      }
+    } else if (m_pLeds) {
+      m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kCatYellow, false); }, 200_ms);
+    }
+  } else if (m_pLeds) {
+    m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kReallyRed, false); }, 200_ms);
   }
 }
 
 // Called once the command ends or is interrupted.
-void AutoAimCommand::End(bool interrupted) {}
+void AutoAimCommand::End(bool interrupted) {
+  if (m_pControllers) {
+    m_pControllers->DriverController().SetVibration(argos_lib::VibrationOff());
+  }
+}
 
 // Returns true when the command should end.
 bool AutoAimCommand::IsFinished() {
