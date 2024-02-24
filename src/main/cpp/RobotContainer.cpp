@@ -62,9 +62,7 @@ RobotContainer::RobotContainer()
     , m_GoToLowPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, false}
     , m_GoToSubwooferPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToTrapPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
-    , m_ReadyForClimbCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
-    , m_RaiseClimberCommand{&m_climberSubsystem}
-    , m_LowerClimberCommand{&m_climberSubsystem}
+    , m_ClimberCommand{&m_climberSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}
@@ -216,11 +214,7 @@ void RobotContainer::ConfigureBindings() {
   (climberUp || climberDown)
       .OnFalse(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.0); }, {&m_climberSubsystem}).ToPtr());
 
-  if (!m_ReadyForClimbCommand.GetIsReadyCLimbFinished()) {
-    climberSequenceTrigger.OnTrue(&m_ReadyForClimbCommand);
-  } else {
-    climberSequenceTrigger.OnTrue(&m_RaiseClimberCommand);
-  }
+  climberSequenceTrigger.OnTrue(&m_climberSubsystem);
 
   // ELEVATOR TRIGGER ACTIVATION
   elevatorLiftManualInput.OnTrue(

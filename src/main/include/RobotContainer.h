@@ -90,9 +90,7 @@ class RobotContainer {
   GoToPodiumPositionCommand m_GoToLowPodiumPositionCommand;
   GoToSubwooferPositionCommand m_GoToSubwooferPositionCommand;
   GoToTrapPositionCommand m_GoToTrapPositionCommand;
-  ReadyForClimbCommand m_ReadyForClimbCommand;
-  RaiseClimberCommand m_RaiseClimberCommand;
-  LowerClimberCommand m_LowerClimberCommand;
+  ClimberCommand m_ClimberCommand;
 
   // Autonomous
   AutonomousNothing m_autoNothing;
