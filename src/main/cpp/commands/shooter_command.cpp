@@ -18,10 +18,7 @@ void ShooterCommand::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void ShooterCommand::Execute() {
-  if (m_pShooter->ReadyToShoot()) {
-    m_pShooter->NoteDetectionOverride(true);
-    m_pShooter->Shoot();
-  }
+  m_pShooter->Shoot();
 }
 
 // Called once the command ends or is interrupted.

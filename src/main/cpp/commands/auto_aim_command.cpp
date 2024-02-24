@@ -20,6 +20,7 @@ AutoAimCommand::AutoAimCommand(SwerveDriveSubsystem* swerveDrive,
 void AutoAimCommand::Initialize() {
   m_pShooter->ShooterGoToSpeed(5000_rpm);
   m_pShooter->SetAmpAndTrapMode(false);
+  m_pSwerveDrive->StopDrive();
 }
 
 // Called repeatedly when this Command is scheduled to run
