@@ -14,6 +14,8 @@
 
 #include <memory>
 
+#include <ctre/phoenix6/controls/VoltageOut.hpp>
+
 #include "Constants.h"
 #include "utils/sensor_conversions.h"
 
@@ -525,18 +527,18 @@ void SwerveDriveSubsystem::VoltageDrive(const units::volt_t& driveVoltage, const
   m_manualOverride = false;
 
   m_frontLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-      argos_lib::angle::NearestAngle(0_deg, m_frontLeft.m_turn.GetPosition()))));
+      argos_lib::angle::NearestAngle(0_deg, m_frontLeft.m_turn.GetPosition().GetValue()))));
   m_frontRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-      argos_lib::angle::NearestAngle(0_deg, m_frontRight.m_turn.GetPosition()))));
+      argos_lib::angle::NearestAngle(0_deg, m_frontRight.m_turn.GetPosition().GetValue()))));
   m_backRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-      argos_lib::angle::NearestAngle(0_deg, m_backRight.m_turn.GetPosition()))));
+      argos_lib::angle::NearestAngle(0_deg, m_backRight.m_turn.GetPosition().GetValue()))));
   m_backLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-      argos_lib::angle::NearestAngle(0_deg, m_backLeft.m_turn.GetPosition()))));
+      argos_lib::angle::NearestAngle(0_deg, m_backLeft.m_turn.GetPosition().GetValue()))));
 
-  m_frontLeft.m_drive.SetControl(VoltageOut(driveVoltage, foc));
-  m_frontRight.m_drive.SetControl(VoltageOut(driveVoltage, foc));
-  m_backRight.m_drive.SetControl(VoltageOut(driveVoltage, foc));
-  m_backLeft.m_drive.SetControl(VoltageOut(driveVoltage, foc));
+  m_frontLeft.m_drive.SetControl(ctre::phoenix6::controls::VoltageOut(driveVoltage, foc));
+  m_frontRight.m_drive.SetControl(ctre::phoenix6::controls::VoltageOut(driveVoltage, foc));
+  m_backRight.m_drive.SetControl(ctre::phoenix6::controls::VoltageOut(driveVoltage, foc));
+  m_backLeft.m_drive.SetControl(ctre::phoenix6::controls::VoltageOut(driveVoltage, foc));
 }
 
 void SwerveDriveSubsystem::VoltageSpin(const units::volt_t& driveVoltage, const bool foc) {
@@ -548,19 +550,22 @@ void SwerveDriveSubsystem::VoltageSpin(const units::volt_t& driveVoltage, const 
 
   const auto moduleStates = m_swerveDriveKinematics.ToSwerveModuleStates(inPlaceTurn);
 
-  m_frontLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-      argos_lib::angle::NearestAngle(moduleStates.at(0).angle.Degrees(), m_frontLeft.m_turn.GetPosition()))));
-  m_frontRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-      argos_lib::angle::NearestAngle(moduleStates.at(1).angle.Degrees(), m_frontRight.m_turn.GetPosition()))));
-  m_backRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-      argos_lib::angle::NearestAngle(moduleStates.at(2).angle.Degrees(), m_backRight.m_turn.GetPosition()))));
+  m_frontLeft.m_turn.SetControl(
+      PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(argos_lib::angle::NearestAngle(
+          moduleStates.at(0).angle.Degrees(), m_frontLeft.m_turn.GetPosition().GetValue()))));
+  m_frontRight.m_turn.SetControl(
+      PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(argos_lib::angle::NearestAngle(
+          moduleStates.at(1).angle.Degrees(), m_frontRight.m_turn.GetPosition().GetValue()))));
+  m_backRight.m_turn.SetControl(
+      PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(argos_lib::angle::NearestAngle(
+          moduleStates.at(2).angle.Degrees(), m_backRight.m_turn.GetPosition().GetValue()))));
   m_backLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-      argos_lib::angle::NearestAngle(moduleStates.at(3).angle.Degrees(), m_backLeft.m_turn.GetPosition()))));
+      argos_lib::angle::NearestAngle(moduleStates.at(3).angle.Degrees(), m_backLeft.m_turn.GetPosition().GetValue()))));
 
-  m_frontLeft.m_drive.SetControl(VoltageOut(driveVoltage, foc));
-  m_frontRight.m_drive.SetControl(VoltageOut(driveVoltage, foc));
-  m_backRight.m_drive.SetControl(VoltageOut(driveVoltage, foc));
-  m_backLeft.m_drive.SetControl(VoltageOut(driveVoltage, foc));
+  m_frontLeft.m_drive.SetControl(ctre::phoenix6::controls::VoltageOut(driveVoltage, foc));
+  m_frontRight.m_drive.SetControl(ctre::phoenix6::controls::VoltageOut(driveVoltage, foc));
+  m_backRight.m_drive.SetControl(ctre::phoenix6::controls::VoltageOut(driveVoltage, foc));
+  m_backLeft.m_drive.SetControl(ctre::phoenix6::controls::VoltageOut(driveVoltage, foc));
 }
 
 void SwerveDriveSubsystem::StopDrive() {
