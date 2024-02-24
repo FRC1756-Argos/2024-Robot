@@ -39,6 +39,7 @@ SimpleLedSubsystem::SimpleLedSubsystem(argos_lib::RobotInstance instance)
 
 void SimpleLedSubsystem::Enable() {
   m_enabled = true;
+
 }
 void SimpleLedSubsystem::Disable() {
   m_enabled = false;
@@ -88,23 +89,16 @@ void SimpleLedSubsystem::SetLedGroupColor(LedGroup group, argos_lib::ArgosColor 
   int startIndx = -1;
   int len = -1;
   switch (group) {
-    case LedGroup::SIDES:
-      m_CANdle.value().ClearAnimation(2);
-      m_CANdle.value().ClearAnimation(3);
-      startIndx = startIndex_sideFront;
-      len = length_sideBack + length_sideFront;
-      break;
     case LedGroup::BACK:
-      m_CANdle.value().ClearAnimation(4);
-      m_CANdle.value().ClearAnimation(5);
-      startIndx = startIndex_backRight;
-      len = length_backRight + length_backLeft;
-      break;
-    case LedGroup::FRONT:
       m_CANdle.value().ClearAnimation(0);
       m_CANdle.value().ClearAnimation(1);
-      startIndx = startIndex_frontLeft;
-      len = length_frontLeft + length_frontRight;
+      startIndx = startIndex_backLeft;
+      len = length_backLeft + length_backRight;
+      break;
+    case LedGroup::FRONT:
+      m_CANdle.value().ClearAnimation(2);
+      startIndx = startIndex_front;
+      len = length_front;
       break;
 
     default:
@@ -134,35 +128,20 @@ void SimpleLedSubsystem::SetLedStripColor(LedStrip strip, argos_lib::ArgosColor 
   int startIndex = -1;
   int len = -1;
   switch (strip) {
-    case LedStrip::FrontLeft:
-      m_CANdle.value().ClearAnimation(0);
-      startIndex = startIndex_frontLeft;
-      len = length_frontLeft;
-      break;
-    case LedStrip::FrontRight:
-      m_CANdle.value().ClearAnimation(1);
-      startIndex = startIndex_frontRight;
-      len = length_frontRight;
-      break;
-    case LedStrip::SideFront:
-      m_CANdle.value().ClearAnimation(2);
-      startIndex = startIndex_sideFront;
-      len = length_sideFront;
-      break;
-    case LedStrip::SideBack:
-      m_CANdle.value().ClearAnimation(3);
-      startIndex = startIndex_sideBack;
-      len = length_sideBack;
-      break;
     case LedStrip::BackLeft:
-      m_CANdle.value().ClearAnimation(5);
+      m_CANdle.value().ClearAnimation(0);
       startIndex = startIndex_backLeft;
       len = length_backLeft;
       break;
     case LedStrip::BackRight:
-      m_CANdle.value().ClearAnimation(4);
+      m_CANdle.value().ClearAnimation(1);
       startIndex = startIndex_backRight;
       len = length_backRight;
+      break;
+    case LedStrip::Front:
+      m_CANdle.value().ClearAnimation(2);
+      startIndex = startIndex_front;
+      len = length_front;
       break;
   }
 
@@ -188,9 +167,9 @@ void SimpleLedSubsystem::SetAllGroupsColor(argos_lib::ArgosColor color, bool res
 
   StopAllAnimations(false);
   int len =
-      length_backLeft + length_backRight + length_sideBack + length_sideFront + length_frontLeft + length_frontRight;
+      length_backLeft + length_backRight + length_front;
   ctre::phoenix::ErrorCode rslt;
-  rslt = m_CANdle.value().SetLEDs(color.r, color.g, color.b, 0, startIndex_frontLeft, len);
+  rslt = m_CANdle.value().SetLEDs(color.r, color.g, color.b, 0, startIndex_backLeft, len);
   if (rslt != ctre::phoenix::ErrorCode::OKAY) {
     m_log.Log(argos_lib::LogLevel::ERR, "CANDle::SetLEDs() returned error[%d]", rslt);
   }
@@ -207,18 +186,14 @@ void SimpleLedSubsystem::SetAllGroupsFade(argos_lib::ArgosColor color, bool rest
 
   const int tipSize = 0;
 
-  std::array<int, 6> lengths = {length_frontLeft - tipSize,
-                                length_frontRight - tipSize,
-                                length_sideFront - tipSize,
-                                length_sideBack - tipSize,
+  std::array<int, 3> lengths = {length_backLeft - tipSize,
                                 length_backRight - tipSize,
-                                length_backLeft - tipSize};
-  std::array<int, 6> offsets = {(inverted_frontLeft ? tipSize : 0) + startIndex_frontLeft,
-                                (inverted_frontRight ? tipSize : 0) + startIndex_frontRight,
-                                (inverted_sideFront ? tipSize : 0) + startIndex_sideFront,
-                                (inverted_sideBack ? tipSize : 0) + startIndex_sideBack,
+                                length_front - tipSize
+                                };
+  std::array<int, 3> offsets = {(inverted_backLeft ? tipSize : 0) + startIndex_backLeft,
                                 (inverted_backRight ? tipSize : 0) + startIndex_backRight,
-                                (inverted_backLeft ? tipSize : 0) + startIndex_backLeft};
+                                (inverted_front ? tipSize : 0) + startIndex_front
+                                };
   for (size_t i = 0; i < lengths.size(); ++i) {
     auto fadeAnimation =
         ctre::phoenix::led::SingleFadeAnimation(color.r, color.g, color.b, 0, 0.7, lengths.at(i), offsets.at(i));
@@ -234,14 +209,9 @@ void SimpleLedSubsystem::SetAllGroupsFlash(argos_lib::ArgosColor color, bool res
     m_ledUpdateFunction = [this, color]() { this->SetAllGroupsFlash(color, false); };
   }
 
-  std::array<int, 6> lengths = {
-      length_frontLeft, length_frontRight, length_sideFront, length_sideBack, length_backRight, length_backLeft};
-  std::array<int, 6> offsets = {startIndex_frontLeft,
-                                startIndex_frontRight,
-                                startIndex_sideFront,
-                                startIndex_sideBack,
-                                startIndex_backRight,
-                                startIndex_backLeft};
+  std::array<int, 3> lengths = {length_backLeft, length_backRight, length_front};
+  std::array<int, 3> offsets = {startIndex_backLeft, startIndex_backRight, startIndex_front};
+
   for (size_t i = 0; i < lengths.size(); ++i) {
     auto flashAnimation =
         ctre::phoenix::led::StrobeAnimation(color.r, color.g, color.b, 0, 0.1, lengths.at(i), offsets.at(i));
@@ -262,22 +232,6 @@ void SimpleLedSubsystem::FlashStrip(LedStrip strip, argos_lib::ArgosColor color,
   int len = -1;
 
   switch (strip) {
-    case LedStrip::FrontLeft:
-      startIndex = startIndex_frontLeft;
-      len = length_frontLeft;
-      break;
-    case LedStrip::FrontRight:
-      startIndex = startIndex_frontRight;
-      len = length_frontRight;
-      break;
-    case LedStrip::SideFront:
-      startIndex = startIndex_sideFront;
-      len = length_sideFront;
-      break;
-    case LedStrip::SideBack:
-      startIndex = startIndex_sideBack;
-      len = length_sideBack;
-      break;
     case LedStrip::BackLeft:
       startIndex = startIndex_backLeft;
       len = length_backLeft;
@@ -285,6 +239,10 @@ void SimpleLedSubsystem::FlashStrip(LedStrip strip, argos_lib::ArgosColor color,
     case LedStrip::BackRight:
       startIndex = startIndex_backRight;
       len = length_backRight;
+      break;
+    case LedStrip::Front:
+      startIndex = startIndex_front;
+      len = length_front;
       break;
   }
 
@@ -309,14 +267,9 @@ void SimpleLedSubsystem::SetAllGroupsLarson(argos_lib::ArgosColor color, bool re
     m_ledUpdateFunction = [this, color]() { this->SetAllGroupsLarson(color, false); };
   }
 
-  std::array<int, 6> lengths = {
-      length_frontLeft, length_frontRight, length_sideFront, length_sideBack, length_backRight, length_backLeft};
-  std::array<int, 6> offsets = {startIndex_frontLeft,
-                                startIndex_frontRight,
-                                startIndex_sideFront,
-                                startIndex_sideBack,
-                                startIndex_backRight,
-                                startIndex_backLeft};
+  std::array<int, 3> lengths = {length_backLeft, length_backRight, length_front};
+  std::array<int, 3> offsets = {startIndex_backLeft, startIndex_backRight, startIndex_front};
+
   for (size_t i = 0; i < lengths.size(); ++i) {
     auto larsonAnimation = ctre::phoenix::led::LarsonAnimation(color.r,
                                                                color.g,
@@ -371,9 +324,6 @@ void SimpleLedSubsystem::StopAllAnimations(bool restorable) {
   m_CANdle.value().ClearAnimation(0);
   m_CANdle.value().ClearAnimation(1);
   m_CANdle.value().ClearAnimation(2);
-  m_CANdle.value().ClearAnimation(3);
-  m_CANdle.value().ClearAnimation(4);
-  m_CANdle.value().ClearAnimation(5);
 }
 
 void SimpleLedSubsystem::SetAllGroupsOff(bool restorable) {
@@ -392,97 +342,58 @@ void SimpleLedSubsystem::FireEverywhere(bool restorable) {
     m_ledUpdateFunction = [this]() { this->FireEverywhere(false); };
   }
 
-  std::array<int, 6> lengths = {
-      length_frontLeft, length_frontRight, length_sideFront, length_sideBack, length_backRight, length_backLeft};
-  std::array<int, 6> offsets = {startIndex_frontLeft,
-                                startIndex_frontRight,
-                                startIndex_sideFront,
-                                startIndex_sideBack,
-                                startIndex_backRight,
-                                startIndex_backLeft};
-  std::array<bool, 6> inverts = {inverted_frontLeft,
-                                 inverted_frontRight,
-                                 inverted_sideFront,
-                                 inverted_sideBack,
-                                 inverted_backRight,
-                                 inverted_backLeft};
+  std::array<int, 3> lengths = {length_backLeft, length_backRight, length_front};
+  std::array<int, 3> offsets = {startIndex_backLeft, startIndex_backRight, startIndex_front};
+  std::array<bool, 3> inverts = {inverted_backLeft, inverted_backRight, inverted_front};
   for (size_t i = 0; i < lengths.size(); ++i) {
     auto fireAnimation =
-        ctre::phoenix::led::FireAnimation(0.5, 0.7, lengths.at(i), 1, 0.2, inverts.at(i), offsets.at(i));
+        ctre::phoenix::led::FireAnimation(0.5, 0.15, lengths.at(i), 0.9, 0.3, inverts.at(i), offsets.at(i));
     m_CANdle.value().Animate(fireAnimation, i);
   }
 }
-void SimpleLedSubsystem::Blind(bool restorable) {
-  if (!m_CANdle) {
-    return;  // No CANdle, so do nothing
-  }
-
-  if (restorable) {
-    m_ledUpdateFunction = [this]() { this->Blind(false); };
-  }
-
-  auto strobeAnimationFL =
-      ctre::phoenix::led::StrobeAnimation(211, 138, 31, 0, 0.19, length_frontLeft, startIndex_frontLeft);
-  m_CANdle.value().Animate(strobeAnimationFL, 0);
-  auto strobeAnimationFR =
-      ctre::phoenix::led::StrobeAnimation(211, 138, 31, 0, 0.15, length_frontRight, startIndex_frontRight);
-  m_CANdle.value().Animate(strobeAnimationFR, 1);
-  auto strobeAnimationSF =
-      ctre::phoenix::led::StrobeAnimation(0, 100, 100, 0, 0.18, length_sideFront, startIndex_sideFront);
-  m_CANdle.value().Animate(strobeAnimationSF, 2);
-  auto strobeAnimationSB =
-      ctre::phoenix::led::StrobeAnimation(100, 100, 0, 0, 0.17, length_sideBack, startIndex_sideBack);
-  m_CANdle.value().Animate(strobeAnimationSB, 3);
-  auto strobeAnimationBR =
-      ctre::phoenix::led::StrobeAnimation(0, 0, 90, 0, 0.16, length_backRight, startIndex_backRight);
-  m_CANdle.value().Animate(strobeAnimationBR, 4);
-  auto strobeAnimationBL =
-      ctre::phoenix::led::StrobeAnimation(0, 100, 0, 0, 0.14, length_backLeft, startIndex_backLeft);
-  m_CANdle.value().Animate(strobeAnimationBL, 5);
-}
 
 void SimpleLedSubsystem::ColorSweep(argos_lib::ArgosColor color, bool correctGamma, bool restorable) {
-  if (restorable) {
-    m_restoreAnimationFunction = [this, color, correctGamma]() { this->ColorSweep(color, correctGamma, false); };
-  }
-  // No continuous update required
-  m_ledUpdateFunction = [this, color, correctGamma]() { this->ColorSweep(color, correctGamma, false); };
+  // if (restorable) {
+  //   m_restoreAnimationFunction = [this, color, correctGamma]() { this->ColorSweep(color, correctGamma, false); };
+  // }
+  // // No continuous update required
+  // m_ledUpdateFunction = [this, color, correctGamma]() { this->ColorSweep(color, correctGamma, false); };
 
-  const auto period_ms = 2000.0;
+  // const auto period_ms = 2000.0;
 
-  const auto now = std::chrono::steady_clock::now();
-  const auto timeWithinPeriod =
-      std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count() -
-      std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) / (1ms * period_ms);
+  // const auto now = std::chrono::steady_clock::now();
+  // const auto timeWithinPeriod =
+  //     std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count() -
+  //     std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) / (1ms * period_ms);
 
-  const auto frontTime = std::fmod(static_cast<double>(timeWithinPeriod), period_ms);
-  const auto sideFrontTime = std::fmod(frontTime + 250, period_ms);
-  const auto sideBackTime = std::fmod(sideFrontTime + 250, period_ms);
-  const auto backTime = std::fmod(sideBackTime + 250, period_ms);
+  // const auto frontTime = std::fmod(static_cast<double>(timeWithinPeriod), period_ms);
+  // const auto sideFrontTime = std::fmod(frontTime + 250, period_ms);
+  // const auto sideBackTime = std::fmod(sideFrontTime + 250, period_ms);
+  // const auto backTime = std::fmod(sideBackTime + 250, period_ms);
 
-  const auto frontAngle = 2 * std::numbers::pi * frontTime / period_ms;
-  const auto sideFrontAngle = 2 * std::numbers::pi * sideFrontTime / period_ms;
-  const auto sideBackAngle = 2 * std::numbers::pi * sideBackTime / period_ms;
-  const auto backAngle = 2 * std::numbers::pi * backTime / period_ms;
+  // const auto frontAngle = 2 * std::numbers::pi * frontTime / period_ms;
+  // const auto sideFrontAngle = 2 * std::numbers::pi * sideFrontTime / period_ms;
+  // const auto sideBackAngle = 2 * std::numbers::pi * sideBackTime / period_ms;
+  // const auto backAngle = 2 * std::numbers::pi * backTime / period_ms;
 
-  auto frontColor = color * (0.5 + std::sin(frontAngle) / 2.0);
-  auto sideFrontColor = color * (0.5 + std::sin(sideFrontAngle) / 2.0);
-  auto sideBackColor = color * (0.5 + std::sin(sideBackAngle) / 2.0);
-  auto backColor = color * (0.5 + std::sin(backAngle) / 2.0);
+  // auto frontColor = color * (0.5 + std::sin(frontAngle) / 2.0);
+  // auto sideFrontColor = color * (0.5 + std::sin(sideFrontAngle) / 2.0);
+  // auto sideBackColor = color * (0.5 + std::sin(sideBackAngle) / 2.0);
+  // auto backColor = color * (0.5 + std::sin(backAngle) / 2.0);
 
-  if (correctGamma) {
-    frontColor = argos_lib::GammaCorrect(frontColor);
-    sideFrontColor = argos_lib::GammaCorrect(sideFrontColor);
-    sideBackColor = argos_lib::GammaCorrect(sideBackColor);
-    backColor = argos_lib::GammaCorrect(backColor);
-  }
+  // if (correctGamma) {
+  //   frontColor = argos_lib::GammaCorrect(frontColor);
+  //   sideFrontColor = argos_lib::GammaCorrect(sideFrontColor);
+  //   sideBackColor = argos_lib::GammaCorrect(sideBackColor);
+  //   backColor = argos_lib::GammaCorrect(backColor);
+  // }
 
-  SetLedStripColor(LedStrip::FrontLeft, frontColor, false);
-  SetLedStripColor(LedStrip::FrontRight, frontColor, false);
-  SetLedStripColor(LedStrip::SideFront, sideFrontColor, false);
-  SetLedStripColor(LedStrip::SideBack, sideBackColor, false);
-  SetLedStripColor(LedStrip::BackLeft, backColor, false);
-  SetLedStripColor(LedStrip::BackRight, backColor, false);
+  // SetLedStripColor(LedStrip::FrontLeft, frontColor, false);
+  // SetLedStripColor(LedStrip::FrontRight, frontColor, false);
+  // SetLedStripColor(LedStrip::SideFront, sideFrontColor, false);
+  // SetLedStripColor(LedStrip::SideBack, sideBackColor, false);
+  // SetLedStripColor(LedStrip::BackLeft, backColor, false);
+  // SetLedStripColor(LedStrip::BackRight, backColor, false);
 }
 
 void SimpleLedSubsystem::TemporaryAnimate(std::function<void()> animationFunction, units::millisecond_t duration) {
