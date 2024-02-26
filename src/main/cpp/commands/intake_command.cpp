@@ -31,8 +31,8 @@ void IntakeCommand::Execute() {
   if (m_pShooter->IsNotePresent()) {
     m_pIntake->Intake(0);
     if (m_pLeds) {
-      m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsFlash(argos_lib::colors::kReallyGreen, false); },
-                                200_ms);
+      m_pLeds->TemporaryAnimate(
+          [this]() { m_pLeds->SetAllGroupsFlash(argos_lib::gamma_corrected_colors::kReallyGreen, false); }, 200_ms);
     }
     if (m_pControllers) {
       m_pControllers->DriverController().SetVibration(
@@ -57,12 +57,14 @@ void IntakeCommand::End(bool interrupted) {
   m_pShooter->Feed(0);
   if (m_pLeds) {
     if (m_pIntake->IsNotePresent()) {
-      m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsFlash(argos_lib::colors::kCatYellow, false); }, 500_ms);
+      m_pLeds->TemporaryAnimate(
+          [this]() { m_pLeds->SetAllGroupsFlash(argos_lib::gamma_corrected_colors::kCatYellow, false); }, 500_ms);
     } else if (m_pShooter->IsNotePresent()) {
-      m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsFlash(argos_lib::colors::kReallyGreen, false); },
-                                500_ms);
+      m_pLeds->TemporaryAnimate(
+          [this]() { m_pLeds->SetAllGroupsFlash(argos_lib::gamma_corrected_colors::kReallyGreen, false); }, 500_ms);
     } else {
-      m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsFlash(argos_lib::colors::kWhite, false); }, 500_ms);
+      m_pLeds->TemporaryAnimate(
+          [this]() { m_pLeds->SetAllGroupsFlash(argos_lib::gamma_corrected_colors::kWhite, false); }, 500_ms);
     }
   }
 }
