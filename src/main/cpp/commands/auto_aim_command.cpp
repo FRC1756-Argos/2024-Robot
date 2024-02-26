@@ -50,8 +50,8 @@ void AutoAimCommand::Execute() {
 
     if (m_pLeds) {
       if (std::abs(offset) < 5 && m_pShooter->ShooterAtSpeed()) {
-        m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kReallyGreen, false); },
-                                  200_ms);
+        m_pLeds->TemporaryAnimate(
+            [this]() { m_pLeds->SetAllGroupsColor(argos_lib::gamma_corrected_colors::kReallyGreen, false); }, 200_ms);
       }
     }
     if (m_pShooter->ShooterAtSpeed() && std::abs(offset) < 5) {
@@ -59,14 +59,16 @@ void AutoAimCommand::Execute() {
         m_pControllers->DriverController().SetVibration(argos_lib::VibrationAlternatePulse(500_ms, 1.0, 0.0));
       }
       if (m_pLeds) {
-        m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kReallyGreen, false); },
-                                  200_ms);
+        m_pLeds->TemporaryAnimate(
+            [this]() { m_pLeds->SetAllGroupsColor(argos_lib::gamma_corrected_colors::kReallyGreen, false); }, 200_ms);
       }
     } else if (m_pLeds) {
-      m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kCatYellow, false); }, 200_ms);
+      m_pLeds->TemporaryAnimate(
+          [this]() { m_pLeds->SetAllGroupsColor(argos_lib::gamma_corrected_colors::kCatYellow, false); }, 200_ms);
     }
   } else if (m_pLeds) {
-    m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kReallyRed, false); }, 200_ms);
+    m_pLeds->TemporaryAnimate(
+        [this]() { m_pLeds->SetAllGroupsColor(argos_lib::gamma_corrected_colors::kReallyRed, false); }, 200_ms);
   }
 }
 
