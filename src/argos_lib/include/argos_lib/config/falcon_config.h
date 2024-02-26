@@ -149,6 +149,9 @@ namespace argos_lib {
       if constexpr (has_pid0_kS<T>{}) {
         config.Slot0.kS = T::pid0_kS;
       }
+      if constexpr (has_pid0_kV<T>{}) {
+        config.Slot0.kV = T::pid0_kV;
+      }
       if constexpr (has_pid0_kA<T>{}) {
         config.Slot0.kA = T::pid0_kA;
       }
@@ -167,6 +170,9 @@ namespace argos_lib {
       }
       if constexpr (has_pid1_kS<T>{}) {
         config.Slot1.kS = T::pid1_kS;
+      }
+      if constexpr (has_pid1_kV<T>{}) {
+        config.Slot1.kV = T::pid1_kV;
       }
       if constexpr (has_pid1_kA<T>{}) {
         config.Slot1.kA = T::pid1_kA;
