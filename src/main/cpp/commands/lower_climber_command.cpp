@@ -27,6 +27,6 @@ bool LowerClimberCommand::IsFinished() {
   return m_pClimber->IsClimberMoving();
 }
 
-bool LowerClimberCommand::GetIsLowerCLimbFinished(){
+bool LowerClimberCommand::GetIsLowerCLimbFinished() {
   return is_lower_climb_finished;
 }

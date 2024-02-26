@@ -6,8 +6,14 @@
 
 #include <frc2/command/SequentialCommandGroup.h>
 
-ClimberCommand::ClimberCommand(ClimberSubsystem* climber, ShooterSubsystem* shooter, ElevatorSubsystem* elevator,
-argos_lib::SwappableControllersSubsystem* controllers, ReadyForClimbCommand* ready, RaiseClimberCommand* raise, LowerClimberCommand* lower, GoToTrapPositionCommand* trap)
+ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
+                               ShooterSubsystem* shooter,
+                               ElevatorSubsystem* elevator,
+                               argos_lib::SwappableControllersSubsystem* controllers,
+                               ReadyForClimbCommand* ready,
+                               RaiseClimberCommand* raise,
+                               LowerClimberCommand* lower,
+                               GoToTrapPositionCommand* trap)
     : m_pClimber{climber}
     , m_pShooter{shooter}
     , m_pElevator{elevator}
@@ -20,23 +26,20 @@ argos_lib::SwappableControllersSubsystem* controllers, ReadyForClimbCommand* rea
 }
 
 // Called when the command is initially scheduled.
-void ClimberCommand::Initialize() {
-
-}
+void ClimberCommand::Initialize() {}
 
 // Called repeatedly when this Command is scheduled to run
 void ClimberCommand::Execute() {
-  if(m_pControllers->OperatorController().GetRawButtonPressed(argos_lib::XboxController::Button::kBumperRight)){
-    if(!(m_pReadyForClimbCommand->GetIsReadyCLimbFinished())){
+  if (m_pControllers->OperatorController().GetRawButtonPressed(argos_lib::XboxController::Button::kBumperRight)) {
+    if (!(m_pReadyForClimbCommand->GetIsReadyCLimbFinished())) {
       m_pReadyForClimbCommand->Schedule();
-    }
-    else if(m_pReadyForClimbCommand->GetIsReadyCLimbFinished() && !(m_pRaiseClimberCommand->GetIsRaiseCLimbFinished())){
+    } else if (m_pReadyForClimbCommand->GetIsReadyCLimbFinished() &&
+               !(m_pRaiseClimberCommand->GetIsRaiseCLimbFinished())) {
       m_pRaiseClimberCommand->Schedule();
-    }
-    else if(m_pRaiseClimberCommand->GetIsRaiseCLimbFinished() && !(m_pLowerClimberCommand->GetIsLowerCLimbFinished())){
+    } else if (m_pRaiseClimberCommand->GetIsRaiseCLimbFinished() &&
+               !(m_pLowerClimberCommand->GetIsLowerCLimbFinished())) {
       m_pLowerClimberCommand->Schedule();
-    }
-    else if(m_pLowerClimberCommand->GetIsLowerCLimbFinished() && !(m_pTrapCommand->GetIsTrapDone())){
+    } else if (m_pLowerClimberCommand->GetIsLowerCLimbFinished() && !(m_pTrapCommand->GetIsTrapDone())) {
       m_pTrapCommand->Schedule();
     }
   }

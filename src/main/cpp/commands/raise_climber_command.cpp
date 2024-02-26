@@ -27,6 +27,6 @@ bool RaiseClimberCommand::IsFinished() {
   return m_pClimber->IsClimberMoving();
 }
 
-bool RaiseClimberCommand::GetIsRaiseCLimbFinished(){
+bool RaiseClimberCommand::GetIsRaiseCLimbFinished() {
   return is_raise_climb_finished;
 }

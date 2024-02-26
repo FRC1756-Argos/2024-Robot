@@ -4,11 +4,10 @@
 
 #pragma once
 
+#include <argos_lib/subsystems/swappable_controllers_subsystem.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/InstantCommand.h>
-
-#include <argos_lib/subsystems/swappable_controllers_subsystem.h>
 
 #include "commands/go_to_trap_position_command.h"
 #include "commands/lower_climber_command.h"
@@ -20,8 +19,14 @@
 
 class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand> {
  public:
-  ClimberCommand(ClimberSubsystem* climber, ShooterSubsystem* shooter, ElevatorSubsystem* elevator,
-  argos_lib::SwappableControllersSubsystem* controllers, ReadyForClimbCommand* ready, RaiseClimberCommand* raise, LowerClimberCommand* lower, GoToTrapPositionCommand* trap);
+  ClimberCommand(ClimberSubsystem* climber,
+                 ShooterSubsystem* shooter,
+                 ElevatorSubsystem* elevator,
+                 argos_lib::SwappableControllersSubsystem* controllers,
+                 ReadyForClimbCommand* ready,
+                 RaiseClimberCommand* raise,
+                 LowerClimberCommand* lower,
+                 GoToTrapPositionCommand* trap);
 
   void Initialize() override;
 

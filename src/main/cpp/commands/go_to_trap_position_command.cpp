@@ -51,6 +51,6 @@ bool GoToTrapPositionCommand::IsFinished() {
   return m_pElevator->IsElevatorAtSetPoint();
 }
 
-bool GoToTrapPositionCommand::GetIsTrapDone(){
+bool GoToTrapPositionCommand::GetIsTrapDone() {
   return is_trap_done;
 }
