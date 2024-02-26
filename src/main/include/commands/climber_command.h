@@ -8,6 +8,8 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/InstantCommand.h>
 
+#include <argos_lib/subsystems/swappable_controllers_subsystem.h>
+
 #include "commands/go_to_trap_position_command.h"
 #include "commands/lower_climber_command.h"
 #include "commands/raise_climber_command.h"
@@ -18,7 +20,8 @@
 
 class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand> {
  public:
-  ClimberCommand(ClimberSubsystem* climber, ShooterSubsystem* shooter, ElevatorSubsystem* elevator);
+  ClimberCommand(ClimberSubsystem* climber, ShooterSubsystem* shooter, ElevatorSubsystem* elevator,
+  argos_lib::SwappableControllersSubsystem* controllers, ReadyForClimbCommand* ready, RaiseClimberCommand* raise, LowerClimberCommand* lower, GoToTrapPositionCommand* trap);
 
   void Initialize() override;
 
@@ -32,9 +35,10 @@ class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand>
   ClimberSubsystem* m_pClimber;
   ShooterSubsystem* m_pShooter;
   ElevatorSubsystem* m_pElevator;
-  // GoToTrapPositionCommand* m_pTrapCommand;
-  // ReadyForClimbCommand* m_pReadyForClimbCommand;
-  // RaiseClimberCommand* m_pRaiseClimberCommand;
-  // LowerClimberCommand* m_pLowerClimberCommand;
-  frc2::CommandPtr m_allCommands;
+  GoToTrapPositionCommand* m_pTrapCommand;
+  ReadyForClimbCommand* m_pReadyForClimbCommand;
+  RaiseClimberCommand* m_pRaiseClimberCommand;
+  LowerClimberCommand* m_pLowerClimberCommand;
+
+  argos_lib::SwappableControllersSubsystem* m_pControllers;
 };

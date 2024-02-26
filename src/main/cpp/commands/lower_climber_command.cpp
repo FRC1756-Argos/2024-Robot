@@ -10,6 +10,7 @@ LowerClimberCommand::LowerClimberCommand(ClimberSubsystem* climber) : m_pClimber
 
 // Called when the command is initially scheduled.
 void LowerClimberCommand::Initialize() {
+  is_lower_climb_finished = false;
   m_pClimber->SetHeight(measure_up::climber::climbLoweredHeight);
 }
 
@@ -17,9 +18,15 @@ void LowerClimberCommand::Initialize() {
 void LowerClimberCommand::Execute() {}
 
 // Called once the command ends or is interrupted.
-void LowerClimberCommand::End(bool interrupted) {}
+void LowerClimberCommand::End(bool interrupted) {
+  is_lower_climb_finished = true;
+}
 
 // Returns true when the command should end.
 bool LowerClimberCommand::IsFinished() {
-  return false;
+  return m_pClimber->IsClimberMoving();
+}
+
+bool LowerClimberCommand::GetIsLowerCLimbFinished(){
+  return is_lower_climb_finished;
 }

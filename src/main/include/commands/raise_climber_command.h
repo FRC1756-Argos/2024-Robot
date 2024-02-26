@@ -22,6 +22,9 @@ class RaiseClimberCommand : public frc2::CommandHelper<frc2::Command, RaiseClimb
 
   bool IsFinished() override;
 
+  bool GetIsRaiseCLimbFinished();
+
  private:
   ClimberSubsystem* m_pClimber;
+  bool is_raise_climb_finished;
 };

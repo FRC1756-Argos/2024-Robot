@@ -6,29 +6,39 @@
 
 #include <frc2/command/SequentialCommandGroup.h>
 
-ClimberCommand::ClimberCommand(ClimberSubsystem* climber, ShooterSubsystem* shooter, ElevatorSubsystem* elevator)
+ClimberCommand::ClimberCommand(ClimberSubsystem* climber, ShooterSubsystem* shooter, ElevatorSubsystem* elevator,
+argos_lib::SwappableControllersSubsystem* controllers, ReadyForClimbCommand* ready, RaiseClimberCommand* raise, LowerClimberCommand* lower, GoToTrapPositionCommand* trap)
     : m_pClimber{climber}
     , m_pShooter{shooter}
     , m_pElevator{elevator}
-    // , m_pTrapCommand{trapCommand}  //, m_pReadyForClimbCommand{&ReadyForClimbCommand(shooter, elevator)}
-    // , m_pRaiseClimberCommand{&RaiseClimberCommand(climber)}
-    // , m_pLowerClimberCommand{&LowerClimberCommand(climber)}
-    , m_allCommands{frc2::InstantCommand{[]() {}, {}}} {
-  AddRequirements({m_pClimber, m_pShooter, m_pClimber});
+    , m_pControllers{controllers}
+    , m_pReadyForClimbCommand{ready}
+    , m_pRaiseClimberCommand{raise}
+    , m_pLowerClimberCommand{lower}
+    , m_pTrapCommand{trap} {
+  AddRequirements({m_pClimber, m_pShooter, m_pElevator, m_pControllers});
 }
 
 // Called when the command is initially scheduled.
 void ClimberCommand::Initialize() {
-  // m_allCommands = ReadyForClimbCommand{m_pShooter, m_pElevator}.ToPtr().AndThen()
 
-  // (frc2::SequentialCommandGroup(&m_pReadyForClimbCommand, &m_pRaiseClimberCommand, &m_pLowerClimberCommand));
 }
 
 // Called repeatedly when this Command is scheduled to run
 void ClimberCommand::Execute() {
-  if (!m_allCommands.IsScheduled()) {
-    Cancel();
-    return;
+  if(m_pControllers->OperatorController().GetRawButtonPressed(argos_lib::XboxController::Button::kBumperRight)){
+    if(!(m_pReadyForClimbCommand->GetIsReadyCLimbFinished())){
+      m_pReadyForClimbCommand->Schedule();
+    }
+    else if(m_pReadyForClimbCommand->GetIsReadyCLimbFinished() && !(m_pRaiseClimberCommand->GetIsRaiseCLimbFinished())){
+      m_pRaiseClimberCommand->Schedule();
+    }
+    else if(m_pRaiseClimberCommand->GetIsRaiseCLimbFinished() && !(m_pLowerClimberCommand->GetIsLowerCLimbFinished())){
+      m_pLowerClimberCommand->Schedule();
+    }
+    else if(m_pLowerClimberCommand->GetIsLowerCLimbFinished() && !(m_pTrapCommand->GetIsTrapDone())){
+      m_pTrapCommand->Schedule();
+    }
   }
 }
 
@@ -37,5 +47,5 @@ void ClimberCommand::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool ClimberCommand::IsFinished() {
-  return false;
+  return m_pTrapCommand->GetIsTrapDone();
 }

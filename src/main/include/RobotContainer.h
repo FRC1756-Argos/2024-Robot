@@ -32,6 +32,10 @@
 #include "subsystems/vision_subsystem.h"
 #include "utils/auto_selector.h"
 
+#include "commands/ready_for_climb_command.h"
+#include "commands/raise_climber_command.h"
+#include "commands/lower_climber_command.h"
+
 /**
  * @brief  Command-based is a "declarative" paradigm, very little robot logic should
  *         actually be handled in the {@link Robot} periodic methods (other than the
@@ -91,6 +95,10 @@ class RobotContainer {
   GoToSubwooferPositionCommand m_GoToSubwooferPositionCommand;
   GoToTrapPositionCommand m_GoToTrapPositionCommand;
   ClimberCommand m_ClimberCommand;
+
+  ReadyForClimbCommand m_ReadyForClimbCommand;
+  RaiseClimberCommand m_RaiseClimberCommand;
+  LowerClimberCommand m_LowerClimberCommand;
 
   // Autonomous
   AutonomousNothing m_autoNothing;

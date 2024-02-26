@@ -22,6 +22,8 @@ class GoToTrapPositionCommand : public frc2::CommandHelper<frc2::Command, GoToTr
 
   bool IsFinished() override;
 
+  bool GetIsTrapDone();
+
  private:
   ShooterSubsystem* m_pShooter;
   ElevatorSubsystem* m_pElevator;
@@ -29,4 +31,6 @@ class GoToTrapPositionCommand : public frc2::CommandHelper<frc2::Command, GoToTr
   frc2::CommandPtr m_allCommands;
 
   bool is_0_deg;
+
+  bool is_trap_done;
 };

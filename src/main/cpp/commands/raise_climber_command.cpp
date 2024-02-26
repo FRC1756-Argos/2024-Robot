@@ -10,6 +10,7 @@ RaiseClimberCommand::RaiseClimberCommand(ClimberSubsystem* climber) : m_pClimber
 
 // Called when the command is initially scheduled.
 void RaiseClimberCommand::Initialize() {
+  is_raise_climb_finished = false;
   m_pClimber->SetHeight(measure_up::climber::climbRaisedHeight);
 }
 
@@ -17,9 +18,15 @@ void RaiseClimberCommand::Initialize() {
 void RaiseClimberCommand::Execute() {}
 
 // Called once the command ends or is interrupted.
-void RaiseClimberCommand::End(bool interrupted) {}
+void RaiseClimberCommand::End(bool interrupted) {
+  is_raise_climb_finished = true;
+}
 
 // Returns true when the command should end.
 bool RaiseClimberCommand::IsFinished() {
-  return false;
+  return m_pClimber->IsClimberMoving();
+}
+
+bool RaiseClimberCommand::GetIsRaiseCLimbFinished(){
+  return is_raise_climb_finished;
 }
