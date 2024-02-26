@@ -108,11 +108,19 @@
     "editor.defaultFormatter": "xaver.clang-format"
   },
   "cSpell.words": [
+    "ADIS",
+    "cancoder",
+    "choreo",
+    "choreolib",
     "ctre",
+    "deadband",
     "Debouncer",
     "holonomic",
+    "Leds",
     "odometry",
+    "Roborio",
     "sensorunit",
+    "Setpoint",
     "subwoofer",
     "talonsrx",
     "teleop"

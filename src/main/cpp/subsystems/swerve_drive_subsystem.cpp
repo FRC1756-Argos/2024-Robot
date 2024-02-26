@@ -231,6 +231,10 @@ void SwerveDriveSubsystem::Disable() {
 
 // SWERVE DRIVE SUBSYSTEM MEMBER FUNCTIONS
 
+wpi::array<frc::SwerveModuleState, 4> SwerveDriveSubsystem::GetRawModuleStates(frc::ChassisSpeeds velocities) {
+  return m_swerveDriveKinematics.ToSwerveModuleStates(velocities);
+}
+
 wpi::array<frc::SwerveModuleState, 4> SwerveDriveSubsystem::GetRawModuleStates(
     SwerveDriveSubsystem::Velocities velocities) {
   // IF SPEEDS ZERO, SET MOTORS TO ZERO AND RETURN
@@ -240,7 +244,7 @@ wpi::array<frc::SwerveModuleState, 4> SwerveDriveSubsystem::GetRawModuleStates(
                                    units::make_unit<units::velocity::meters_per_second_t>(0),
                                    units::make_unit<units::angular_velocity::radians_per_second_t>(0)};
 
-    return m_swerveDriveKinematics.ToSwerveModuleStates(emptySpeeds);
+    return GetRawModuleStates(emptySpeeds);
   }
 
   switch (m_controlMode) {
@@ -253,7 +257,7 @@ wpi::array<frc::SwerveModuleState, 4> SwerveDriveSubsystem::GetRawModuleStates(
           frc::Rotation2d(GetFieldCentricAngle()));
 
       // Return the speeds to consumer
-      return m_swerveDriveKinematics.ToSwerveModuleStates(fieldCentricSpeeds);
+      return GetRawModuleStates(fieldCentricSpeeds);
     }
 
     case (DriveControlMode::robotCentricControl): {
@@ -263,14 +267,14 @@ wpi::array<frc::SwerveModuleState, 4> SwerveDriveSubsystem::GetRawModuleStates(
           units::make_unit<units::velocity::meters_per_second_t>(velocities.sideVelocity),
           units::make_unit<units::angular_velocity::radians_per_second_t>(velocities.rotVelocity)};
 
-      return m_swerveDriveKinematics.ToSwerveModuleStates(robotCentricSpeeds);
+      return GetRawModuleStates(robotCentricSpeeds);
     }
   }
   frc::ChassisSpeeds emptySpeeds{units::make_unit<units::velocity::meters_per_second_t>(0),
                                  units::make_unit<units::velocity::meters_per_second_t>(0),
                                  units::make_unit<units::angular_velocity::radians_per_second_t>(0)};
 
-  return m_swerveDriveKinematics.ToSwerveModuleStates(emptySpeeds);
+  return GetRawModuleStates(emptySpeeds);
 }
 
 wpi::array<frc::SwerveModuleState, 4> SwerveDriveSubsystem::GetCurrentModuleStates() {
@@ -394,62 +398,13 @@ void SwerveDriveSubsystem::SwerveDrive(const double fwVelocity, const double sid
     moduleStates = GetRawModuleStates(velocities);
   }
 
-  moduleStates.at(0) = argos_lib::swerve::Optimize(
-      moduleStates.at(0),
-      sensor_conversions::swerve_drive::turn::ToAngle(m_frontLeft.m_turn.GetPosition().GetValue()),
-      0_rpm,
-      0_fps,
-      12_fps);
-  moduleStates.at(1) = argos_lib::swerve::Optimize(
-      moduleStates.at(1),
-      sensor_conversions::swerve_drive::turn::ToAngle(m_frontRight.m_turn.GetPosition().GetValue()),
-      0_rpm,
-      0_fps,
-      12_fps);
-  moduleStates.at(2) = argos_lib::swerve::Optimize(
-      moduleStates.at(2),
-      sensor_conversions::swerve_drive::turn::ToAngle(m_backRight.m_turn.GetPosition().GetValue()),
-      0_rpm,
-      0_fps,
-      12_fps);
-  moduleStates.at(3) = argos_lib::swerve::Optimize(
-      moduleStates.at(3),
-      sensor_conversions::swerve_drive::turn::ToAngle(m_backLeft.m_turn.GetPosition().GetValue()),
-      0_rpm,
-      0_fps,
-      12_fps);
+  moduleStates = OptimizeAllModules(moduleStates);
 
   // Give module state values to motors
 
   if (m_followingProfile) {
     // When following profile, use closed-loop velocity
-    // FRONT LEFT
-    m_frontLeft.m_drive.SetControl(VelocityVoltage(sensor_conversions::swerve_drive::drive::ToSensorVelocity(
-        moduleStates.at(indexes::swerveModules::frontLeftIndex).speed)));
-
-    m_frontLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-        moduleStates.at(indexes::swerveModules::frontLeftIndex).angle.Degrees())));
-
-    // FRONT RIGHT
-    m_frontRight.m_drive.SetControl(VelocityVoltage(sensor_conversions::swerve_drive::drive::ToSensorVelocity(
-        moduleStates.at(indexes::swerveModules::frontRightIndex).speed)));
-
-    m_frontRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-        moduleStates.at(indexes::swerveModules::frontRightIndex).angle.Degrees())));
-
-    // BACK RIGHT
-    m_backRight.m_drive.SetControl(VelocityVoltage(sensor_conversions::swerve_drive::drive::ToSensorVelocity(
-        moduleStates.at(indexes::swerveModules::backRightIndex).speed)));
-
-    m_backRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-        moduleStates.at(indexes::swerveModules::backRightIndex).angle.Degrees())));
-
-    // BACK LEFT
-    m_backLeft.m_drive.SetControl(VelocityVoltage(sensor_conversions::swerve_drive::drive::ToSensorVelocity(
-        moduleStates.at(indexes::swerveModules::backLeftIndex).speed)));
-
-    m_backLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-        moduleStates.at(indexes::swerveModules::backLeftIndex).angle.Degrees())));
+    ClosedLoopDrive(moduleStates);
   } else {
     // FRONT LEFT
     m_frontLeft.m_drive.SetControl(
@@ -521,6 +476,13 @@ void SwerveDriveSubsystem::SwerveDrive(const units::degree_t& velAngle, const do
   SwerveDrive(velAngle, velocity, 0);
 }
 
+void SwerveDriveSubsystem::SwerveDrive(frc::ChassisSpeeds desiredChassisSpeed) {
+  m_manualOverride = true;
+  auto moduleStates = GetRawModuleStates(desiredChassisSpeed);
+  moduleStates = OptimizeAllModules(moduleStates);
+  ClosedLoopDrive(moduleStates);
+}
+
 void SwerveDriveSubsystem::StopDrive() {
   m_frontLeft.m_drive.Set(0.0);
   m_frontLeft.m_turn.Set(0.0);
@@ -530,6 +492,19 @@ void SwerveDriveSubsystem::StopDrive() {
   m_backRight.m_turn.Set(0.0);
   m_backLeft.m_drive.Set(0.0);
   m_backLeft.m_turn.Set(0.0);
+}
+
+choreolib::ChoreoControllerFunction SwerveDriveSubsystem::GetChoreoControllerFunction() {
+  return choreolib::Choreo::ChoreoSwerveController(
+      frc::PIDController{m_followerController.getXController().GetP(),
+                         m_followerController.getXController().GetI(),
+                         m_followerController.getXController().GetD()},
+      frc::PIDController{m_followerController.getYController().GetP(),
+                         m_followerController.getYController().GetI(),
+                         m_followerController.getYController().GetD()},
+      frc::PIDController{m_followerController.getThetaController().GetP(),
+                         m_followerController.getThetaController().GetI(),
+                         m_followerController.getThetaController().GetD()});
 }
 
 void SwerveDriveSubsystem::Home(const units::degree_t& angle) {
@@ -806,4 +781,63 @@ void SwerveDriveSubsystem::ResetIMUYaw() {
 
 frc::ChassisSpeeds SwerveDriveSubsystem::GetChassisVelocity() {
   return m_swerveDriveKinematics.ToChassisSpeeds(GetCurrentModuleStates());
+}
+
+wpi::array<frc::SwerveModuleState, 4> SwerveDriveSubsystem::OptimizeAllModules(
+    wpi::array<frc::SwerveModuleState, 4> rawStates) {
+  rawStates.at(0) = argos_lib::swerve::Optimize(
+      rawStates.at(0),
+      sensor_conversions::swerve_drive::turn::ToAngle(m_frontLeft.m_turn.GetPosition().GetValue()),
+      0_rpm,
+      0_fps,
+      12_fps);
+  rawStates.at(1) = argos_lib::swerve::Optimize(
+      rawStates.at(1),
+      sensor_conversions::swerve_drive::turn::ToAngle(m_frontRight.m_turn.GetPosition().GetValue()),
+      0_rpm,
+      0_fps,
+      12_fps);
+  rawStates.at(2) = argos_lib::swerve::Optimize(
+      rawStates.at(2),
+      sensor_conversions::swerve_drive::turn::ToAngle(m_backRight.m_turn.GetPosition().GetValue()),
+      0_rpm,
+      0_fps,
+      12_fps);
+  rawStates.at(3) = argos_lib::swerve::Optimize(
+      rawStates.at(3),
+      sensor_conversions::swerve_drive::turn::ToAngle(m_backLeft.m_turn.GetPosition().GetValue()),
+      0_rpm,
+      0_fps,
+      12_fps);
+  return rawStates;
+}
+
+void SwerveDriveSubsystem::ClosedLoopDrive(wpi::array<frc::SwerveModuleState, 4> moduleStates) {
+  // FRONT LEFT
+  m_frontLeft.m_drive.SetControl(VelocityVoltage(sensor_conversions::swerve_drive::drive::ToSensorVelocity(
+      moduleStates.at(indexes::swerveModules::frontLeftIndex).speed)));
+
+  m_frontLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
+      moduleStates.at(indexes::swerveModules::frontLeftIndex).angle.Degrees())));
+
+  // FRONT RIGHT
+  m_frontRight.m_drive.SetControl(VelocityVoltage(sensor_conversions::swerve_drive::drive::ToSensorVelocity(
+      moduleStates.at(indexes::swerveModules::frontRightIndex).speed)));
+
+  m_frontRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
+      moduleStates.at(indexes::swerveModules::frontRightIndex).angle.Degrees())));
+
+  // BACK RIGHT
+  m_backRight.m_drive.SetControl(VelocityVoltage(sensor_conversions::swerve_drive::drive::ToSensorVelocity(
+      moduleStates.at(indexes::swerveModules::backRightIndex).speed)));
+
+  m_backRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
+      moduleStates.at(indexes::swerveModules::backRightIndex).angle.Degrees())));
+
+  // BACK LEFT
+  m_backLeft.m_drive.SetControl(VelocityVoltage(sensor_conversions::swerve_drive::drive::ToSensorVelocity(
+      moduleStates.at(indexes::swerveModules::backLeftIndex).speed)));
+
+  m_backLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
+      moduleStates.at(indexes::swerveModules::backLeftIndex).angle.Degrees())));
 }

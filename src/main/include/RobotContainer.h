@@ -7,14 +7,14 @@
 #include <argos_lib/config/config_types.h>
 #include <argos_lib/general/generic_debouncer.h>
 #include <argos_lib/subsystems/swappable_controllers_subsystem.h>
-#include <commands/autonomous/autonomous_nothing.h>
-#include <commands/drive_to_position.h>
 #include <frc/filter/SlewRateLimiter.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
 
 #include "Constants.h"
 #include "commands/auto_aim_command.h"
+#include "commands/autonomous/autonomous_choreo_test.h"
+#include "commands/autonomous/autonomous_nothing.h"
 #include "commands/climber_homing_command.h"
 #include "commands/go_to_amp_position_command.h"
 #include "commands/go_to_podium_position_command.h"
@@ -92,6 +92,7 @@ class RobotContainer {
 
   // Autonomous
   AutonomousNothing m_autoNothing;
+  AutonomousChoreoTest m_autoChoreoTest;
 
   AutoSelector m_autoSelector;
 

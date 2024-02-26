@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <choreo/lib/Choreo.h>
 #include <frc/ADIS16448_IMU.h>
 #include <frc/Timer.h>
 #include <frc/controller/HolonomicDriveController.h>
@@ -93,10 +94,16 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   /// @param velocity Magnitude of velocity on [0, 1] to apply
   void SwerveDrive(const units::degree_t& velAngle, const double& velocity);
 
+  /// @brief Drive a set chassis speed.  Used for choreo path tracking
+  /// @param desiredChassisSpeed Motion parameters
+  void SwerveDrive(frc::ChassisSpeeds desiredChassisSpeed);
+
   /**
    * @brief Stop all motors
    */
   void StopDrive();
+
+  choreolib::ChoreoControllerFunction GetChoreoControllerFunction();
 
   /**
    * @brief Save homes to persistent storage and updates module motors
@@ -304,6 +311,7 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   argos_lib::NTSubscriber m_rotationalFollowerConstraintTuner_vel;
   argos_lib::NTSubscriber m_rotationalFollowerConstraintTuner_accel;
 
+  wpi::array<frc::SwerveModuleState, 4> GetRawModuleStates(frc::ChassisSpeeds velocities);
   /**
  * @brief Get the Raw Module States object and switch between robot-centric and field-centric
  *
@@ -342,4 +350,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
   units::degree_t GetIMUYaw();
   void ResetIMUYaw();
+
+  wpi::array<frc::SwerveModuleState, 4> OptimizeAllModules(wpi::array<frc::SwerveModuleState, 4> rawStates);
+
+  void ClosedLoopDrive(wpi::array<frc::SwerveModuleState, 4> moduleStates);
 };
