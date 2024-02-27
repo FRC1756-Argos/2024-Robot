@@ -12,12 +12,20 @@ namespace encoder_conf {
         constexpr static auto range = ctre::phoenix6::signals::AbsoluteSensorRangeValue::Signed_PlusMinusHalf;
       };
     }  // namespace drive
+    namespace elevator {
+      struct elevatorEncoderConf {
+        constexpr static auto range = ctre::phoenix6::signals::AbsoluteSensorRangeValue::Unsigned_0To1;
+      };
+    }  // namespace elevator
   }    // namespace comp_bot
 
   namespace practice_bot {
     namespace drive {
       using genericTurn = encoder_conf::comp_bot::drive::genericTurn;
     }  // namespace drive
+    namespace elevator {
+      using elevatorEncoderConf = encoder_conf::comp_bot::elevator::elevatorEncoderConf;
+    }
 
   }  // namespace practice_bot
 }  // namespace encoder_conf

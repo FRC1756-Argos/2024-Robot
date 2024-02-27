@@ -11,6 +11,8 @@
 #include <ctre/phoenix6/controls/PositionVoltage.hpp>
 
 #include "argos_lib/config/falcon_config.h"
+#include "argos_lib/config/cancoder_config.h"
+#include "constants/encoders.h"
 #include "constants/addresses.h"
 #include "constants/measure_up.h"
 #include "constants/motors.h"
@@ -23,6 +25,9 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
     , m_carriageMotor(GetCANAddr(address::comp_bot::elevator::carriageRotation,
                                  address::practice_bot::elevator::carriageRotation,
                                  robotInstance))
+    , m_elevatorEncoder(GetCANAddr(address::comp_bot::encoders::elevatorEncoder,
+                                   address::practice_bot::encoders::elevatorEncoder,
+                                   robotInstance))
     , m_robotInstance(robotInstance)
     , m_elevatorManualOverride{false}
     , m_carriageMotorManualOverride{false}
@@ -35,7 +40,12 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
                                          motorConfig::comp_bot::elevator::carriageRotation>(
       m_carriageMotor, 100_ms, robotInstance);
 
-  m_primaryMotor.SetPosition(sensor_conversions::elevator::lift::ToSensorUnit(measure_up::elevator::lift::minHeight));
+  argos_lib::cancoder_config::CanCoderConfig<encoder_conf::comp_bot::elevator::elevatorEncoderConf,
+                                             encoder_conf::practice_bot::elevator::elevatorEncoderConf>(
+      m_elevatorEncoder, 100_ms, robotInstance);
+
+  m_primaryMotor.SetPosition(
+      sensor_conversions::elevator::lift::AbsEncoderToSensorUnit(m_elevatorEncoder.GetAbsolutePosition().GetValue()));
   /// @todo Actually home elevator height instead of assuming elevator starts at bottom
   EnableCarriageSoftLimits();
   EnableElevatorSoftLimits();

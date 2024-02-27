@@ -71,13 +71,18 @@ namespace sensor_conversions {
   namespace elevator {
     namespace lift {
       constexpr auto sensorConversionFactor = 1_in / 3_tr;
+      constexpr auto absEncoderReduction = 1.0 / 10.0;
+
       constexpr units::inch_t ToHeight(const units::angle::turn_t sensorUnit) {
         return sensorConversionFactor * sensorUnit;
       }
-
       constexpr units::angle::turn_t ToSensorUnit(const units::inch_t height) {
         return height / sensorConversionFactor;
       }
+      constexpr units::angle::turn_t AbsEncoderToSensorUnit(units::angle::turn_t encoderReading) {
+        return encoderReading / absEncoderReduction;
+      }
+
     }  // namespace lift
     namespace carriage {
       constexpr auto sensorConversionFactor = (1.0 / 9.0) * (15.0 / 72.0);
