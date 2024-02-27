@@ -57,6 +57,8 @@ namespace measure_up {
       constexpr auto maxHeight = 41.5_in;
       constexpr auto intakeHeight = 21.5_in;
       constexpr auto ampHeight = 40_in;
+      constexpr auto podiumLowHeight = intakeHeight;
+      constexpr auto podiumHighHeight = 40_in;
       constexpr auto subwooferHeight = intakeHeight;
       constexpr auto trapHeight = 36_in;
     }  // namespace lift
@@ -65,7 +67,9 @@ namespace measure_up {
       constexpr auto maxAngle = 270_deg;
       constexpr auto intakeAngle = 40_deg;
       constexpr auto ampAngle = 135_deg;
-      constexpr auto subwooferAngle = 56.2_deg;
+      constexpr auto podiumHighAngle = 28_deg;
+      constexpr auto podiumLowAngle = 36_deg;
+      constexpr auto subwooferAngle = 135_deg;
       constexpr auto trapAngle = -110_deg;
     }  // namespace carriage
   }    // namespace elevator
