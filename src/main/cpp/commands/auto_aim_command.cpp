@@ -45,7 +45,7 @@ void AutoAimCommand::Execute() {
     frc::SmartDashboard::PutNumber("(AIM) offset", horzOffset.value().to<double>());
     double offset = horzOffset.value().to<double>();
     offset -= cameraOffset.value().to<double>();
-    m_pSwerveDrive->SwerveDrive(0.0, 0.0, -offset * 0.016);
+    m_pSwerveDrive->SwerveRotate(-offset * 0.016);
     frc::SmartDashboard::PutNumber("(AIM) offset2", offset);
 
     if (m_pLeds) {

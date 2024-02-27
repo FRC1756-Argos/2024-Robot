@@ -127,7 +127,10 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
     , m_rotationalFollowerTuner_I{"argos/drive/rotationalFollower"}
     , m_rotationalFollowerTuner_D{"argos/drive/rotationalFollower"}
     , m_rotationalFollowerConstraintTuner_vel{"argos/drive/rotationalFollower"}
-    , m_rotationalFollowerConstraintTuner_accel{"argos/drive/rotationalFollower"} {
+    , m_rotationalFollowerConstraintTuner_accel{"argos/drive/rotationalFollower"}
+    , m_currentFwVel(0.0)
+    , m_currentSideVel(0.0)
+    , m_currentRotVel(0.0) {
   // TURN MOTORS CONFIG
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::drive::frontLeftTurn,
                                          motorConfig::practice_bot::drive::frontLeftTurn>(
@@ -312,6 +315,9 @@ void SwerveDriveSubsystem::SwerveDrive(const double fwVelocity, const double sid
     m_manualOverride = true;
     m_followingProfile = false;
     m_profileComplete = false;
+
+    m_currentFwVel = fwVelocity;
+    m_currentSideVel = sideVelocity;
   }
 
   SwerveDriveSubsystem::Velocities velocities{fwVelocity, sideVelocity, rotVelocity};
