@@ -25,7 +25,7 @@ namespace encoder_conf {
     }  // namespace drive
     namespace elevator {
       using elevatorEncoderConf = encoder_conf::comp_bot::elevator::elevatorEncoderConf;
-    }
+    }  // namespace elevator
 
   }  // namespace practice_bot
 }  // namespace encoder_conf
