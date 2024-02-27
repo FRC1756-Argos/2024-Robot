@@ -4,7 +4,11 @@
 
 #include "commands/autonomous/autonomous_choreo_test.h"
 
+#include <frc2/command/ParallelCommandGroup.h>
+#include <units/length.h>
+
 #include "commands/drive_choreo.h"
+#include "commands/prime_shooter_command.h"
 
 AutonomousChoreoTest::AutonomousChoreoTest(ElevatorSubsystem& elevator,
                                            IntakeSubsystem& intake,
@@ -16,7 +20,8 @@ AutonomousChoreoTest::AutonomousChoreoTest(ElevatorSubsystem& elevator,
     , m_Shooter{shooter}
     , m_Swerve{swerve}
     , m_Vision{vision}
-    , m_allCommands{DriveChoreo{m_Swerve, "TestPath", true}} {}
+    , m_allCommands{frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "TestPath", true},
+                                               PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 12_ft}}} {}
 
 // Called when the command is initially scheduled.
 void AutonomousChoreoTest::Initialize() {

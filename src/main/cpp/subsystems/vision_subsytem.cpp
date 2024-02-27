@@ -20,7 +20,8 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
     , m_pDriveSubsystem(pDriveSubsystem)
     , m_usePolynomial(true)
     , m_useTrigonometry(false)
-    , m_shooterAngleMap{shooterRange::shooterAngle} {}
+    , m_shooterAngleMap{shooterRange::shooterAngle}
+    , m_shooterSpeedMap{shooterRange::shooterSpeed} {}
 
 // This method will be called once per scheduler run
 void VisionSubsystem::Periodic() {
@@ -68,19 +69,31 @@ std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
   return std::nullopt;
 }
 
+units::degree_t VisionSubsystem::getShooterAngle(const units::inch_t distance, const InterpolationMode mode) const {
+  switch (mode) {
+    case InterpolationMode::LinearInterpolation:
+      return m_shooterAngleMap.Map(distance);
+    case InterpolationMode::Polynomial: {
+      const auto d = distance.to<double>();
+      return units::degree_t(88 - (0.78 * d) + (0.00335 * d * d) - (0.00000505 * d * d * d));
+    }
+    case InterpolationMode::Trig:
+      return units::math::atan2(measure_up::shooter_targets::speakerOpeningHeightFromShooter, distance);
+  }
+  return measure_up::elevator::carriage::intakeAngle;
+}
+
 std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
   auto distance = GetDistanceToSpeaker();
 
   if (distance) {
-    double d = distance.value().to<double>();
+    auto mode = InterpolationMode::LinearInterpolation;
     if (m_usePolynomial) {
-      // d /= 12.0;
-      return units::degree_t(88 - (0.78 * d) + (0.00335 * d * d) - (0.00000505 * d * d * d));
+      mode = InterpolationMode::Polynomial;
     } else if (m_useTrigonometry) {
-      return (units::math::atan2(measure_up::shooter_targets::speakerOpeningHeightFromShooter, distance.value()));
-    } else {
-      return m_shooterAngleMap.Map(distance.value());
+      mode = InterpolationMode::Trig;
     }
+    return getShooterAngle(distance.value(), mode);
   }
 
   return std::nullopt;
@@ -101,6 +114,36 @@ std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
     return accountLongerSpin +
            units::math::atan2(measure_up::shooter_targets::cameraOffsetFromShooter, distance.value());
   }
+  return std::nullopt;
+}
+
+units::angular_velocity::revolutions_per_minute_t VisionSubsystem::getShooterSpeed(const units::inch_t distance,
+                                                                                   const InterpolationMode mode) const {
+  switch (mode) {
+    case InterpolationMode::Trig:
+      [[fallthrough]];
+    case InterpolationMode::Polynomial:
+      [[fallthrough]];
+    case InterpolationMode::LinearInterpolation:
+      return m_shooterSpeedMap(distance);
+  }
+  return m_shooterSpeedMap(0_in);
+}
+
+[[nodiscard]] std::optional<units::angular_velocity::revolutions_per_minute_t> VisionSubsystem::getShooterSpeed() {
+  auto distance = GetDistanceToSpeaker();
+
+  if (distance) {
+    auto mode = InterpolationMode::LinearInterpolation;
+    if (m_usePolynomial) {
+      mode = InterpolationMode::Polynomial;
+    } else if (m_useTrigonometry) {
+      mode = InterpolationMode::Trig;
+    }
+    return getShooterSpeed(distance.value(), mode);
+  }
+
+  return std::nullopt;
 }
 
 std::optional<units::inch_t> VisionSubsystem::GetDistanceToSpeaker() {
