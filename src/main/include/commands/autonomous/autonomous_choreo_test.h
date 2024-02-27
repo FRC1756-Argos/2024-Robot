@@ -21,11 +21,11 @@ class AutonomousChoreoTest
     : public frc2::CommandHelper<frc2::Command, AutonomousChoreoTest>
     , public AutonomousCommand {
  public:
-  AutonomousChoreoTest(ElevatorSubsystem* elevator,
-                       IntakeSubsystem* intake,
-                       ShooterSubsystem* shooter,
-                       SwerveDriveSubsystem* swerve,
-                       VisionSubsystem* vision);
+  AutonomousChoreoTest(ElevatorSubsystem& elevator,
+                       IntakeSubsystem& intake,
+                       ShooterSubsystem& shooter,
+                       SwerveDriveSubsystem& swerve,
+                       VisionSubsystem& vision);
 
   void Initialize() override;
 
@@ -45,11 +45,11 @@ class AutonomousChoreoTest
   frc2::Command* GetCommand() final;
 
  private:
-  ElevatorSubsystem* m_pElevator;
-  IntakeSubsystem* m_pIntake;
-  ShooterSubsystem* m_pShooter;
-  SwerveDriveSubsystem* m_pSwerve;
-  VisionSubsystem* m_pVision;
+  ElevatorSubsystem& m_Elevator;
+  IntakeSubsystem& m_Intake;
+  ShooterSubsystem& m_Shooter;
+  SwerveDriveSubsystem& m_Swerve;
+  VisionSubsystem& m_Vision;
 
   frc2::SequentialCommandGroup m_allCommands;
 };

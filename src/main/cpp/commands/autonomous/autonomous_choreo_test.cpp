@@ -7,17 +7,18 @@
 #include "commands/drive_choreo.h"
 #include "commands/initialize_odometry_command.h"
 
-AutonomousChoreoTest::AutonomousChoreoTest(ElevatorSubsystem* elevator,
-                                           IntakeSubsystem* intake,
-                                           ShooterSubsystem* shooter,
-                                           SwerveDriveSubsystem* swerve,
-                                           VisionSubsystem* vision)
-    : m_pElevator{elevator}
-    , m_pIntake{intake}
-    , m_pShooter{shooter}
-    , m_pSwerve{swerve}
-    , m_pVision{vision}
-    , m_allCommands{InitializeOdometryCommand{m_pSwerve, {0_m, 0_m, 0_deg}}, DriveChoreo{m_pSwerve, "Test"}} {}
+AutonomousChoreoTest::AutonomousChoreoTest(ElevatorSubsystem& elevator,
+                                           IntakeSubsystem& intake,
+                                           ShooterSubsystem& shooter,
+                                           SwerveDriveSubsystem& swerve,
+                                           VisionSubsystem& vision)
+    : m_Elevator{elevator}
+    , m_Intake{intake}
+    , m_Shooter{shooter}
+    , m_Swerve{swerve}
+    , m_Vision{vision}
+    , m_allCommands{InitializeOdometryCommand{&m_Swerve, {1.45_m, 7.026_m, 0_deg}}, DriveChoreo{m_Swerve, "TestPath"}} {
+}
 
 // Called when the command is initially scheduled.
 void AutonomousChoreoTest::Initialize() {

@@ -7,17 +7,17 @@
 #include <choreo/lib/Choreo.h>
 #include <frc/DriverStation.h>
 
-DriveChoreo::DriveChoreo(SwerveDriveSubsystem* drive, const std::string& trajectoryName)
-    : m_pDrive{drive}
+DriveChoreo::DriveChoreo(SwerveDriveSubsystem& drive, const std::string& trajectoryName)
+    : m_Drive{drive}
     , m_ChoreoCommand{choreolib::Choreo::GetTrajectory(trajectoryName),
-                      [this]() { return m_pDrive->GetContinuousOdometry(); },
-                      m_pDrive->GetChoreoControllerFunction(),
-                      [this](frc::ChassisSpeeds speeds) { return m_pDrive->SwerveDrive(speeds); },
-                      [this]() {
+                      [&drive]() { return drive.GetContinuousOdometry(); },
+                      drive.GetChoreoControllerFunction(),
+                      [&drive](frc::ChassisSpeeds speeds) { return drive.SwerveDrive(speeds); },
+                      []() {
                         const auto alliance = frc::DriverStation::GetAlliance();
                         return alliance && alliance.value() == frc::DriverStation::Alliance::kRed;
                       },
-                      {m_pDrive}} {}
+                      {&m_Drive}} {}
 
 // Called when the command is initially scheduled.
 void DriveChoreo::Initialize() {

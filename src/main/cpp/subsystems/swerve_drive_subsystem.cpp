@@ -54,7 +54,6 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
                                                                      address::practice_bot::drive::backLeftTurn,
                  instance == argos_lib::RobotInstance::Competition ? address::comp_bot::encoders::backLeftEncoder :
                                                                      address::practice_bot::encoders::backLeftEncoder)
-    , m_imu(frc::ADIS16448_IMU::kZ, frc::SPI::Port::kMXP, frc::ADIS16448_IMU::CalibrationTime::_8s)
     , m_pigeonIMU(instance == argos_lib::RobotInstance::Competition ? address::comp_bot::sensors::pigeonIMU.address :
                                                                       address::practice_bot::sensors::pigeonIMU.address,
                   std::string(instance == argos_lib::RobotInstance::Competition ?
@@ -287,6 +286,7 @@ wpi::array<frc::SwerveModulePosition, 4> SwerveDriveSubsystem::GetCurrentModuleP
 
 void SwerveDriveSubsystem::SwerveDrive(const double fwVelocity, const double sideVelocity, const double rotVelocity) {
   UpdateEstimatedPose();
+  GetContinuousOdometry();
   if (fwVelocity == 0 && sideVelocity == 0 && rotVelocity == 0) {
     if (!m_followingProfile) {
       StopDrive();
@@ -477,6 +477,7 @@ void SwerveDriveSubsystem::SwerveDrive(const units::degree_t& velAngle, const do
 }
 
 void SwerveDriveSubsystem::SwerveDrive(frc::ChassisSpeeds desiredChassisSpeed) {
+  UpdateEstimatedPose();
   m_manualOverride = true;
   auto moduleStates = GetRawModuleStates(desiredChassisSpeed);
   moduleStates = OptimizeAllModules(moduleStates);
@@ -592,6 +593,7 @@ frc::Rotation2d SwerveDriveSubsystem::GetContinuousOdometryAngle() {
 
   auto continuousOdometry = frc::Rotation2d{latestOdometry.Rotation().Degrees() + m_continuousOdometryOffset};
   frc::SmartDashboard::PutNumber("(Odometry) Continuous Angle", continuousOdometry.Degrees().to<double>());
+
   return continuousOdometry;
 }
 
@@ -602,6 +604,10 @@ frc::Rotation2d SwerveDriveSubsystem::GetNearestSquareAngle() {
 
 frc::Pose2d SwerveDriveSubsystem::GetContinuousOdometry() {
   const auto discontinuousOdometry = m_poseEstimator.GetEstimatedPosition();
+  frc::SmartDashboard::PutNumber("(Odometry) Current X",
+                                 units::inch_t{discontinuousOdometry.Translation().X()}.to<double>());
+  frc::SmartDashboard::PutNumber("(Odometry) Current Y",
+                                 units::inch_t{discontinuousOdometry.Translation().Y()}.to<double>());
   return frc::Pose2d{discontinuousOdometry.Translation(), GetContinuousOdometryAngle()};
 }
 

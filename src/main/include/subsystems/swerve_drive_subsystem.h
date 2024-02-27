@@ -5,7 +5,6 @@
 #pragma once
 
 #include <choreo/lib/Choreo.h>
-#include <frc/ADIS16448_IMU.h>
 #include <frc/Timer.h>
 #include <frc/controller/HolonomicDriveController.h>
 #include <frc/controller/PIDController.h>
@@ -265,7 +264,6 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   SwerveModule m_backLeft;    ///< Back left swerve module
 
   // GYROSCOPIC SENSORS
-  frc::ADIS16448_IMU m_imu;
   ctre::phoenix6::hardware::Pigeon2 m_pigeonIMU;
 
   units::degree_t m_fieldHomeOffset;  ///< Offset from IMU angle to 0 field angle (intake away from driver station)
