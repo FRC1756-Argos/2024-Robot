@@ -112,10 +112,13 @@
     "cancoder",
     "choreo",
     "choreolib",
+    "Codespaces",
     "ctre",
     "deadband",
     "Debouncer",
+    "Doxygen",
     "holonomic",
+    "LCHS",
     "Leds",
     "odometry",
     "Roborio",
@@ -123,7 +126,8 @@
     "Setpoint",
     "subwoofer",
     "talonsrx",
-    "teleop"
+    "teleop",
+    "wpiformat"
   ],
   "todo-tree.general.tags": [
     "BUG",

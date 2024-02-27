@@ -5,7 +5,6 @@
 #include "commands/autonomous/autonomous_choreo_test.h"
 
 #include "commands/drive_choreo.h"
-#include "commands/initialize_odometry_command.h"
 
 AutonomousChoreoTest::AutonomousChoreoTest(ElevatorSubsystem& elevator,
                                            IntakeSubsystem& intake,
@@ -17,8 +16,7 @@ AutonomousChoreoTest::AutonomousChoreoTest(ElevatorSubsystem& elevator,
     , m_Shooter{shooter}
     , m_Swerve{swerve}
     , m_Vision{vision}
-    , m_allCommands{InitializeOdometryCommand{&m_Swerve, {1.45_m, 7.026_m, 0_deg}}, DriveChoreo{m_Swerve, "TestPath"}} {
-}
+    , m_allCommands{DriveChoreo{m_Swerve, "TestPath", true}} {}
 
 // Called when the command is initially scheduled.
 void AutonomousChoreoTest::Initialize() {

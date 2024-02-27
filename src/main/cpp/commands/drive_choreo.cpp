@@ -7,9 +7,10 @@
 #include <choreo/lib/Choreo.h>
 #include <frc/DriverStation.h>
 
-DriveChoreo::DriveChoreo(SwerveDriveSubsystem& drive, const std::string& trajectoryName)
+DriveChoreo::DriveChoreo(SwerveDriveSubsystem& drive, const std::string& trajectoryName, const bool initializeOdometry)
     : m_Drive{drive}
-    , m_ChoreoCommand{choreolib::Choreo::GetTrajectory(trajectoryName),
+    , m_trajectory{choreolib::Choreo::GetTrajectory(trajectoryName)}
+    , m_ChoreoCommand{m_trajectory,
                       [&drive]() { return drive.GetContinuousOdometry(); },
                       drive.GetChoreoControllerFunction(),
                       [&drive](frc::ChassisSpeeds speeds) { return drive.SwerveDrive(speeds); },
@@ -17,10 +18,21 @@ DriveChoreo::DriveChoreo(SwerveDriveSubsystem& drive, const std::string& traject
                         const auto alliance = frc::DriverStation::GetAlliance();
                         return alliance && alliance.value() == frc::DriverStation::Alliance::kRed;
                       },
-                      {&m_Drive}} {}
+                      {&m_Drive}}
+    , m_initializeOdometry{false} {}
 
 // Called when the command is initially scheduled.
 void DriveChoreo::Initialize() {
+  if (m_initializeOdometry) {  // Initial odometry changes base on alliance because choreo always uses odometry relative to blue alliance origin
+    const auto alliance = frc::DriverStation::GetAlliance();
+    if (alliance && alliance.value() == frc::DriverStation::Alliance::kRed) {
+      m_Drive.InitializeOdometry(m_trajectory.GetInitialPose());
+    } else {
+      m_Drive.InitializeOdometry(m_trajectory.Flipped().GetInitialPose());
+    }
+    // Driver still wants orientation relative to alliance station
+    m_Drive.FieldHome(m_trajectory.GetInitialPose().Rotation().Degrees(), false);
+  }
   m_ChoreoCommand.Initialize();
 }
 

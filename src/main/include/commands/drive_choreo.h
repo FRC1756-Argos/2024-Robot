@@ -14,7 +14,7 @@
 
 class DriveChoreo : public frc2::CommandHelper<frc2::Command, DriveChoreo> {
  public:
-  DriveChoreo(SwerveDriveSubsystem& drive, const std::string& trajectoryName);
+  DriveChoreo(SwerveDriveSubsystem& drive, const std::string& trajectoryName, const bool initializeOdometry = false);
 
   void Initialize() override;
 
@@ -26,5 +26,7 @@ class DriveChoreo : public frc2::CommandHelper<frc2::Command, DriveChoreo> {
 
  private:
   SwerveDriveSubsystem& m_Drive;
+  const choreolib::ChoreoTrajectory m_trajectory;
   choreolib::ChoreoSwerveCommand m_ChoreoCommand;
+  const bool m_initializeOdometry;
 };
