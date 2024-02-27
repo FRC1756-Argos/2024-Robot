@@ -77,10 +77,8 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
       // d /= 12.0;
       return units::degree_t(88 - (0.78 * d) + (0.00335 * d * d) - (0.00000531 * d * d * d));
     } else if (m_useTrigonometry) {
-      auto offset = distance.value() > 130_in ? (0.05 * distance.value().to<double>()) : 0.0;
-      return static_cast<units::degree_t>(offset) +
-             static_cast<units::degree_t>(
-                 units::math::atan2(measure_up::shooter_targets::speakerOpeningHeightFromGround, distance.value()));
+      return static_cast<units::degree_t>(
+          units::math::atan2(measure_up::shooter_targets::speakerOpeningHeightFromGround, distance.value()));
     } else {
       return m_shooterAngleMap.Map(distance.value());
     }
