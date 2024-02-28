@@ -53,9 +53,14 @@ RobotContainer::RobotContainer()
     , m_intakeSubsystem(m_instance)
     , m_climberSubsystem(m_instance)
     , m_elevatorSubsystem(m_instance)
-    , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem}
+    , m_IntakeCommand{&m_intakeSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_controllers, &m_ledSubSystem}
     , m_ShooterCommand{&m_ShooterSubSystem}
-    , m_autoAimCommand{&m_swerveDrive, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_visionSubSystem}
+    , m_autoAimCommand{&m_swerveDrive,
+                       &m_ShooterSubSystem,
+                       &m_elevatorSubsystem,
+                       &m_visionSubSystem,
+                       &m_controllers,
+                       &m_ledSubSystem}
     , m_ClimberHomeCommand(m_climberSubsystem)
     , m_GoToAmpPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToHighPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, true}

@@ -36,6 +36,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   void SetAmpAndTrapMode(bool ampAndTrapMode);
 
+  [[nodiscard]] bool ShooterAtSpeed();
+
  private:
   ctre::phoenix6::hardware::TalonFX m_primaryMotor;
   ctre::phoenix6::hardware::TalonFX m_secondaryMotor;

@@ -6,6 +6,8 @@
 
 #include <argos_lib/config/falcon_config.h>
 #include <argos_lib/config/talonsrx_config.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <units/math.h>
 
 #include "constants/addresses.h"
 #include "constants/measure_up.h"
@@ -81,4 +83,14 @@ void ShooterSubsystem::NoteDetectionOverride(bool override) {
 
 void ShooterSubsystem::SetAmpAndTrapMode(bool ampAndTrapMode) {
   m_ampAndTrapMode = ampAndTrapMode;
+}
+
+[[nodiscard]] bool ShooterSubsystem::ShooterAtSpeed() {
+  frc::SmartDashboard::PutString("(AtSpeed) mode", m_primaryMotor.GetControlMode().GetValue().ToString());
+  frc::SmartDashboard::PutNumber("(AtSpeed) error", m_primaryMotor.GetClosedLoopError().GetValue());
+  if (m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::VelocityVoltage &&
+      m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::VelocityVoltageFOC) {
+    return false;
+  }
+  return units::math::abs(units::turns_per_second_t{m_primaryMotor.GetClosedLoopError().GetValue()}) < 200_rpm;
 }

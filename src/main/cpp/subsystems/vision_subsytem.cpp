@@ -75,9 +75,10 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
     double d = distance.value().to<double>();
     if (m_usePolynomial) {
       // d /= 12.0;
-      return units::degree_t(88 - (0.78 * d) + (0.00335 * d * d) - (0.00000505 * d * d * d));
+      return units::degree_t(88 - (0.78 * d) + (0.00335 * d * d) - (0.00000531 * d * d * d));
     } else if (m_useTrigonometry) {
-      return (units::math::atan2(measure_up::shooter_targets::speakerOpeningHeightFromShooter, distance.value()));
+      return static_cast<units::degree_t>(
+          units::math::atan2(measure_up::shooter_targets::speakerOpeningHeightFromGround, distance.value()));
     } else {
       return m_shooterAngleMap.Map(distance.value());
     }
@@ -89,17 +90,18 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
 std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
   auto distance = GetDistanceToSpeaker();
   if (distance && distance.value() < measure_up::shooter_targets::offsetDistanceThreshold) {
-    return units::math::atan2(measure_up::shooter_targets::cameraOffsetFromShooter, distance.value());
+    return static_cast<units::degree_t>(
+        units::math::atan2(measure_up::shooter_targets::cameraOffsetFromShooter, distance.value()));
   } else if (distance) {
-    units::degree_t accountLongerSpin = (units::degree_t)(2.0 * (distance.value().to<double>() / 80.0));
+    units::degree_t accountLongerSpin = (units::degree_t)(2.0 * (distance.value().to<double>() * 0.011));
     const auto targetValues = GetCameraTargetValues();
     if (targetValues.tagPose.Rotation().Z() > measure_up::shooter_targets::offsetRotationThreshold) {
       accountLongerSpin += 0.8_deg;
     } else if (targetValues.tagPose.Rotation().Z() < 0_deg) {
       accountLongerSpin = 0.0_deg;
     }
-    return accountLongerSpin +
-           units::math::atan2(measure_up::shooter_targets::cameraOffsetFromShooter, distance.value());
+    return accountLongerSpin + static_cast<units::degree_t>(units::math::atan2(
+                                   measure_up::shooter_targets::cameraOffsetFromShooter, distance.value()));
   }
 }
 
