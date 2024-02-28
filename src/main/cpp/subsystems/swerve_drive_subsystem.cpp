@@ -10,6 +10,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/angle.h>
 #include <units/angular_velocity.h>
+#include <units/frequency.h>
 #include <units/velocity.h>
 
 #include <memory>
@@ -77,6 +78,8 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
     , m_prevOdometryAngle{0_deg}
     , m_continuousOdometryOffset{0_deg}
     , m_poseEstimator{m_swerveDriveKinematics, frc::Rotation2d(GetIMUYaw()), GetCurrentModulePositions(), frc::Pose2d{}}
+    , m_odometryThread{}
+    , m_stillRunning{true}
     , m_fsStorage(paths::swerveHomesPath)
     , m_followingProfile(false)
     , m_profileComplete(false)
@@ -171,6 +174,27 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
 
   InitializeMotors();
 
+  const auto odometryUpdateFrequency = 200_Hz;
+
+  m_pigeonIMU.GetYaw().SetUpdateFrequency(odometryUpdateFrequency);
+  m_pigeonIMU.GetAngularVelocityZDevice().SetUpdateFrequency(odometryUpdateFrequency);
+  m_frontLeft.m_drive.GetPosition().SetUpdateFrequency(odometryUpdateFrequency);
+  m_frontLeft.m_drive.GetVelocity().SetUpdateFrequency(odometryUpdateFrequency);
+  m_frontLeft.m_turn.GetPosition().SetUpdateFrequency(odometryUpdateFrequency);
+  m_frontLeft.m_turn.GetVelocity().SetUpdateFrequency(odometryUpdateFrequency);
+  m_frontRight.m_drive.GetPosition().SetUpdateFrequency(odometryUpdateFrequency);
+  m_frontRight.m_drive.GetVelocity().SetUpdateFrequency(odometryUpdateFrequency);
+  m_frontRight.m_turn.GetPosition().SetUpdateFrequency(odometryUpdateFrequency);
+  m_frontRight.m_turn.GetVelocity().SetUpdateFrequency(odometryUpdateFrequency);
+  m_backRight.m_drive.GetPosition().SetUpdateFrequency(odometryUpdateFrequency);
+  m_backRight.m_drive.GetVelocity().SetUpdateFrequency(odometryUpdateFrequency);
+  m_backRight.m_turn.GetPosition().SetUpdateFrequency(odometryUpdateFrequency);
+  m_backRight.m_turn.GetVelocity().SetUpdateFrequency(odometryUpdateFrequency);
+  m_backLeft.m_drive.GetPosition().SetUpdateFrequency(odometryUpdateFrequency);
+  m_backLeft.m_drive.GetVelocity().SetUpdateFrequency(odometryUpdateFrequency);
+  m_backLeft.m_turn.GetPosition().SetUpdateFrequency(odometryUpdateFrequency);
+  m_backLeft.m_turn.GetVelocity().SetUpdateFrequency(odometryUpdateFrequency);
+
   m_followerController.getThetaController().EnableContinuousInput(-180_deg, 180_deg);
 
   m_linearFollowerTuner_P.AddMonitor(
@@ -220,6 +244,13 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
         UpdateFollowerRotationalPIDConstraints(m_rotationalPIDConstraints);
       },
       units::degrees_per_second_squared_t{m_rotationalPIDConstraints.maxAcceleration}.to<double>());
+
+  m_odometryThread = std::thread(&SwerveDriveSubsystem::UpdateEstimatedPose, this);
+}
+
+SwerveDriveSubsystem::~SwerveDriveSubsystem() {
+  m_stillRunning = false;
+  m_odometryThread.join();
 }
 
 void SwerveDriveSubsystem::Disable() {
@@ -285,7 +316,6 @@ wpi::array<frc::SwerveModulePosition, 4> SwerveDriveSubsystem::GetCurrentModuleP
 }
 
 void SwerveDriveSubsystem::SwerveDrive(const double fwVelocity, const double sideVelocity, const double rotVelocity) {
-  UpdateEstimatedPose();
   GetContinuousOdometry();
   if (fwVelocity == 0 && sideVelocity == 0 && rotVelocity == 0) {
     if (!m_followingProfile) {
@@ -477,7 +507,6 @@ void SwerveDriveSubsystem::SwerveDrive(const units::degree_t& velAngle, const do
 }
 
 void SwerveDriveSubsystem::SwerveDrive(frc::ChassisSpeeds desiredChassisSpeed) {
-  UpdateEstimatedPose();
   m_manualOverride = true;
   auto moduleStates = GetRawModuleStates(desiredChassisSpeed);
   moduleStates = OptimizeAllModules(moduleStates);
@@ -611,14 +640,81 @@ frc::Pose2d SwerveDriveSubsystem::GetContinuousOdometry() {
   return frc::Pose2d{discontinuousOdometry.Translation(), GetContinuousOdometryAngle()};
 }
 
-frc::Pose2d SwerveDriveSubsystem::UpdateEstimatedPose() {
-  const auto newEstPose = m_poseEstimator.Update(frc::Rotation2d{-GetIMUYaw()}, GetCurrentModulePositions());
-  const auto continuousEstPoseAngle = GetContinuousOdometryAngle();
-  // frc::SmartDashboard::PutNumber("(Odometry) X", units::inch_t{newEstPose.X()}.to<double>());
-  // frc::SmartDashboard::PutNumber("(Odometry) Y", units::inch_t{newEstPose.Y()}.to<double>());
-  // frc::SmartDashboard::PutNumber("(Odometry) Angle", newEstPose.Rotation().Degrees().to<double>());
-  // frc::SmartDashboard::PutNumber("(Odometry) Continuous Angle", GetContinuousOdometryAngle().Degrees().to<double>());
-  return frc::Pose2d{newEstPose.Translation(), continuousEstPoseAngle};
+void SwerveDriveSubsystem::UpdateEstimatedPose() {
+  auto& yawUpdate = m_pigeonIMU.GetYaw();
+  auto& yawRateUpdate = m_pigeonIMU.GetAngularVelocityZDevice();
+  auto& frontLeftDrivePositionUpdate = m_frontLeft.m_drive.GetPosition();
+  auto& frontLeftDriveVelocityUpdate = m_frontLeft.m_drive.GetVelocity();
+  auto& frontLeftTurnPositionUpdate = m_frontLeft.m_turn.GetPosition();
+  auto& frontLeftTurnVelocityUpdate = m_frontLeft.m_turn.GetVelocity();
+  auto& frontRightDrivePositionUpdate = m_frontRight.m_drive.GetPosition();
+  auto& frontRightDriveVelocityUpdate = m_frontRight.m_drive.GetVelocity();
+  auto& frontRightTurnPositionUpdate = m_frontRight.m_turn.GetPosition();
+  auto& frontRightTurnVelocityUpdate = m_frontRight.m_turn.GetVelocity();
+  auto& backRightDrivePositionUpdate = m_backRight.m_drive.GetPosition();
+  auto& backRightDriveVelocityUpdate = m_backRight.m_drive.GetVelocity();
+  auto& backRightTurnPositionUpdate = m_backRight.m_turn.GetPosition();
+  auto& backRightTurnVelocityUpdate = m_backRight.m_turn.GetVelocity();
+  auto& backLeftDrivePositionUpdate = m_backLeft.m_drive.GetPosition();
+  auto& backLeftDriveVelocityUpdate = m_backLeft.m_drive.GetVelocity();
+  auto& backLeftTurnPositionUpdate = m_backLeft.m_turn.GetPosition();
+  auto& backLeftTurnVelocityUpdate = m_backLeft.m_turn.GetVelocity();
+
+  while (m_stillRunning) {
+    if (0 == ctre::phoenix6::BaseStatusSignal::WaitForAll(20_ms,
+                                                          yawUpdate,
+                                                          yawRateUpdate,
+                                                          frontLeftDrivePositionUpdate,
+                                                          frontLeftDriveVelocityUpdate,
+                                                          frontLeftTurnPositionUpdate,
+                                                          frontLeftTurnVelocityUpdate,
+                                                          frontRightDrivePositionUpdate,
+                                                          frontRightDriveVelocityUpdate,
+                                                          frontRightTurnPositionUpdate,
+                                                          frontRightTurnVelocityUpdate,
+                                                          backRightDrivePositionUpdate,
+                                                          backRightDriveVelocityUpdate,
+                                                          backRightTurnPositionUpdate,
+                                                          backRightTurnVelocityUpdate,
+                                                          backLeftDrivePositionUpdate,
+                                                          backLeftDriveVelocityUpdate,
+                                                          backLeftTurnPositionUpdate,
+                                                          backLeftTurnVelocityUpdate)) {
+      auto yaw = ctre::phoenix6::BaseStatusSignal::GetLatencyCompensatedValue(yawUpdate, yawRateUpdate);
+      auto frontLeftDrivePosition = ctre::phoenix6::BaseStatusSignal::GetLatencyCompensatedValue(
+          frontLeftDrivePositionUpdate, frontLeftDriveVelocityUpdate);
+      auto frontLeftTurnPosition = ctre::phoenix6::BaseStatusSignal::GetLatencyCompensatedValue(
+          frontLeftTurnPositionUpdate, frontLeftTurnVelocityUpdate);
+      auto frontRightDrivePosition = ctre::phoenix6::BaseStatusSignal::GetLatencyCompensatedValue(
+          frontRightDrivePositionUpdate, frontRightDriveVelocityUpdate);
+      auto frontRightTurnPosition = ctre::phoenix6::BaseStatusSignal::GetLatencyCompensatedValue(
+          frontRightTurnPositionUpdate, frontRightTurnVelocityUpdate);
+      auto backRightDrivePosition = ctre::phoenix6::BaseStatusSignal::GetLatencyCompensatedValue(
+          backRightDrivePositionUpdate, backRightDriveVelocityUpdate);
+      auto backRightTurnPosition = ctre::phoenix6::BaseStatusSignal::GetLatencyCompensatedValue(
+          backRightTurnPositionUpdate, backRightTurnVelocityUpdate);
+      auto backLeftDrivePosition = ctre::phoenix6::BaseStatusSignal::GetLatencyCompensatedValue(
+          backLeftDrivePositionUpdate, backLeftDriveVelocityUpdate);
+      auto backLeftTurnPosition = ctre::phoenix6::BaseStatusSignal::GetLatencyCompensatedValue(
+          backLeftTurnPositionUpdate, backLeftTurnVelocityUpdate);
+
+      auto updateTime = yawUpdate.GetTimestamp().GetTime();
+      auto frontLeftModule = frc::SwerveModulePosition{
+          sensor_conversions::swerve_drive::drive::ToDistance(frontLeftDrivePosition),
+          frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(frontLeftTurnPosition)}};
+      auto frontRightModule = frc::SwerveModulePosition{
+          sensor_conversions::swerve_drive::drive::ToDistance(frontRightDrivePosition),
+          frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(frontRightTurnPosition)}};
+      auto backRightModule = frc::SwerveModulePosition{
+          sensor_conversions::swerve_drive::drive::ToDistance(backRightDrivePosition),
+          frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(backRightTurnPosition)}};
+      auto backLeftModule = frc::SwerveModulePosition{
+          sensor_conversions::swerve_drive::drive::ToDistance(backLeftDrivePosition),
+          frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(backLeftTurnPosition)}};
+      m_poseEstimator.UpdateWithTime(
+          updateTime, frc::Rotation2d(-yaw), {frontLeftModule, frontRightModule, backRightModule, backLeftModule});
+    }
+  }
 }
 
 units::degree_t SwerveDriveSubsystem::GetFieldCentricAngle() {

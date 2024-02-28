@@ -17,6 +17,7 @@
 #include <frc2/command/SubsystemBase.h>
 
 #include <memory>
+#include <thread>
 
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
@@ -67,6 +68,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   enum DriveControlMode { fieldCentricControl, robotCentricControl };
 
   explicit SwerveDriveSubsystem(const argos_lib::RobotInstance instance);
+
+  virtual ~SwerveDriveSubsystem();
 
   /**
    * @brief Handle the robot disabling
@@ -134,11 +137,9 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   frc::Pose2d GetContinuousOdometry();
 
   /**
-   * @brief Reads module states & gyro, updates pose estimator, and returns latest pose estimate
-   *
-   * @return Estimate of robot pose
+   * @brief Reads module states & gyro and updates pose estimator.
    */
-  frc::Pose2d UpdateEstimatedPose();
+  void UpdateEstimatedPose();
 
   /**
    * @brief Get the field-centric angle of the robot based on gyro and saved reference orientation
@@ -285,6 +286,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   units::degree_t m_continuousOdometryOffset;  ///< Offset to convert [-180,180] odometry angle to continuous angle
 
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;  ///< accounts vision-based measurements for odometry
+  std::thread m_odometryThread;                      ///< Updates robot odometry at very high rate
+  bool m_stillRunning;                               ///< false indicates subsystem is being destroyed
 
   // std::FILE SYSTEM HOMING STORAGE
   argos_lib::SwerveFSHomingStorage m_fsStorage;  ///< Roborio filesystem access for homes
