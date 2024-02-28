@@ -72,7 +72,9 @@ RobotContainer::RobotContainer()
                        &m_ReadyForClimbCommand,
                        &m_RaiseClimberCommand,
                        &m_LowerClimberCommand,
-                       &m_GoToAmpPositionCommand}
+                       &m_GoToTrapPositionCommand
+                       }
+
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}

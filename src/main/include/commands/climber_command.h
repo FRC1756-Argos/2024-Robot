@@ -46,4 +46,5 @@ class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand>
   LowerClimberCommand* m_pLowerClimberCommand;
 
   argos_lib::SwappableControllersSubsystem* m_pControllers;
+  int button_count;
 };

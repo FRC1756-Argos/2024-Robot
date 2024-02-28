@@ -54,3 +54,7 @@ bool GoToTrapPositionCommand::IsFinished() {
 bool GoToTrapPositionCommand::GetIsTrapDone() {
   return is_trap_done;
 }
+
+void GoToTrapPositionCommand::ResetIsTrapDone(){
+  is_trap_done = false;
+}

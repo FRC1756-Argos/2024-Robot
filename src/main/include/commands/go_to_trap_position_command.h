@@ -24,6 +24,8 @@ class GoToTrapPositionCommand : public frc2::CommandHelper<frc2::Command, GoToTr
 
   bool GetIsTrapDone();
 
+  void ResetIsTrapDone();
+
  private:
   ShooterSubsystem* m_pShooter;
   ElevatorSubsystem* m_pElevator;

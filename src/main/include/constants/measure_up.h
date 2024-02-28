@@ -49,7 +49,7 @@ namespace measure_up {
   namespace climber {
     constexpr auto lowerLimit = 3.375_in;  // from floor to bottom of linear rail carrige
     constexpr auto upperLimit = 24.5_in;   // approx 19.5in of travel, get better value later
-    constexpr auto climbRaisedHeight = 23_in;
+    constexpr auto climbRaisedHeight = 24_in;
     constexpr auto climbLoweredHeight = 4_in;
   }  // namespace climber
 

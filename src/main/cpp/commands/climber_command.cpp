@@ -6,6 +6,8 @@
 
 #include <frc2/command/SequentialCommandGroup.h>
 
+#include <frc/smartdashboard/SmartDashboard.h>
+
 ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
                                ShooterSubsystem* shooter,
                                ElevatorSubsystem* elevator,
@@ -21,15 +23,21 @@ ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
     , m_pReadyForClimbCommand{ready}
     , m_pRaiseClimberCommand{raise}
     , m_pLowerClimberCommand{lower}
-    , m_pTrapCommand{trap} {
-  AddRequirements({m_pClimber, m_pShooter, m_pElevator, m_pControllers});
+    , m_pTrapCommand{trap}
+    {
+  //AddRequirements({m_pClimber, m_pShooter, m_pElevator, m_pControllers});
 }
 
 // Called when the command is initially scheduled.
-void ClimberCommand::Initialize() {}
+void ClimberCommand::Initialize() {
+  m_pReadyForClimbCommand->Schedule();
+  button_count = 0;
+  m_pTrapCommand->ResetIsTrapDone();
+}
 
 // Called repeatedly when this Command is scheduled to run
 void ClimberCommand::Execute() {
+  /*
   if (m_pControllers->OperatorController().GetRawButtonPressed(argos_lib::XboxController::Button::kBumperRight)) {
     if (!(m_pReadyForClimbCommand->GetIsReadyCLimbFinished())) {
       m_pReadyForClimbCommand->Schedule();
@@ -42,11 +50,34 @@ void ClimberCommand::Execute() {
     } else if (m_pLowerClimberCommand->GetIsLowerCLimbFinished() && !(m_pTrapCommand->GetIsTrapDone())) {
       m_pTrapCommand->Schedule();
     }
+  }*/
+
+  if(m_pControllers->OperatorController().GetRawButtonPressed(argos_lib::XboxController::Button::kBumperLeft)){
+
+    switch(button_count){
+      case 0:
+        m_pRaiseClimberCommand->Schedule();
+        ++button_count;
+        break;
+      case 1:
+        m_pLowerClimberCommand->Schedule();
+        ++button_count;
+        break;
+      case 2:
+        m_pTrapCommand->Schedule();
+        ++button_count;
+        break;
+      default:
+        button_count = 0;
+    }
   }
 }
 
 // Called once the command ends or is interrupted.
-void ClimberCommand::End(bool interrupted) {}
+void ClimberCommand::End(bool interrupted) {
+  button_count = 0;
+
+}
 
 // Returns true when the command should end.
 bool ClimberCommand::IsFinished() {
