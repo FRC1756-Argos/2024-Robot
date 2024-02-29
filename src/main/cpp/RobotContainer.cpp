@@ -67,19 +67,11 @@ RobotContainer::RobotContainer()
     , m_GoToLowPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, false}
     , m_GoToSubwooferPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToTrapPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
-    , m_ReadyForClimbCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
-    , m_RaiseClimberCommand{&m_climberSubsystem}
-    , m_LowerClimberCommand{&m_climberSubsystem}
     , m_ClimberCommand{&m_climberSubsystem,
                        &m_ShooterSubSystem,
                        &m_elevatorSubsystem,
-                       &m_controllers,
-                       &m_ReadyForClimbCommand,
-                       &m_RaiseClimberCommand,
-                       &m_LowerClimberCommand,
-                       &m_GoToTrapPositionCommand
+                       &m_controllers
                        }
-
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}

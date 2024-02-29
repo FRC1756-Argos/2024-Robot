@@ -11,27 +11,24 @@
 ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
                                ShooterSubsystem* shooter,
                                ElevatorSubsystem* elevator,
-                               argos_lib::SwappableControllersSubsystem* controllers,
-                               ReadyForClimbCommand* ready,
-                               RaiseClimberCommand* raise,
-                               LowerClimberCommand* lower,
-                               GoToTrapPositionCommand* trap)
+                               argos_lib::SwappableControllersSubsystem* controllers
+                               )
     : m_pClimber{climber}
     , m_pShooter{shooter}
     , m_pElevator{elevator}
     , m_pControllers{controllers}
-    , m_pReadyForClimbCommand{ready}
-    , m_pRaiseClimberCommand{raise}
-    , m_pLowerClimberCommand{lower}
-    , m_pTrapCommand{trap}
+    , m_ReadyForClimbCommand{ReadyForClimbCommand{shooter, elevator}}
+    , m_RaiseClimberCommand{RaiseClimberCommand{climber}}
+    , m_LowerClimberCommand{LowerClimberCommand{climber}}
+    , m_TrapCommand{GoToTrapPositionCommand{shooter, elevator}}
     {
 }
 
 // Called when the command is initially scheduled.
 void ClimberCommand::Initialize() {
-  m_pReadyForClimbCommand->Schedule();
+  m_ReadyForClimbCommand.Schedule();
   button_count = 0;
-  m_pTrapCommand->ResetIsTrapDone();
+  m_TrapCommand.ResetIsTrapDone();
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -41,15 +38,15 @@ void ClimberCommand::Execute() {
 
     switch(button_count){
       case 0:
-        m_pRaiseClimberCommand->Schedule();
+        m_RaiseClimberCommand.Schedule();
         ++button_count;
         break;
       case 1:
-        m_pLowerClimberCommand->Schedule();
+        m_LowerClimberCommand.Schedule();
         ++button_count;
         break;
       case 2:
-        m_pTrapCommand->Schedule();
+        m_TrapCommand.Schedule();
         ++button_count;
         break;
       default:
@@ -66,5 +63,5 @@ void ClimberCommand::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool ClimberCommand::IsFinished() {
-  return m_pTrapCommand->GetIsTrapDone();
+  return m_TrapCommand.GetIsTrapDone();
 }

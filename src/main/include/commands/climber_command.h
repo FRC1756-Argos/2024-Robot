@@ -22,11 +22,8 @@ class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand>
   ClimberCommand(ClimberSubsystem* climber,
                  ShooterSubsystem* shooter,
                  ElevatorSubsystem* elevator,
-                 argos_lib::SwappableControllersSubsystem* controllers,
-                 ReadyForClimbCommand* ready,
-                 RaiseClimberCommand* raise,
-                 LowerClimberCommand* lower,
-                 GoToTrapPositionCommand* trap);
+                 argos_lib::SwappableControllersSubsystem* controllers
+                 );
 
   void Initialize() override;
 
@@ -40,10 +37,10 @@ class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand>
   ClimberSubsystem* m_pClimber;
   ShooterSubsystem* m_pShooter;
   ElevatorSubsystem* m_pElevator;
-  GoToTrapPositionCommand* m_pTrapCommand;
-  ReadyForClimbCommand* m_pReadyForClimbCommand;
-  RaiseClimberCommand* m_pRaiseClimberCommand;
-  LowerClimberCommand* m_pLowerClimberCommand;
+  GoToTrapPositionCommand m_TrapCommand;
+  ReadyForClimbCommand m_ReadyForClimbCommand;
+  RaiseClimberCommand m_RaiseClimberCommand;
+  LowerClimberCommand m_LowerClimberCommand;
 
   argos_lib::SwappableControllersSubsystem* m_pControllers;
   int button_count;

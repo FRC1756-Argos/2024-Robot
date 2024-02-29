@@ -95,10 +95,6 @@ class RobotContainer {
   GoToTrapPositionCommand m_GoToTrapPositionCommand;
   ClimberCommand m_ClimberCommand;
 
-  ReadyForClimbCommand m_ReadyForClimbCommand;
-  RaiseClimberCommand m_RaiseClimberCommand;
-  LowerClimberCommand m_LowerClimberCommand;
-
   // Autonomous
   AutonomousNothing m_autoNothing;
 
