@@ -25,7 +25,6 @@ ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
     , m_pLowerClimberCommand{lower}
     , m_pTrapCommand{trap}
     {
-  //AddRequirements({m_pClimber, m_pShooter, m_pElevator, m_pControllers});
 }
 
 // Called when the command is initially scheduled.
@@ -37,20 +36,6 @@ void ClimberCommand::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void ClimberCommand::Execute() {
-  /*
-  if (m_pControllers->OperatorController().GetRawButtonPressed(argos_lib::XboxController::Button::kBumperRight)) {
-    if (!(m_pReadyForClimbCommand->GetIsReadyCLimbFinished())) {
-      m_pReadyForClimbCommand->Schedule();
-    } else if (m_pReadyForClimbCommand->GetIsReadyCLimbFinished() &&
-               !(m_pRaiseClimberCommand->GetIsRaiseCLimbFinished())) {
-      m_pRaiseClimberCommand->Schedule();
-    } else if (m_pRaiseClimberCommand->GetIsRaiseCLimbFinished() &&
-               !(m_pLowerClimberCommand->GetIsLowerCLimbFinished())) {
-      m_pLowerClimberCommand->Schedule();
-    } else if (m_pLowerClimberCommand->GetIsLowerCLimbFinished() && !(m_pTrapCommand->GetIsTrapDone())) {
-      m_pTrapCommand->Schedule();
-    }
-  }*/
 
   if(m_pControllers->OperatorController().GetRawButtonPressed(argos_lib::XboxController::Button::kBumperLeft)){
 
