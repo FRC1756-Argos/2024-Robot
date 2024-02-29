@@ -508,8 +508,6 @@ void SwerveDriveSubsystem::SwerveDrive(const units::degree_t& velAngle, const do
 
 void SwerveDriveSubsystem::SwerveDrive(frc::ChassisSpeeds desiredChassisSpeed) {
   m_manualOverride = true;
-  std::cout << "vx:" << desiredChassisSpeed.vx.to<double>() << " vy:" << desiredChassisSpeed.vy.to<double>()
-            << " vomega:" << desiredChassisSpeed.omega.to<double>() << '\n';
   auto moduleStates = GetRawModuleStates(desiredChassisSpeed);
   moduleStates = OptimizeAllModules(moduleStates);
   ClosedLoopDrive(moduleStates);
@@ -727,7 +725,7 @@ void SwerveDriveSubsystem::UpdateEstimatedPose() {
           sensor_conversions::swerve_drive::drive::ToDistance(backLeftDrivePosition),
           frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(backLeftTurnPosition)}};
       m_poseEstimator.UpdateWithTime(
-          updateTime, frc::Rotation2d(-yaw), {frontLeftModule, frontRightModule, backRightModule, backLeftModule});
+          updateTime, frc::Rotation2d(yaw), {frontLeftModule, frontRightModule, backRightModule, backLeftModule});
     }
   }
 }

@@ -3,7 +3,7 @@
     "robotConfiguration": {
         "mass": 70.63053807628098,
         "rotationalInertia": 7.222551739703853,
-        "motorMaxTorque": 1.1526315789473685,
+        "motorMaxTorque": 0.7684210526315789,
         "motorMaxVelocity": 4864,
         "gearing": 6.12,
         "wheelbase": 0.5968996776741741,
@@ -22,7 +22,7 @@
                     "isInitialGuess": false,
                     "translationConstrained": true,
                     "headingConstrained": true,
-                    "controlIntervalCount": 26
+                    "controlIntervalCount": 30
                 },
                 {
                     "x": 4.400511264801025,
@@ -31,7 +31,7 @@
                     "isInitialGuess": false,
                     "translationConstrained": true,
                     "headingConstrained": true,
-                    "controlIntervalCount": 26
+                    "controlIntervalCount": 29
                 },
                 {
                     "x": 1.460693597793579,
@@ -527,23 +527,20 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "direction": 0
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         0,
                         1
                     ],
-                    "type": "StraightLine",
-                    "direction": 0
+                    "type": "StraightLine"
                 }
             ],
             "usesControlIntervalGuessing": true,
