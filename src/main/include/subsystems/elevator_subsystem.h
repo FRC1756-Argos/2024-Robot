@@ -10,6 +10,7 @@
 #include <units/length.h>
 
 #include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix6/CANcoder.hpp>
 
 class ElevatorSubsystem : public frc2::SubsystemBase {
  public:
