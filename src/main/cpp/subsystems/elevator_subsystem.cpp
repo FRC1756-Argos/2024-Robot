@@ -10,10 +10,10 @@
 #include <ctre/phoenix6/configs/Configs.hpp>
 #include <ctre/phoenix6/controls/PositionVoltage.hpp>
 
-#include "argos_lib/config/falcon_config.h"
 #include "argos_lib/config/cancoder_config.h"
-#include "constants/encoders.h"
+#include "argos_lib/config/falcon_config.h"
 #include "constants/addresses.h"
+#include "constants/encoders.h"
 #include "constants/measure_up.h"
 #include "constants/motors.h"
 #include "utils/sensor_conversions.h"
