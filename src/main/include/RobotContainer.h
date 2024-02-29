@@ -15,12 +15,16 @@
 #include "commands/auto_aim_command.h"
 #include "commands/autonomous/autonomous_choreo_test.h"
 #include "commands/autonomous/autonomous_nothing.h"
+#include "commands/climber_command.h"
 #include "commands/climber_homing_command.h"
 #include "commands/go_to_amp_position_command.h"
 #include "commands/go_to_podium_position_command.h"
 #include "commands/go_to_subwoofer_position_command.h"
 #include "commands/go_to_trap_position_command.h"
 #include "commands/intake_command.h"
+#include "commands/lower_climber_command.h"
+#include "commands/raise_climber_command.h"
+#include "commands/ready_for_climb_command.h"
 #include "commands/shooter_command.h"
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
@@ -89,6 +93,7 @@ class RobotContainer {
   GoToPodiumPositionCommand m_GoToLowPodiumPositionCommand;
   GoToSubwooferPositionCommand m_GoToSubwooferPositionCommand;
   GoToTrapPositionCommand m_GoToTrapPositionCommand;
+  ClimberCommand m_ClimberCommand;
 
   // Autonomous
   AutonomousNothing m_autoNothing;

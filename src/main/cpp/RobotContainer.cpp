@@ -67,6 +67,7 @@ RobotContainer::RobotContainer()
     , m_GoToLowPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, false}
     , m_GoToSubwooferPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToTrapPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
+    , m_ClimberCommand{&m_climberSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_controllers}
     , m_autoNothing{}
     , m_autoChoreoTest{m_elevatorSubsystem, m_intakeSubsystem, m_ShooterSubSystem, m_swerveDrive, m_visionSubSystem}
     , m_autoSelector{{&m_autoNothing, &m_autoChoreoTest}, &m_autoNothing}
@@ -157,6 +158,8 @@ void RobotContainer::ConfigureBindings() {
   auto subwooferPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kY);
   auto trapPositionTrigger =
       m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
+  auto climberSequenceTrigger =
+      m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
 
   // ELEVATOR TRIGGERS
   auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
@@ -216,6 +219,8 @@ void RobotContainer::ConfigureBindings() {
                          .ToPtr());
   (climberUp || climberDown)
       .OnFalse(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.0); }, {&m_climberSubsystem}).ToPtr());
+
+  climberSequenceTrigger.OnTrue(&m_ClimberCommand);
 
   // ELEVATOR TRIGGER ACTIVATION
   elevatorLiftManualInput.OnTrue(

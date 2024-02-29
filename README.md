@@ -133,8 +133,8 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | DPad Right      | Unused |
 | DPad Down       | Climber Down |
 | DPad Left       | Unused |
-| LB              | Backwards Trap Sequence |
-| RB              | Trap Sequence |
+| LB              | Continue Climb Sequence |
+| RB              | Start Climb Sequence |
 | LT              | Trap |
 | RT              | Shooter Up Position |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
