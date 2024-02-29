@@ -10,8 +10,7 @@
 ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
                                ShooterSubsystem* shooter,
                                ElevatorSubsystem* elevator,
-                               argos_lib::SwappableControllersSubsystem* controllers
-                               )
+                               argos_lib::SwappableControllersSubsystem* controllers)
     : m_pClimber{climber}
     , m_pShooter{shooter}
     , m_pElevator{elevator}
@@ -19,9 +18,7 @@ ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
     , m_ReadyForClimbCommand{ReadyForClimbCommand{shooter, elevator}}
     , m_RaiseClimberCommand{RaiseClimberCommand{climber}}
     , m_LowerClimberCommand{LowerClimberCommand{climber}}
-    , m_TrapCommand{GoToTrapPositionCommand{shooter, elevator}}
-    {
-}
+    , m_TrapCommand{GoToTrapPositionCommand{shooter, elevator}} {}
 
 // Called when the command is initially scheduled.
 void ClimberCommand::Initialize() {

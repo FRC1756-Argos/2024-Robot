@@ -22,8 +22,7 @@ class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand>
   ClimberCommand(ClimberSubsystem* climber,
                  ShooterSubsystem* shooter,
                  ElevatorSubsystem* elevator,
-                 argos_lib::SwappableControllersSubsystem* controllers
-                 );
+                 argos_lib::SwappableControllersSubsystem* controllers);
 
   void Initialize() override;
 
