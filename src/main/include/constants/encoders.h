@@ -15,7 +15,7 @@ namespace encoder_conf {
     namespace elevator {
       struct elevatorEncoderConf {
         constexpr static auto range = ctre::phoenix6::signals::AbsoluteSensorRangeValue::Signed_PlusMinusHalf;
-        constexpr static auto direction = ctre::phoenix6::signals::SensorDirectionValue::Clockwise_Positive;
+        constexpr static auto direction = ctre::phoenix6::signals::SensorDirectionValue::Clockwise_Positive; ///@todo determine correct direction, range
         constexpr static auto magnetOffset = 0;
       };
     }  // namespace elevator
