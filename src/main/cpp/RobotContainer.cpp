@@ -77,8 +77,7 @@ RobotContainer::RobotContainer()
                        &m_ReadyForClimbCommand,
                        &m_RaiseClimberCommand,
                        &m_LowerClimberCommand,
-                       &m_GoToTrapPositionCommand
-                       }
+                       &m_GoToTrapPositionCommand}
 
     , m_autoNothing{}
     , m_autoSelector{{&m_autoNothing}, &m_autoNothing}

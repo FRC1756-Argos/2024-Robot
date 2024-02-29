@@ -55,6 +55,6 @@ bool GoToTrapPositionCommand::GetIsTrapDone() {
   return is_trap_done;
 }
 
-void GoToTrapPositionCommand::ResetIsTrapDone(){
+void GoToTrapPositionCommand::ResetIsTrapDone() {
   is_trap_done = false;
 }
