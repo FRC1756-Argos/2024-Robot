@@ -33,9 +33,16 @@ void AutoAimCommand::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void AutoAimCommand::Execute() {
   auto angle = m_pVision->getShooterAngle();
+  auto speed = m_pVision->getShooterSpeed();
   if (angle != std::nullopt) {
     frc::SmartDashboard::PutNumber("(AIM) angle", angle.value().to<double>());
     m_pElevator->SetCarriageAngle(angle.value());
+  }
+
+  if (speed != std::nullopt) {
+    frc::SmartDashboard::PutNumber("(AIM) speed",
+                                   units::angular_velocity::revolutions_per_minute_t{speed.value()}.to<double>());
+    m_pShooter->ShooterGoToSpeed(speed.value());
   }
 
   auto horzOffset = m_pVision->GetHorizontalOffsetToTarget();
