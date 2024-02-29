@@ -508,6 +508,8 @@ void SwerveDriveSubsystem::SwerveDrive(const units::degree_t& velAngle, const do
 
 void SwerveDriveSubsystem::SwerveDrive(frc::ChassisSpeeds desiredChassisSpeed) {
   m_manualOverride = true;
+  std::cout << "vx:" << desiredChassisSpeed.vx.to<double>() << " vy:" << desiredChassisSpeed.vy.to<double>()
+            << " vomega:" << desiredChassisSpeed.omega.to<double>() << '\n';
   auto moduleStates = GetRawModuleStates(desiredChassisSpeed);
   moduleStates = OptimizeAllModules(moduleStates);
   ClosedLoopDrive(moduleStates);
@@ -626,6 +628,10 @@ frc::Rotation2d SwerveDriveSubsystem::GetContinuousOdometryAngle() {
   return continuousOdometry;
 }
 
+frc::Rotation2d SwerveDriveSubsystem::GetRawOdometryAngle() {
+  return m_poseEstimator.GetEstimatedPosition().Rotation();
+}
+
 frc::Rotation2d SwerveDriveSubsystem::GetNearestSquareAngle() {
   const auto currentAngle = GetContinuousOdometryAngle().Degrees();
   return units::math::round(currentAngle / 90) * 90;
@@ -638,6 +644,15 @@ frc::Pose2d SwerveDriveSubsystem::GetContinuousOdometry() {
   frc::SmartDashboard::PutNumber("(Odometry) Current Y",
                                  units::inch_t{discontinuousOdometry.Translation().Y()}.to<double>());
   return frc::Pose2d{discontinuousOdometry.Translation(), GetContinuousOdometryAngle()};
+}
+
+frc::Pose2d SwerveDriveSubsystem::GetRawOdometry() {
+  const auto discontinuousOdometry = m_poseEstimator.GetEstimatedPosition();
+  frc::SmartDashboard::PutNumber("(Odometry) Current X",
+                                 units::inch_t{discontinuousOdometry.Translation().X()}.to<double>());
+  frc::SmartDashboard::PutNumber("(Odometry) Current Y",
+                                 units::inch_t{discontinuousOdometry.Translation().Y()}.to<double>());
+  return discontinuousOdometry;
 }
 
 void SwerveDriveSubsystem::UpdateEstimatedPose() {

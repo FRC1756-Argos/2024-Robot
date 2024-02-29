@@ -11,7 +11,7 @@ DriveChoreo::DriveChoreo(SwerveDriveSubsystem& drive, const std::string& traject
     : m_Drive{drive}
     , m_trajectory{choreolib::Choreo::GetTrajectory(trajectoryName)}
     , m_ChoreoCommand{m_trajectory,
-                      [&drive]() { return drive.GetContinuousOdometry(); },
+                      [&drive]() { return drive.GetRawOdometry(); },
                       drive.GetChoreoControllerFunction(),
                       [&drive](frc::ChassisSpeeds speeds) { return drive.SwerveDrive(speeds); },
                       []() {
@@ -19,15 +19,21 @@ DriveChoreo::DriveChoreo(SwerveDriveSubsystem& drive, const std::string& traject
                         return alliance && alliance.value() == frc::DriverStation::Alliance::kRed;
                       },
                       {&m_Drive}}
-    , m_initializeOdometry{false} {}
+    , m_initializeOdometry{initializeOdometry} {}
 
 // Called when the command is initially scheduled.
 void DriveChoreo::Initialize() {
   if (m_initializeOdometry) {  // Initial odometry changes base on alliance because choreo always uses odometry relative to blue alliance origin
     const auto alliance = frc::DriverStation::GetAlliance();
     if (alliance && alliance.value() == frc::DriverStation::Alliance::kRed) {
+      std::cout << " X:" << units::inch_t{m_trajectory.GetInitialPose().Translation().X()}.to<double>()
+                << " Y:" << units::inch_t{m_trajectory.GetInitialPose().Translation().Y()}.to<double>()
+                << " Theta:" << m_trajectory.GetInitialPose().Rotation().Degrees().to<double>() << '\n';
       m_Drive.InitializeOdometry(m_trajectory.GetInitialPose());
     } else {
+      std::cout << " X:" << units::inch_t{m_trajectory.Flipped().GetInitialPose().Translation().X()}.to<double>()
+                << " Y:" << units::inch_t{m_trajectory.Flipped().GetInitialPose().Translation().Y()}.to<double>()
+                << " Theta:" << m_trajectory.Flipped().GetInitialPose().Rotation().Degrees().to<double>() << '\n';
       m_Drive.InitializeOdometry(m_trajectory.Flipped().GetInitialPose());
     }
     // Driver still wants orientation relative to alliance station
