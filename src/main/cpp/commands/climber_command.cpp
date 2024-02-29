@@ -4,9 +4,8 @@
 
 #include "commands/climber_command.h"
 
-#include <frc2/command/SequentialCommandGroup.h>
-
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc2/command/SequentialCommandGroup.h>
 
 ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
                                ShooterSubsystem* shooter,
@@ -33,10 +32,8 @@ void ClimberCommand::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void ClimberCommand::Execute() {
-
-  if(m_pControllers->OperatorController().GetRawButtonPressed(argos_lib::XboxController::Button::kBumperLeft)){
-
-    switch(button_count){
+  if (m_pControllers->OperatorController().GetRawButtonPressed(argos_lib::XboxController::Button::kBumperLeft)) {
+    switch (button_count) {
       case 0:
         m_RaiseClimberCommand.Schedule();
         ++button_count;
@@ -58,7 +55,6 @@ void ClimberCommand::Execute() {
 // Called once the command ends or is interrupted.
 void ClimberCommand::End(bool interrupted) {
   button_count = 0;
-
 }
 
 // Returns true when the command should end.
