@@ -71,7 +71,7 @@ namespace sensor_conversions {
   namespace elevator {
     namespace lift {
       constexpr auto sensorConversionFactor = 1_in / 3_tr;
-      constexpr auto absEncoderReduction = 1.0 / 10.0;
+      constexpr auto rotorToEncoderRatio = 10.0;
 
       constexpr units::inch_t ToHeight(const units::angle::turn_t sensorUnit) {
         return sensorConversionFactor * sensorUnit;
@@ -80,7 +80,7 @@ namespace sensor_conversions {
         return height / sensorConversionFactor;
       }
       constexpr units::angle::turn_t AbsEncoderToSensorUnit(units::angle::turn_t encoderReading) {
-        return encoderReading / absEncoderReduction;
+        return encoderReading * rotorToEncoderRatio;
       }
 
     }  // namespace lift

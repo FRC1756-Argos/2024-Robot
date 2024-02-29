@@ -14,7 +14,9 @@ namespace encoder_conf {
     }  // namespace drive
     namespace elevator {
       struct elevatorEncoderConf {
-        constexpr static auto range = ctre::phoenix6::signals::AbsoluteSensorRangeValue::Unsigned_0To1;
+        constexpr static auto range = ctre::phoenix6::signals::AbsoluteSensorRangeValue::Signed_PlusMinusHalf;
+        constexpr static auto direction = ctre::phoenix6::signals::SensorDirectionValue::Clockwise_Positive;
+        constexpr static auto magnetOffset = 0;
       };
     }  // namespace elevator
   }    // namespace comp_bot
@@ -24,8 +26,7 @@ namespace encoder_conf {
       using genericTurn = encoder_conf::comp_bot::drive::genericTurn;
     }  // namespace drive
     namespace elevator {
-      using elevatorEncoderConf = encoder_conf::comp_bot::elevator::elevatorEncoderConf;
+      struct elevatorEncoderConf {};
     }
-
   }  // namespace practice_bot
 }  // namespace encoder_conf

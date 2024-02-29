@@ -48,6 +48,11 @@ When commissioning a new robot, you should set the instance type to either "Comp
 3. Use something flat that is the length of the robot and line the swerve wheels up.
 4. Power on the robot and connect your computer. Open Phoenix Tuner X. Select each drive CANcoder and click the "Zero CANcoder" button.
 
+### Homing Elevator Encoder
+
+1. Move elevator to lower boundary position.
+2. Power on and connect to the robot.
+3. Select the elevator encoder in Phoenix Tuner X and click "Zero CANCoder".
 
 ### Vision
 

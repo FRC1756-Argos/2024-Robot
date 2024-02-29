@@ -44,8 +44,13 @@ ElevatorSubsystem::ElevatorSubsystem(argos_lib::RobotInstance robotInstance)
                                              encoder_conf::practice_bot::elevator::elevatorEncoderConf>(
       m_elevatorEncoder, 100_ms, robotInstance);
 
-  m_primaryMotor.SetPosition(
-      sensor_conversions::elevator::lift::AbsEncoderToSensorUnit(m_elevatorEncoder.GetAbsolutePosition().GetValue()));
+  if (argos_lib::GetRobotInstance() == argos_lib::RobotInstance::Competition) {
+    m_primaryMotor.SetPosition(
+       sensor_conversions::elevator::lift::AbsEncoderToSensorUnit(m_elevatorEncoder.GetAbsolutePosition().GetValue()));
+  } else {
+    m_primaryMotor.SetPosition(sensor_conversions::elevator::lift::ToSensorUnit(measure_up::elevator::lift::minHeight));
+  }
+
   /// @todo Actually home elevator height instead of assuming elevator starts at bottom
   EnableCarriageSoftLimits();
   EnableElevatorSoftLimits();

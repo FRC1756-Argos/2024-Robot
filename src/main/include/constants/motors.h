@@ -184,7 +184,10 @@ namespace motorConfig {
         constexpr static auto inverted = false;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statorCurrentLimit = 40_A;
-        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::FusedCANcoder;
+        constexpr static auto selectedSensor_addr = address::comp_bot::encoders::elevatorEncoder;
+        constexpr static auto sensorToMechanismRatio = 1;
+        constexpr static auto rotorToSensorRatio = sensor_conversions::elevator::lift::rotorToEncoderRatio;
         constexpr static auto pid0_kP = controlLoop::comp_bot::elevator::lift::kP;
         constexpr static auto pid0_kI = controlLoop::comp_bot::elevator::lift::kI;
         constexpr static auto pid0_kD = controlLoop::comp_bot::elevator::lift::kD;
@@ -244,7 +247,20 @@ namespace motorConfig {
       using secondaryClimbing = motorConfig::comp_bot::climber::secondaryClimbing;
     }  // namespace climber
     namespace elevator {
-      using primaryElevator = motorConfig::comp_bot::elevator::primaryElevator;
+      struct primaryElevator {
+        constexpr static auto inverted = false;
+        constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
+        constexpr static auto statorCurrentLimit = 40_A;
+        constexpr static auto selectedSensor = ctre::phoenix6::signals::FeedbackSensorSourceValue::RotorSensor;
+        constexpr static auto pid0_kP = controlLoop::comp_bot::elevator::lift::kP;
+        constexpr static auto pid0_kI = controlLoop::comp_bot::elevator::lift::kI;
+        constexpr static auto pid0_kD = controlLoop::comp_bot::elevator::lift::kD;
+        constexpr static auto pid0_kS = controlLoop::comp_bot::elevator::lift::kS;
+        constexpr static auto pid0_kV = controlLoop::comp_bot::elevator::lift::kV;
+        constexpr static auto pid0_kA = controlLoop::comp_bot::elevator::lift::kA;
+        constexpr static auto pid0_kG = controlLoop::comp_bot::elevator::lift::kG;
+        constexpr static auto pid0_gravityType = controlLoop::comp_bot::elevator::lift::gravityType;
+      };
       using secondaryElevator = motorConfig::comp_bot::elevator::secondaryElevator;
       using carriageRotation = motorConfig::comp_bot::elevator::carriageRotation;
     }  // namespace elevator
