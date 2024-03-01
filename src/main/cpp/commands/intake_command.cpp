@@ -10,8 +10,14 @@ IntakeCommand::IntakeCommand(IntakeSubsystem* intake,
                              ShooterSubsystem* shooter,
                              ElevatorSubsystem* elevator,
                              argos_lib::SwappableControllersSubsystem* controllers,
-                             SimpleLedSubsystem* leds)
-    : m_pIntake{intake}, m_pShooter{shooter}, m_pElevator{elevator}, m_pControllers{controllers}, m_pLeds{leds} {
+                             SimpleLedSubsystem* leds,
+                             bool endOnNoteAcquisition)
+    : m_pIntake{intake}
+    , m_pShooter{shooter}
+    , m_pElevator{elevator}
+    , m_pControllers{controllers}
+    , m_pLeds{leds}
+    , m_endOnNoteAcquisition{endOnNoteAcquisition} {
   AddRequirements({m_pIntake, m_pShooter, m_pElevator});
 }
 
@@ -71,5 +77,5 @@ void IntakeCommand::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool IntakeCommand::IsFinished() {
-  return false;
+  return m_endOnNoteAcquisition && m_pShooter->IsNotePresent();
 }
