@@ -293,9 +293,6 @@ void SwerveDriveSubsystem::SwerveDrive(const double fwVelocity, const double sid
     m_manualOverride = true;
     m_followingProfile = false;
     m_profileComplete = false;
-
-    m_currentFwVel = fwVelocity;
-    m_currentSideVel = sideVelocity;
   }
 
   SwerveDriveSubsystem::Velocities velocities{fwVelocity, sideVelocity, rotVelocity};
