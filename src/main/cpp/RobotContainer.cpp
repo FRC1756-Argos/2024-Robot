@@ -32,7 +32,6 @@
 #include <memory>
 #include <optional>
 
-#include "Constants.h"
 #include "argos_lib/subsystems/led_subsystem.h"
 #include "commands/drive_to_position.h"
 #include "commands/intake_command.h"
@@ -103,15 +102,20 @@ RobotContainer::RobotContainer()
 
           auto angle = m_visionSubSystem.getShooterAngle();
           if (angle != std::nullopt) {
-            frc::SmartDashboard::PutNumber("(DRIVE) Aim angle", angle.value().to<double>());
-            m_elevatorSubsystem.SetCarriageAngle(angle.value());
+            units::degree_t finalAngle = angle.value() - units::degree_t(speeds::drive::medialIntertialOffset *
+                                                                         deadbandTranslationSpeeds.leftSpeedPct);
+            m_elevatorSubsystem.SetCarriageAngle(finalAngle);
           }
 
           if (horzOffset != std::nullopt && cameraOffset != std::nullopt) {
-            frc::SmartDashboard::PutNumber("(DRIVE) VISION offset", horzOffset.value().to<double>());
             double offset = horzOffset.value().to<double>();
             offset -= cameraOffset.value().to<double>();
-            rotateSpeed = -offset * 0.016;
+            auto finalOffset =
+                offset + speeds::drive::lateralIntertialOffset * deadbandTranslationSpeeds.forwardSpeedPct;
+            rotateSpeed = -finalOffset * 0.016;
+            // simmer down the translation speeds
+            deadbandTranslationSpeeds.forwardSpeedPct *= speeds::drive::aimSpeedReductionPct;
+            deadbandTranslationSpeeds.leftSpeedPct *= speeds::drive::aimSpeedReductionPct;
           } else {
             rotateSpeed = deadbandRotSpeed;
           }
@@ -137,7 +141,6 @@ RobotContainer::RobotContainer()
         frc::SmartDashboard::PutNumber(
             "(DRIVER) Joystick Right X",
             m_controllers.DriverController().GetX(argos_lib::XboxController::JoystickHand::kRightHand));
-        frc::SmartDashboard::PutNumber("(DRIVER) rotSpeed", deadbandRotSpeed);
       },
       {&m_swerveDrive}));
 
