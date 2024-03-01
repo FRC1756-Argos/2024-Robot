@@ -127,10 +127,7 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
     , m_rotationalFollowerTuner_I{"argos/drive/rotationalFollower"}
     , m_rotationalFollowerTuner_D{"argos/drive/rotationalFollower"}
     , m_rotationalFollowerConstraintTuner_vel{"argos/drive/rotationalFollower"}
-    , m_rotationalFollowerConstraintTuner_accel{"argos/drive/rotationalFollower"}
-    , m_currentFwVel(0.0)
-    , m_currentSideVel(0.0)
-    , m_currentRotVel(0.0) {
+    , m_rotationalFollowerConstraintTuner_accel{"argos/drive/rotationalFollower"} {
   // TURN MOTORS CONFIG
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::drive::frontLeftTurn,
                                          motorConfig::practice_bot::drive::frontLeftTurn>(
@@ -282,25 +279,6 @@ wpi::array<frc::SwerveModuleState, 4> SwerveDriveSubsystem::GetCurrentModuleStat
 
 wpi::array<frc::SwerveModulePosition, 4> SwerveDriveSubsystem::GetCurrentModulePositions() {
   return {m_frontLeft.GetPosition(), m_frontRight.GetPosition(), m_backRight.GetPosition(), m_backLeft.GetPosition()};
-}
-
-void SwerveDriveSubsystem::SwerveRotate(const double rotVelocity) {
-  SwerveDriveSubsystem::Velocities velocities{m_currentFwVel, m_currentSideVel, rotVelocity};
-  if (rotVelocity > 0.0) {
-    auto moduleStates = GetRawModuleStates(velocities);
-
-    m_frontLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-        moduleStates.at(indexes::swerveModules::frontLeftIndex).angle.Degrees())));
-
-    m_frontRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-        moduleStates.at(indexes::swerveModules::frontRightIndex).angle.Degrees())));
-
-    m_backRight.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-        moduleStates.at(indexes::swerveModules::backRightIndex).angle.Degrees())));
-
-    m_backLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
-        moduleStates.at(indexes::swerveModules::backLeftIndex).angle.Degrees())));
-  }
 }
 
 void SwerveDriveSubsystem::SwerveDrive(const double fwVelocity, const double sideVelocity, const double rotVelocity) {

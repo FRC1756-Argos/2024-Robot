@@ -91,21 +91,51 @@ RobotContainer::RobotContainer()
         auto deadbandRotSpeed = m_driveRotSpeed(
             -m_controllers.DriverController().GetX(argos_lib::XboxController::JoystickHand::kRightHand));
 
+        auto rotateSpeed = deadbandRotSpeed;
+
+        frc::SmartDashboard::PutBoolean("(DRIVER) IsAimingActive", m_visionSubSystem.IsAimWhileMoveActive());
+
+        if (m_visionSubSystem.IsAimWhileMoveActive()) {
+          auto horzOffset = m_visionSubSystem.GetHorizontalOffsetToTarget();
+          auto cameraOffset = m_visionSubSystem.getShooterOffset();
+
+          auto angle = m_visionSubSystem.getShooterAngle();
+          if (angle != std::nullopt) {
+            frc::SmartDashboard::PutNumber("(DRIVE) Aim angle", angle.value().to<double>());
+            m_elevatorSubsystem.SetCarriageAngle(angle.value());
+          }
+
+          if (horzOffset != std::nullopt && cameraOffset != std::nullopt) {
+            frc::SmartDashboard::PutNumber("(DRIVE) VISION offset", horzOffset.value().to<double>());
+            double offset = horzOffset.value().to<double>();
+            offset -= cameraOffset.value().to<double>();
+            rotateSpeed = -offset * 0.016;
+          } else {
+            rotateSpeed = deadbandRotSpeed;
+          }
+        }
+
         if (frc::DriverStation::IsTeleop() &&
             (m_swerveDrive.GetManualOverride() || deadbandTranslationSpeeds.forwardSpeedPct != 0 ||
-             deadbandTranslationSpeeds.leftSpeedPct != 0 || deadbandRotSpeed != 0)) {
+             deadbandTranslationSpeeds.leftSpeedPct != 0 || rotateSpeed != 0)) {
+          m_visionSubSystem.SetEnableStaticRotation(false);
           m_swerveDrive.SwerveDrive(
               deadbandTranslationSpeeds.forwardSpeedPct,
               deadbandTranslationSpeeds.leftSpeedPct,
-              deadbandRotSpeed);  // X axis is positive right (CW), but swerve coordinates are positive left (CCW)
+              rotateSpeed);  // X axis is positive right (CW), but swerve coordinates are positive left (CCW)
         }
         // DEBUG STUFF
+        frc::SmartDashboard::PutBoolean("(DRIVER) Static Enable", m_visionSubSystem.IsStaticRotationEnabled());
         frc::SmartDashboard::PutNumber(
             "(DRIVER) Joystick Left Y",
             m_controllers.DriverController().GetY(argos_lib::XboxController::JoystickHand::kLeftHand));
         frc::SmartDashboard::PutNumber(
             "(DRIVER) Joystick Left X",
             m_controllers.DriverController().GetX(argos_lib::XboxController::JoystickHand::kLeftHand));
+        frc::SmartDashboard::PutNumber(
+            "(DRIVER) Joystick Right X",
+            m_controllers.DriverController().GetX(argos_lib::XboxController::JoystickHand::kRightHand));
+        frc::SmartDashboard::PutNumber("(DRIVER) rotSpeed", deadbandRotSpeed);
       },
       {&m_swerveDrive}));
 
@@ -149,6 +179,7 @@ void RobotContainer::ConfigureBindings() {
   auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
   auto aim = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
+  auto aimWhileMove = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kA);
 
   auto ampPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
   auto highPodiumPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kX);
@@ -192,7 +223,10 @@ void RobotContainer::ConfigureBindings() {
   intake.WhileTrue(&m_IntakeCommand);
   shoot.WhileTrue(&m_ShooterCommand);
   aim.WhileTrue(&m_autoAimCommand);
-
+  aimWhileMove
+      .OnTrue(frc2::InstantCommand([this]() { m_visionSubSystem.SetAimWhileMove(true); }, {&m_visionSubSystem}).ToPtr())
+      .OnFalse(
+          frc2::InstantCommand([this]() { m_visionSubSystem.SetAimWhileMove(false); }, {&m_visionSubSystem}).ToPtr());
   // CLIMBER TRIGGER ACTIVATION
   startupClimberHomeTrigger.OnTrue(&m_ClimberHomeCommand);
 
