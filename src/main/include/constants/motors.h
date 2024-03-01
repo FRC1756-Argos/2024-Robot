@@ -136,6 +136,7 @@ namespace motorConfig {
       struct feedMotor {
         constexpr static auto inverted = false;
         constexpr static auto continuousCurrentLimit = 20_A;
+        constexpr static auto voltCompSat = 11_V;
         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Brake;
         constexpr static auto forwardLimitSwitchSource =
             ctre::phoenix::motorcontrol::LimitSwitchSource::LimitSwitchSource_FeedbackConnector;
@@ -148,6 +149,7 @@ namespace motorConfig {
       struct primaryIntake {
         constexpr static auto inverted = false;
         constexpr static auto continuousCurrentLimit = 30_A;
+        constexpr static auto voltCompSat = 11_V;
         constexpr static auto neutralMode = ctre::phoenix::motorcontrol::NeutralMode::Brake;
         constexpr static auto forwardLimitSwitchSource =
             ctre::phoenix::motorcontrol::LimitSwitchSource::LimitSwitchSource_FeedbackConnector;
