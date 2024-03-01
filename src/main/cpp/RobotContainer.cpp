@@ -109,10 +109,6 @@ RobotContainer::RobotContainer()
 
           if (horzOffset != std::nullopt && cameraOffset != std::nullopt) {
             auto lateralSpeedPct = deadbandTranslationSpeeds.leftSpeedPct;
-            // for blue alliance required counter inertia is opposite when we go left
-            if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
-              lateralSpeedPct *= -1;
-            }
             double offset = horzOffset.value().to<double>();
             offset -= cameraOffset.value().to<double>();
             auto finalOffset = offset + speeds::drive::lateralInertialOffset * lateralSpeedPct;
