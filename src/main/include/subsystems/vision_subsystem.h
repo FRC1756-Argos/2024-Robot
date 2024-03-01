@@ -152,6 +152,12 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   void RequestFilterReset();
 
+  void SetAimWhileMove(bool val);
+  [[nodiscard]] bool IsAimWhileMoveActive();
+
+  void SetEnableStaticRotation(bool val);
+  [[nodiscard]] bool IsStaticRotationEnabled();
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -180,6 +186,8 @@ class VisionSubsystem : public frc2::SubsystemBase {
   LimelightTarget::tValues m_oldTargetValues;  ///< The old robot poses and latencies
   bool m_usePolynomial;                        ///< specifies whether to use the polynomial to obtain shooter angle
   bool m_useTrigonometry;                      ///< specifies whether to use the trigonometry to obtain shooter angle
+  bool m_isAimWhileMoveActive;                 ///< true if aiming trigger is pressed and locked
+  bool m_enableStaticRotation;                 ///< true if you want to rotate in the absence of translation input
 
   argos_lib::InterpolationMap<decltype(shooterRange::shooterAngle.front().inVal),
                               shooterRange::shooterAngle.size(),

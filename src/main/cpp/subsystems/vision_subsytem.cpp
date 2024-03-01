@@ -20,6 +20,8 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
     , m_pDriveSubsystem(pDriveSubsystem)
     , m_usePolynomial(true)
     , m_useTrigonometry(false)
+    , m_isAimWhileMoveActive(false)
+    , m_enableStaticRotation(false)
     , m_shooterAngleMap{shooterRange::shooterAngle}
     , m_shooterSpeedMap{shooterRange::shooterSpeed} {}
 
@@ -67,6 +69,22 @@ std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
   }
 
   return std::nullopt;
+}
+
+bool VisionSubsystem::IsAimWhileMoveActive() {
+  return m_isAimWhileMoveActive;
+}
+
+void VisionSubsystem::SetAimWhileMove(bool val) {
+  m_isAimWhileMoveActive = val;
+}
+
+bool VisionSubsystem::IsStaticRotationEnabled() {
+  return m_enableStaticRotation;
+}
+
+void VisionSubsystem::SetEnableStaticRotation(bool val) {
+  m_enableStaticRotation = val;
 }
 
 units::degree_t VisionSubsystem::getShooterAngle(const units::inch_t distance, const InterpolationMode mode) const {

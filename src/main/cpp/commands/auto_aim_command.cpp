@@ -52,8 +52,11 @@ void AutoAimCommand::Execute() {
     frc::SmartDashboard::PutNumber("(AIM) offset", horzOffset.value().to<double>());
     double offset = horzOffset.value().to<double>();
     offset -= cameraOffset.value().to<double>();
-    m_pSwerveDrive->SwerveDrive(0.0, 0.0, -offset * 0.016);
-    frc::SmartDashboard::PutNumber("(AIM) offset2", offset);
+
+    m_pSwerveDrive->SwerveDrive(0, 0, -offset * 0.016);
+    if (m_pVision->IsStaticRotationEnabled()) {
+      frc::SmartDashboard::PutNumber("(AIM) offset2", offset);
+    }
 
     if (m_pLeds) {
       if (std::abs(offset) < 5 && m_pShooter->ShooterAtSpeed()) {
