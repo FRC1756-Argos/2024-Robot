@@ -6,13 +6,18 @@
 
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
+#include <units/length.h>
 
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
+#include "subsystems/vision_subsystem.h"
 
-class GoToTrapPositionCommand : public frc2::CommandHelper<frc2::Command, GoToTrapPositionCommand> {
+class PrimeShooterCommand : public frc2::CommandHelper<frc2::Command, PrimeShooterCommand> {
  public:
-  GoToTrapPositionCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator);
+  PrimeShooterCommand(ShooterSubsystem& shooter,
+                      ElevatorSubsystem& elevator,
+                      VisionSubsystem& vision,
+                      const units::inch_t distance);
 
   void Initialize() override;
 
@@ -22,17 +27,9 @@ class GoToTrapPositionCommand : public frc2::CommandHelper<frc2::Command, GoToTr
 
   bool IsFinished() override;
 
-  bool GetIsTrapDone();
-
-  void ResetIsTrapDone();
-
  private:
-  ShooterSubsystem* m_pShooter;
-  ElevatorSubsystem* m_pElevator;
-
-  frc2::CommandPtr m_allCommands;
-
-  bool is_0_deg;
-
-  bool is_trap_done;
+  ShooterSubsystem& m_Shooter;
+  ElevatorSubsystem& m_Elevator;
+  VisionSubsystem& m_Vision;
+  const units::inch_t m_distance;
 };

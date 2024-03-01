@@ -8,6 +8,9 @@
 #include <frc/geometry/Pose3d.h>
 #include <frc/geometry/Transform3d.h>
 #include <frc2/command/SubsystemBase.h>
+#include <units/angle.h>
+#include <units/angular_velocity.h>
+#include <units/length.h>
 
 #include "argos_lib/config/config_types.h"
 #include "argos_lib/general/interpolation.h"
@@ -108,6 +111,8 @@ class VisionSubsystem : public frc2::SubsystemBase {
  public:
   VisionSubsystem(const argos_lib::RobotInstance instance, SwerveDriveSubsystem* pDriveSubsystem);
 
+  enum class InterpolationMode { LinearInterpolation, Polynomial, Trig };
+
   /**
    * @brief Get the distance to the tag
    *
@@ -161,9 +166,14 @@ class VisionSubsystem : public frc2::SubsystemBase {
   /// @brief it disables (duh)
   void Disable();
 
+  [[nodiscard]] units::degree_t getShooterAngle(const units::inch_t distance, const InterpolationMode mode) const;
   [[nodiscard]] std::optional<units::degree_t> getShooterAngle();
 
   [[nodiscard]] std::optional<units::degree_t> getShooterOffset();
+
+  [[nodiscard]] units::angular_velocity::revolutions_per_minute_t getShooterSpeed(const units::inch_t distance,
+                                                                                  const InterpolationMode mode) const;
+  [[nodiscard]] std::optional<units::angular_velocity::revolutions_per_minute_t> getShooterSpeed();
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -183,4 +193,8 @@ class VisionSubsystem : public frc2::SubsystemBase {
                               shooterRange::shooterAngle.size(),
                               decltype(shooterRange::shooterAngle.front().outVal)>
       m_shooterAngleMap;  ///< Maps a distance to a shooter pitch angle
+  argos_lib::InterpolationMap<decltype(shooterRange::shooterSpeed.front().inVal),
+                              shooterRange::shooterSpeed.size(),
+                              decltype(shooterRange::shooterSpeed.front().outVal)>
+      m_shooterSpeedMap;  ///< Maps a distance to a shooter speed
 };

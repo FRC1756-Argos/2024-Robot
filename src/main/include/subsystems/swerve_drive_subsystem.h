@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <frc/ADIS16448_IMU.h>
+#include <choreo/lib/Choreo.h>
 #include <frc/Timer.h>
 #include <frc/controller/HolonomicDriveController.h>
 #include <frc/controller/PIDController.h>
@@ -17,6 +17,7 @@
 #include <frc2/command/SubsystemBase.h>
 
 #include <memory>
+#include <thread>
 
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/Pigeon2.hpp>
@@ -68,6 +69,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
   explicit SwerveDriveSubsystem(const argos_lib::RobotInstance instance);
 
+  virtual ~SwerveDriveSubsystem();
+
   /**
    * @brief Handle the robot disabling
    */
@@ -93,10 +96,16 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   /// @param velocity Magnitude of velocity on [0, 1] to apply
   void SwerveDrive(const units::degree_t& velAngle, const double& velocity);
 
+  /// @brief Drive a set chassis speed.  Used for choreo path tracking
+  /// @param desiredChassisSpeed Motion parameters
+  void SwerveDrive(frc::ChassisSpeeds desiredChassisSpeed);
+
   /**
    * @brief Stop all motors
    */
   void StopDrive();
+
+  choreolib::ChoreoControllerFunction GetChoreoControllerFunction();
 
   /**
    * @brief Save homes to persistent storage and updates module motors
@@ -123,16 +132,18 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
   frc::Rotation2d GetContinuousOdometryAngle();
 
+  frc::Rotation2d GetRawOdometryAngle();
+
   frc::Rotation2d GetNearestSquareAngle();
 
   frc::Pose2d GetContinuousOdometry();
 
+  frc::Pose2d GetRawOdometry();
+
   /**
-   * @brief Reads module states & gyro, updates pose estimator, and returns latest pose estimate
-   *
-   * @return Estimate of robot pose
+   * @brief Reads module states & gyro and updates pose estimator.
    */
-  frc::Pose2d UpdateEstimatedPose();
+  void UpdateEstimatedPose();
 
   /**
    * @brief Get the field-centric angle of the robot based on gyro and saved reference orientation
@@ -258,7 +269,6 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   SwerveModule m_backLeft;    ///< Back left swerve module
 
   // GYROSCOPIC SENSORS
-  frc::ADIS16448_IMU m_imu;
   ctre::phoenix6::hardware::Pigeon2 m_pigeonIMU;
 
   units::degree_t m_fieldHomeOffset;  ///< Offset from IMU angle to 0 field angle (intake away from driver station)
@@ -280,6 +290,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   units::degree_t m_continuousOdometryOffset;  ///< Offset to convert [-180,180] odometry angle to continuous angle
 
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;  ///< accounts vision-based measurements for odometry
+  std::thread m_odometryThread;                      ///< Updates robot odometry at very high rate
+  bool m_stillRunning;                               ///< false indicates subsystem is being destroyed
 
   // std::FILE SYSTEM HOMING STORAGE
   argos_lib::SwerveFSHomingStorage m_fsStorage;  ///< Roborio filesystem access for homes
@@ -304,6 +316,7 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   argos_lib::NTSubscriber m_rotationalFollowerConstraintTuner_vel;
   argos_lib::NTSubscriber m_rotationalFollowerConstraintTuner_accel;
 
+  wpi::array<frc::SwerveModuleState, 4> GetRawModuleStates(frc::ChassisSpeeds velocities);
   /**
  * @brief Get the Raw Module States object and switch between robot-centric and field-centric
  *
@@ -342,4 +355,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
   units::degree_t GetIMUYaw();
   void ResetIMUYaw();
+
+  wpi::array<frc::SwerveModuleState, 4> OptimizeAllModules(wpi::array<frc::SwerveModuleState, 4> rawStates);
+
+  void ClosedLoopDrive(wpi::array<frc::SwerveModuleState, 4> moduleStates);
 };

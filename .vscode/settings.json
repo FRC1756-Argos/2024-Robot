@@ -108,14 +108,26 @@
     "editor.defaultFormatter": "xaver.clang-format"
   },
   "cSpell.words": [
+    "ADIS",
+    "cancoder",
+    "choreo",
+    "choreolib",
+    "Codespaces",
     "ctre",
+    "deadband",
     "Debouncer",
+    "Doxygen",
     "holonomic",
+    "LCHS",
+    "Leds",
     "odometry",
+    "Roborio",
     "sensorunit",
+    "Setpoint",
     "subwoofer",
     "talonsrx",
-    "teleop"
+    "teleop",
+    "wpiformat"
   ],
   "todo-tree.general.tags": [
     "BUG",
