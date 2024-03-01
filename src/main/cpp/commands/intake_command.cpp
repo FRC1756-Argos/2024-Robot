@@ -22,7 +22,7 @@ void IntakeCommand::Initialize() {
   m_pIntake->NoteDetectionOverride(false);
   m_pShooter->NoteDetectionOverride(false);
   m_pIntake->Intake(1);
-  m_pShooter->Feed(0.3);
+  m_pShooter->Feed(0.8);
   m_pShooter->SetAmpAndTrapMode(false);
 }
 
@@ -40,7 +40,7 @@ void IntakeCommand::Execute() {
     }
   } else if (m_pIntake->IsNotePresent()) {
     // Reduce intake speed during handoff to be gentler to notes
-    m_pIntake->Intake(0.5);
+    m_pIntake->Intake(0.8);
   } else {
     m_pIntake->Intake(1);
   }
