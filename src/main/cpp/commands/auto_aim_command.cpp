@@ -33,9 +33,16 @@ void AutoAimCommand::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void AutoAimCommand::Execute() {
   auto angle = m_pVision->getShooterAngle();
+  auto speed = m_pVision->getShooterSpeed();
   if (angle != std::nullopt) {
     frc::SmartDashboard::PutNumber("(AIM) angle", angle.value().to<double>());
     m_pElevator->SetCarriageAngle(angle.value());
+  }
+
+  if (speed != std::nullopt) {
+    frc::SmartDashboard::PutNumber("(AIM) speed",
+                                   units::angular_velocity::revolutions_per_minute_t{speed.value()}.to<double>());
+    m_pShooter->ShooterGoToSpeed(speed.value());
   }
 
   auto horzOffset = m_pVision->GetHorizontalOffsetToTarget();
@@ -45,13 +52,16 @@ void AutoAimCommand::Execute() {
     frc::SmartDashboard::PutNumber("(AIM) offset", horzOffset.value().to<double>());
     double offset = horzOffset.value().to<double>();
     offset -= cameraOffset.value().to<double>();
-    m_pSwerveDrive->SwerveDrive(0.0, 0.0, -offset * 0.016);
-    frc::SmartDashboard::PutNumber("(AIM) offset2", offset);
+
+    m_pSwerveDrive->SwerveDrive(0, 0, -offset * 0.016);
+    if (m_pVision->IsStaticRotationEnabled()) {
+      frc::SmartDashboard::PutNumber("(AIM) offset2", offset);
+    }
 
     if (m_pLeds) {
       if (std::abs(offset) < 5 && m_pShooter->ShooterAtSpeed()) {
-        m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kReallyGreen, false); },
-                                  200_ms);
+        m_pLeds->TemporaryAnimate(
+            [this]() { m_pLeds->SetAllGroupsColor(argos_lib::gamma_corrected_colors::kReallyGreen, false); }, 200_ms);
       }
     }
     if (m_pShooter->ShooterAtSpeed() && std::abs(offset) < 5) {
@@ -59,14 +69,16 @@ void AutoAimCommand::Execute() {
         m_pControllers->DriverController().SetVibration(argos_lib::VibrationAlternatePulse(500_ms, 1.0, 0.0));
       }
       if (m_pLeds) {
-        m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kReallyGreen, false); },
-                                  200_ms);
+        m_pLeds->TemporaryAnimate(
+            [this]() { m_pLeds->SetAllGroupsColor(argos_lib::gamma_corrected_colors::kReallyGreen, false); }, 200_ms);
       }
     } else if (m_pLeds) {
-      m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kCatYellow, false); }, 200_ms);
+      m_pLeds->TemporaryAnimate(
+          [this]() { m_pLeds->SetAllGroupsColor(argos_lib::gamma_corrected_colors::kCatYellow, false); }, 200_ms);
     }
   } else if (m_pLeds) {
-    m_pLeds->TemporaryAnimate([this]() { m_pLeds->SetAllGroupsColor(argos_lib::colors::kReallyRed, false); }, 200_ms);
+    m_pLeds->TemporaryAnimate(
+        [this]() { m_pLeds->SetAllGroupsColor(argos_lib::gamma_corrected_colors::kReallyRed, false); }, 200_ms);
   }
 }
 

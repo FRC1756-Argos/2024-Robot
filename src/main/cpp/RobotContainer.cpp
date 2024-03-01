@@ -32,7 +32,6 @@
 #include <memory>
 #include <optional>
 
-#include "Constants.h"
 #include "argos_lib/subsystems/led_subsystem.h"
 #include "commands/drive_to_position.h"
 #include "commands/intake_command.h"
@@ -67,8 +66,10 @@ RobotContainer::RobotContainer()
     , m_GoToLowPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, false}
     , m_GoToSubwooferPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToTrapPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
+    , m_ClimberCommand{&m_climberSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_controllers}
     , m_autoNothing{}
-    , m_autoSelector{{&m_autoNothing}, &m_autoNothing}
+    , m_autoChoreoTest{m_elevatorSubsystem, m_intakeSubsystem, m_ShooterSubSystem, m_swerveDrive, m_visionSubSystem}
+    , m_autoSelector{{&m_autoNothing, &m_autoChoreoTest}, &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}
     , m_rotationalNudgeRate{4 / 1_s}
     , m_distanceNudgeRate{12 / 1_s}
@@ -91,21 +92,55 @@ RobotContainer::RobotContainer()
         auto deadbandRotSpeed = m_driveRotSpeed(
             -m_controllers.DriverController().GetX(argos_lib::XboxController::JoystickHand::kRightHand));
 
+        auto rotateSpeed = deadbandRotSpeed;
+
+        frc::SmartDashboard::PutBoolean("(DRIVER) IsAimingActive", m_visionSubSystem.IsAimWhileMoveActive());
+
+        if (m_visionSubSystem.IsAimWhileMoveActive()) {
+          auto horzOffset = m_visionSubSystem.GetHorizontalOffsetToTarget();
+          auto cameraOffset = m_visionSubSystem.getShooterOffset();
+
+          auto angle = m_visionSubSystem.getShooterAngle();
+          if (angle != std::nullopt) {
+            units::degree_t finalAngle = angle.value() - units::degree_t(speeds::drive::medialIntertialOffset *
+                                                                         deadbandTranslationSpeeds.leftSpeedPct);
+            m_elevatorSubsystem.SetCarriageAngle(finalAngle);
+          }
+
+          if (horzOffset != std::nullopt && cameraOffset != std::nullopt) {
+            double offset = horzOffset.value().to<double>();
+            offset -= cameraOffset.value().to<double>();
+            auto finalOffset =
+                offset + speeds::drive::lateralIntertialOffset * deadbandTranslationSpeeds.forwardSpeedPct;
+            rotateSpeed = -finalOffset * 0.016;
+            // simmer down the translation speeds
+            deadbandTranslationSpeeds.forwardSpeedPct *= speeds::drive::aimSpeedReductionPct;
+            deadbandTranslationSpeeds.leftSpeedPct *= speeds::drive::aimSpeedReductionPct;
+          } else {
+            rotateSpeed = deadbandRotSpeed;
+          }
+        }
+
         if (frc::DriverStation::IsTeleop() &&
             (m_swerveDrive.GetManualOverride() || deadbandTranslationSpeeds.forwardSpeedPct != 0 ||
-             deadbandTranslationSpeeds.leftSpeedPct != 0 || deadbandRotSpeed != 0)) {
+             deadbandTranslationSpeeds.leftSpeedPct != 0 || rotateSpeed != 0)) {
+          m_visionSubSystem.SetEnableStaticRotation(false);
           m_swerveDrive.SwerveDrive(
               deadbandTranslationSpeeds.forwardSpeedPct,
               deadbandTranslationSpeeds.leftSpeedPct,
-              deadbandRotSpeed);  // X axis is positive right (CW), but swerve coordinates are positive left (CCW)
+              rotateSpeed);  // X axis is positive right (CW), but swerve coordinates are positive left (CCW)
         }
         // DEBUG STUFF
+        frc::SmartDashboard::PutBoolean("(DRIVER) Static Enable", m_visionSubSystem.IsStaticRotationEnabled());
         frc::SmartDashboard::PutNumber(
             "(DRIVER) Joystick Left Y",
             m_controllers.DriverController().GetY(argos_lib::XboxController::JoystickHand::kLeftHand));
         frc::SmartDashboard::PutNumber(
             "(DRIVER) Joystick Left X",
             m_controllers.DriverController().GetX(argos_lib::XboxController::JoystickHand::kLeftHand));
+        frc::SmartDashboard::PutNumber(
+            "(DRIVER) Joystick Right X",
+            m_controllers.DriverController().GetX(argos_lib::XboxController::JoystickHand::kRightHand));
       },
       {&m_swerveDrive}));
 
@@ -149,6 +184,7 @@ void RobotContainer::ConfigureBindings() {
   auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
   auto aim = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
+  auto aimWhileMove = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kA);
 
   auto ampPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
   auto highPodiumPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kX);
@@ -156,6 +192,8 @@ void RobotContainer::ConfigureBindings() {
   auto subwooferPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kY);
   auto trapPositionTrigger =
       m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
+  auto climberSequenceTrigger =
+      m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
 
   // ELEVATOR TRIGGERS
   auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
@@ -192,7 +230,10 @@ void RobotContainer::ConfigureBindings() {
   intake.WhileTrue(&m_IntakeCommand);
   shoot.WhileTrue(&m_ShooterCommand);
   aim.WhileTrue(&m_autoAimCommand);
-
+  aimWhileMove
+      .OnTrue(frc2::InstantCommand([this]() { m_visionSubSystem.SetAimWhileMove(true); }, {&m_visionSubSystem}).ToPtr())
+      .OnFalse(
+          frc2::InstantCommand([this]() { m_visionSubSystem.SetAimWhileMove(false); }, {&m_visionSubSystem}).ToPtr());
   // CLIMBER TRIGGER ACTIVATION
   startupClimberHomeTrigger.OnTrue(&m_ClimberHomeCommand);
 
@@ -215,6 +256,8 @@ void RobotContainer::ConfigureBindings() {
                          .ToPtr());
   (climberUp || climberDown)
       .OnFalse(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.0); }, {&m_climberSubsystem}).ToPtr());
+
+  climberSequenceTrigger.OnTrue(&m_ClimberCommand);
 
   // ELEVATOR TRIGGER ACTIVATION
   elevatorLiftManualInput.OnTrue(
@@ -262,6 +305,8 @@ void RobotContainer::ConfigureBindings() {
   lowPodiumPositionTrigger.OnTrue(&m_GoToLowPodiumPositionCommand);
   subwooferPositionTrigger.OnTrue(&m_GoToSubwooferPositionCommand);
   trapPositionTrigger.OnTrue(&m_GoToTrapPositionCommand);
+
+  std::cout << "&swerve" << &m_swerveDrive << '\n';
 }
 
 void RobotContainer::Disable() {

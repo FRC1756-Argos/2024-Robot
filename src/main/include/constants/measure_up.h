@@ -30,11 +30,13 @@ namespace measure_up {
   }  // namespace swerve_offsets
   namespace shooter_targets {
     constexpr auto speakerTagHeight = 58_in;  // needs update
-    constexpr auto speakerOpeningHeightFromShooter = 82.5_in;
+    constexpr auto speakerOpeningHeightFromShooter = 54.5_in;
     constexpr auto trapOpeningHeight = 36.25_in;
     constexpr auto cameraOffsetFromShooter = 21.0_in;
     constexpr auto offsetDistanceThreshold = 140_in;
     constexpr auto offsetRotationThreshold = 50_deg;
+    constexpr auto speakerOpeningHeightFromGround = 80.5_in;
+    constexpr auto cameraHeightToAprilTag = 28.63_in;
   }  // namespace shooter_targets
   namespace camera_front {
     constexpr auto cameraX = 0_in;  /// @todo real mounting offsets
@@ -49,7 +51,9 @@ namespace measure_up {
   namespace climber {
     constexpr auto lowerLimit = 3.375_in;  // from floor to bottom of linear rail carrige
     constexpr auto upperLimit = 24.5_in;   // approx 19.5in of travel, get better value later
-  }                                        // namespace climber
+    constexpr auto climbRaisedHeight = 24_in;
+    constexpr auto climbLoweredHeight = 4_in;
+  }  // namespace climber
 
   namespace elevator {
     namespace lift {

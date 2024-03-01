@@ -19,6 +19,7 @@ GoToTrapPositionCommand::GoToTrapPositionCommand(ShooterSubsystem* shooter, Elev
 
 // Called when the command is initially scheduled.
 void GoToTrapPositionCommand::Initialize() {
+  is_trap_done = false;
   m_pShooter->SetAmpAndTrapMode(true);
   m_pShooter->Disable();
   m_pElevator->SetCarriageAngle(90_deg);
@@ -41,9 +42,19 @@ void GoToTrapPositionCommand::Execute() {
 }
 
 // Called once the command ends or is interrupted.
-void GoToTrapPositionCommand::End(bool interrupted) {}
+void GoToTrapPositionCommand::End(bool interrupted) {
+  is_trap_done = true;
+}
 
 // Returns true when the command should end.
 bool GoToTrapPositionCommand::IsFinished() {
   return m_pElevator->IsElevatorAtSetPoint();
+}
+
+bool GoToTrapPositionCommand::GetIsTrapDone() {
+  return is_trap_done;
+}
+
+void GoToTrapPositionCommand::ResetIsTrapDone() {
+  is_trap_done = false;
 }
