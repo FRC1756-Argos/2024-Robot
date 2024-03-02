@@ -30,8 +30,6 @@ class GoToTrapPositionCommand : public frc2::CommandHelper<frc2::Command, GoToTr
   ShooterSubsystem* m_pShooter;
   ElevatorSubsystem* m_pElevator;
 
-  frc2::CommandPtr m_allCommands;
-
   bool is_0_deg;
 
   bool is_trap_done;

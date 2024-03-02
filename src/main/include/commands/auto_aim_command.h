@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <argos_lib/general/debouncer.h>
 #include <argos_lib/subsystems/swappable_controllers_subsystem.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
@@ -21,7 +22,8 @@ class AutoAimCommand : public frc2::CommandHelper<frc2::Command, AutoAimCommand>
                  ElevatorSubsystem* elevator,
                  VisionSubsystem* vision,
                  argos_lib::SwappableControllersSubsystem* controllers,
-                 SimpleLedSubsystem* leds);
+                 SimpleLedSubsystem* leds,
+                 bool endWhenAimed = false);
 
   void Initialize() override;
 
@@ -38,4 +40,6 @@ class AutoAimCommand : public frc2::CommandHelper<frc2::Command, AutoAimCommand>
   VisionSubsystem* m_pVision;
   argos_lib::SwappableControllersSubsystem* m_pControllers;
   SimpleLedSubsystem* m_pLeds;
+  bool m_endWhenAimed;
+  argos_lib::Debouncer m_aimedDebouncer;
 };

@@ -13,7 +13,7 @@
 #include "constants/measure_up.h"
 
 GoToTrapPositionCommand::GoToTrapPositionCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator)
-    : m_pShooter{shooter}, m_pElevator{elevator}, m_allCommands{frc2::InstantCommand{[]() {}, {}}} {
+    : m_pShooter{shooter}, m_pElevator{elevator} {
   AddRequirements({m_pShooter, m_pElevator});
 }
 
@@ -33,6 +33,7 @@ void GoToTrapPositionCommand::Execute() {
     is_0_deg = true;
   }
   if (is_0_deg && m_pElevator->IsLiftAtSetPoint()) {
+    frc2::WaitCommand(100_ms);
     m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::trapAngle);
   }
 
