@@ -102,7 +102,7 @@ RobotContainer::RobotContainer()
 
           auto angle = m_visionSubSystem.getShooterAngle();
           if (angle != std::nullopt) {
-            units::degree_t finalAngle = angle.value() + units::degree_t(speeds::drive::medialInertialOffset *
+            units::degree_t finalAngle = angle.value() - units::degree_t(speeds::drive::medialInertialOffset *
                                                                          deadbandTranslationSpeeds.forwardSpeedPct);
             m_elevatorSubsystem.SetCarriageAngle(finalAngle);
           }
@@ -111,7 +111,7 @@ RobotContainer::RobotContainer()
             auto lateralSpeedPct = deadbandTranslationSpeeds.leftSpeedPct;
             double offset = horzOffset.value().to<double>();
             offset -= cameraOffset.value().to<double>();
-            auto finalOffset = offset + speeds::drive::lateralInertialOffset * lateralSpeedPct;
+            auto finalOffset = offset - speeds::drive::lateralInertialOffset * lateralSpeedPct;
             rotateSpeed = -finalOffset * 0.016;
             // simmer down the translation speeds
             deadbandTranslationSpeeds.forwardSpeedPct *= speeds::drive::aimSpeedReductionPct;
