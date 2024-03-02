@@ -67,6 +67,7 @@ RobotContainer::RobotContainer()
     , m_GoToSubwooferPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToTrapPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_ClimberCommand{&m_climberSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_controllers}
+    , m_TrapAimCommand{&m_swerveDrive, &m_visionSubSystem, &m_controllers, &m_ledSubSystem}
     , m_autoNothing{}
     , m_autoChoreoTest{m_elevatorSubsystem, m_intakeSubsystem, m_ShooterSubSystem, m_swerveDrive, m_visionSubSystem}
     , m_autoSelector{{&m_autoNothing, &m_autoChoreoTest}, &m_autoNothing}
@@ -186,6 +187,8 @@ void RobotContainer::ConfigureBindings() {
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto climberDown = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kDown);
   auto climberZero = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
+  auto trapAlign = (m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kB) &&
+                    m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kX));
 
   // SHOOT TRIGGERS
   auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
@@ -264,6 +267,8 @@ void RobotContainer::ConfigureBindings() {
                          .ToPtr());
   (climberUp || climberDown)
       .OnFalse(frc2::InstantCommand([this]() { m_climberSubsystem.ClimberMove(0.0); }, {&m_climberSubsystem}).ToPtr());
+
+  trapAlign.WhileTrue(&m_TrapAimCommand);
 
   climberSequenceTrigger.OnTrue(&m_ClimberCommand);
 

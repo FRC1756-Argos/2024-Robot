@@ -26,6 +26,7 @@
 #include "commands/raise_climber_command.h"
 #include "commands/ready_for_climb_command.h"
 #include "commands/shooter_command.h"
+#include "commands/trap_aim_command.h"
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/intake_subsystem.h"
@@ -94,6 +95,7 @@ class RobotContainer {
   GoToSubwooferPositionCommand m_GoToSubwooferPositionCommand;
   GoToTrapPositionCommand m_GoToTrapPositionCommand;
   ClimberCommand m_ClimberCommand;
+  TrapAimCommand m_TrapAimCommand;
 
   // Autonomous
   AutonomousNothing m_autoNothing;

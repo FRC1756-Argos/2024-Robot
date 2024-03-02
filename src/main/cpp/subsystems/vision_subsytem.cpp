@@ -220,6 +220,25 @@ std::optional<units::inch_t> VisionSubsystem::GetDistanceToTrap() {
   }
 }
 
+std::optional<units::inch_t> VisionSubsystem::GetLateralOffsetToTrap() {
+  int tagOfInterest1 = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                           field_points::blue_alliance::april_tags::stageCenter.id :
+                           field_points::red_alliance::april_tags::stageCenter.id;
+  int tagOfInterest2 = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                           field_points::blue_alliance::april_tags::stageLeft.id :
+                           field_points::red_alliance::april_tags::stageLeft.id;
+  int tagOfInterest3 = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                           field_points::blue_alliance::april_tags::stageRight.id :
+                           field_points::red_alliance::april_tags::stageRight.id;
+  const auto targetValues = GetCameraTargetValues();
+  if (tagOfInterest1 == GetCameraTargetValues().tagID || tagOfInterest2 == GetCameraTargetValues().tagID ||
+      tagOfInterest3 == GetCameraTargetValues().tagID) {
+    return static_cast<units::inch_t>(targetValues.tagPose.X());
+  } else {
+    return std::nullopt;
+  }
+}
+
 std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTrap() {
   LimelightTarget::tValues targetValues = GetCameraTargetValues();
   int tagOfInterest1 = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
@@ -239,24 +258,6 @@ std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTrap() {
   }
 
   return std::nullopt;
-}
-
-std::optional<units::degree_t> VisionSubsystem::GetOrientationToTrap() {
-  int tagOfInterest1 = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
-                           field_points::blue_alliance::april_tags::stageCenter.id :
-                           field_points::red_alliance::april_tags::stageCenter.id;
-  int tagOfInterest2 = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
-                           field_points::blue_alliance::april_tags::stageLeft.id :
-                           field_points::red_alliance::april_tags::stageLeft.id;
-  int tagOfInterest3 = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
-                           field_points::blue_alliance::april_tags::stageRight.id :
-                           field_points::red_alliance::april_tags::stageRight.id;
-  const auto targetValues = GetCameraTargetValues();
-  if (tagOfInterest1 == GetCameraTargetValues().tagID || tagOfInterest2 == GetCameraTargetValues().tagID ||
-      tagOfInterest3 == GetCameraTargetValues().tagID)
-    return static_cast<units::degree_t>(targetValues.tagPose.Rotation().Z());
-  else
-    return std::nullopt;
 }
 
 void VisionSubsystem::SetPipeline(uint16_t tag) {

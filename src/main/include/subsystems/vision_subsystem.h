@@ -177,9 +177,9 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] std::optional<units::inch_t> GetDistanceToTrap();
 
-  [[nodiscard]] std::optional<units::degree_t> GetHorizontalOffsetToTrap();
+  [[nodiscard]] std::optional<units::inch_t> GetLateralOffsetToTrap();
 
-  [[nodiscard]] std::optional<units::degree_t> GetOrientationToTrap();
+  [[nodiscard]] std::optional<units::degree_t> GetHorizontalOffsetToTrap();
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
