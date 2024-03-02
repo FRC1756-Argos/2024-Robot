@@ -6,6 +6,8 @@
 
 Robot code for 2024 FRC season
 
+[Doxygen documentation](https://frc1756-argos.github.io/2024-Robot/)
+
 ## Key Features
 
 ### LED Color Codes

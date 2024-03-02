@@ -12,7 +12,7 @@
 
 class ShooterCommand : public frc2::CommandHelper<frc2::Command, ShooterCommand> {
  public:
-  explicit ShooterCommand(ShooterSubsystem* shooter);
+  explicit ShooterCommand(ShooterSubsystem* shooter, bool endAfterShot = false);
 
   void Initialize() override;
 
@@ -24,4 +24,7 @@ class ShooterCommand : public frc2::CommandHelper<frc2::Command, ShooterCommand>
 
  private:
   ShooterSubsystem* m_pShooter;
+  bool m_endAfterShot;
+  bool m_notePresent;
+  bool m_noteShot;
 };
