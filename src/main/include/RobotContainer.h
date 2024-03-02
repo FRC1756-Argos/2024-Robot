@@ -13,6 +13,7 @@
 
 #include "Constants.h"
 #include "commands/auto_aim_command.h"
+#include "commands/autonomous/autonomous_center2_wing.h"
 #include "commands/autonomous/autonomous_choreo_test.h"
 #include "commands/autonomous/autonomous_nothing.h"
 #include "commands/climber_command.h"
@@ -98,6 +99,7 @@ class RobotContainer {
   // Autonomous
   AutonomousNothing m_autoNothing;
   AutonomousChoreoTest m_autoChoreoTest;
+  AutonomousCenter2Wing m_autoCenter2wing;
 
   AutoSelector m_autoSelector;
 
