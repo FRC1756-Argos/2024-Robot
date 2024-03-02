@@ -8,6 +8,7 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/InstantCommand.h>
+#include <frc2/command/SequentialCommandGroup.h>
 
 #include "commands/go_to_trap_position_command.h"
 #include "commands/lower_climber_command.h"
@@ -17,9 +18,6 @@
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
-#include "commands/shooter_command.h"
-
-#include <frc2/command/SequentialCommandGroup.h>
 
 class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand> {
  public:
@@ -46,7 +44,6 @@ class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand>
   LowerClimberCommand m_LowerClimberCommand;
   frc2::SequentialCommandGroup m_SeqCommand;
   ShooterCommand m_ShootCommand;
-
 
   argos_lib::SwappableControllersSubsystem* m_pControllers;
   int button_count;

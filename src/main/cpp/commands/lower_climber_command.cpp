@@ -3,8 +3,10 @@
 ///            the license file in the root directory of this project.
 
 #include "commands/lower_climber_command.h"
-#include "constants/measure_up.h"
+
 #include <units/math.h>
+
+#include "constants/measure_up.h"
 
 LowerClimberCommand::LowerClimberCommand(ClimberSubsystem* climber) : m_pClimber{climber} {
   AddRequirements({m_pClimber});
@@ -19,9 +21,9 @@ void LowerClimberCommand::Initialize() {
 void LowerClimberCommand::Execute() {}
 
 // Called once the command ends or is interrupted.
-void LowerClimberCommand::End(bool interrupted) {
-}
+void LowerClimberCommand::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool LowerClimberCommand::IsFinished() {
-  return units::math::abs(m_pClimber->GetClimberExtension() - measure_up::climber::climbLoweredHeight) < 0.25_in;}
+  return units::math::abs(m_pClimber->GetClimberExtension() - measure_up::climber::climbLoweredHeight) < 0.25_in;
+}

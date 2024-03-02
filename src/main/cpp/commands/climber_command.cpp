@@ -3,10 +3,9 @@
 ///            the license file in the root directory of this project.
 
 #include "commands/climber_command.h"
-#include <frc2/command/WaitCommand.h>
 
 #include <frc/smartdashboard/SmartDashboard.h>
-
+#include <frc2/command/WaitCommand.h>
 
 ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
                                ShooterSubsystem* shooter,
