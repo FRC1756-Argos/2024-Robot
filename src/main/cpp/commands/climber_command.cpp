@@ -44,9 +44,9 @@ void ClimberCommand::Execute() {
         ++button_count;
         break;
       case 3:
-      ShooterCommand{m_pShooter}.Schedule();
-      ++button_count;
-      break;
+        ShooterCommand{m_pShooter}.Schedule();
+        ++button_count;
+        break;
       default:
         button_count = 0;
     }
