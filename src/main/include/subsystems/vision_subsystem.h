@@ -175,6 +175,12 @@ class VisionSubsystem : public frc2::SubsystemBase {
                                                                                   const InterpolationMode mode) const;
   [[nodiscard]] std::optional<units::angular_velocity::revolutions_per_minute_t> getShooterSpeed();
 
+  [[nodiscard]] std::optional<units::inch_t> GetDistanceToTrap();
+
+  [[nodiscard]] std::optional<units::degree_t> GetHorizontalOffsetToTrap();
+
+  [[nodiscard]] std::optional<units::degree_t> GetOrientationToTrap();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
