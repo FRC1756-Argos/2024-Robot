@@ -12,7 +12,6 @@
 #include <string>
 
 #include "commands/autonomous/autonomous_command.h"
-#include "commands/shooter_command.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/intake_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
@@ -56,7 +55,4 @@ class AutonomousCenter2Wing
   SwerveDriveSubsystem& m_Swerve;
   VisionSubsystem& m_Vision;
   frc2::SequentialCommandGroup m_SeqCommands;
-  frc2::ParallelCommandGroup& m_ParCommands;
-  ShooterCommand& m_ShooterCommand;
-  IntakeCommand& m_IntakeCommand;
 };

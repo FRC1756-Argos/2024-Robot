@@ -12,6 +12,7 @@
 #include "commands/drive_choreo.h"
 #include "commands/intake_command.h"
 #include "commands/prime_shooter_command.h"
+#include "commands/shooter_command.h"
 #include "subsystems/shooter_subsystem.h"
 
 AutonomousCenter2Wing::AutonomousCenter2Wing(IntakeSubsystem& intake,
@@ -27,9 +28,9 @@ AutonomousCenter2Wing::AutonomousCenter2Wing(IntakeSubsystem& intake,
     , m_Swerve{swerve}
     , m_Vision{vision}  //, m_ShooterCommand{ShooterCommand{*shooter}}
     , m_SeqCommands{frc2::SequentialCommandGroup{
-          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 12_ft},
+          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in},
           ShooterCommand{&m_Shooter, true},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "center2wing", true},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Center_2wing", true},
                                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true}},
           ShooterCommand{&m_Shooter, true}}} {}
 
@@ -54,7 +55,7 @@ bool AutonomousCenter2Wing::IsFinished() {
 }
 
 std::string AutonomousCenter2Wing::GetName() const {
-  return "99. Choreo Test";
+  return "01. Center 2";
 }
 
 frc2::Command* AutonomousCenter2Wing::GetCommand() {
