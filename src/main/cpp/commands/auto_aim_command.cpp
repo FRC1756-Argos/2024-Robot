@@ -19,7 +19,9 @@ AutoAimCommand::AutoAimCommand(SwerveDriveSubsystem* swerveDrive,
     , m_pElevator{elevator}
     , m_pVision{vision}
     , m_pControllers{controllers}
-    , m_pLeds{leds} {
+    , m_pLeds{leds}
+    , m_endWhenAimed{endWhenAimed}
+    , m_aimedDebouncer{{300_ms, 0_ms}} {
   AddRequirements({m_pSwerveDrive, m_pShooter, m_pElevator});
 }
 

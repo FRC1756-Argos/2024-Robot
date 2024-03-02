@@ -15,6 +15,7 @@
 #include "commands/auto_aim_command.h"
 #include "commands/autonomous/autonomous_choreo_test.h"
 #include "commands/autonomous/autonomous_nothing.h"
+#include "commands/autonomous/autonomous_source1.h"
 #include "commands/climber_command.h"
 #include "commands/climber_homing_command.h"
 #include "commands/go_to_amp_position_command.h"
@@ -98,6 +99,8 @@ class RobotContainer {
   // Autonomous
   AutonomousNothing m_autoNothing;
   AutonomousChoreoTest m_autoChoreoTest;
+  AutonomousCenter2Wing m_autoCenter2wing;
+  AutonomousSource1 m_autoSource1;
 
   AutoSelector m_autoSelector;
 
