@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <argos_lib/subsystems/swappable_controllers_subsystem.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/SequentialCommandGroup.h>
@@ -15,6 +16,7 @@
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/intake_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
+#include "subsystems/simple_led_subsystem.h"
 #include "subsystems/swerve_drive_subsystem.h"
 #include "subsystems/vision_subsystem.h"
 
@@ -22,11 +24,13 @@ class AutonomousCenter2Wing
     : public frc2::CommandHelper<frc2::Command, AutonomousCenter2Wing>
     , public AutonomousCommand {
  public:
-  AutonomousCenter2Wing(ElevatorSubsystem& elevator,
-                        IntakeSubsystem& intake,
+  AutonomousCenter2Wing(IntakeSubsystem& intake,
                         ShooterSubsystem& shooter,
+                        ElevatorSubsystem& elevator,
                         SwerveDriveSubsystem& swerve,
-                        VisionSubsystem& vision);
+                        VisionSubsystem& vision,
+                        argos_lib::SwappableControllersSubsystem& controllers,
+                        SimpleLedSubsystem& leds);
 
   void Initialize() override;
 
@@ -46,12 +50,13 @@ class AutonomousCenter2Wing
   frc2::Command* GetCommand() final;
 
  private:
-  ElevatorSubsystem& m_Elevator;
   IntakeSubsystem& m_Intake;
   ShooterSubsystem& m_Shooter;
+  ElevatorSubsystem& m_Elevator;
   SwerveDriveSubsystem& m_Swerve;
   VisionSubsystem& m_Vision;
-  ShooterCommand m_ShooterCommand;
-  IntakeCommand m_IntakeCommand;
-  frc2::SequentialCommandGroup m_allCommands;
+  frc2::SequentialCommandGroup m_SeqCommands;
+  frc2::ParallelCommandGroup& m_ParCommands;
+  ShooterCommand& m_ShooterCommand;
+  IntakeCommand& m_IntakeCommand;
 };
