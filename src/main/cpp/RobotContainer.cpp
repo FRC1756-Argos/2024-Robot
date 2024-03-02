@@ -243,14 +243,14 @@ void RobotContainer::ConfigureBindings() {
   climberUp.OnTrue(frc2::InstantCommand(
                        [this]() {
                          m_climberSubsystem.SetClimberManualOverride(true);
-                         m_climberSubsystem.ClimberMove(0.2);
+                         m_climberSubsystem.ClimberMove(0.6);
                        },
                        {&m_climberSubsystem})
                        .ToPtr());
   climberDown.OnTrue(frc2::InstantCommand(
                          [this]() {
                            m_climberSubsystem.SetClimberManualOverride(true);
-                           m_climberSubsystem.ClimberMove(-0.4);
+                           m_climberSubsystem.ClimberMove(-0.8);
                          },
                          {&m_climberSubsystem})
                          .ToPtr());

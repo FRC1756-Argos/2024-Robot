@@ -33,6 +33,7 @@ void GoToTrapPositionCommand::Execute() {
     is_0_deg = true;
   }
   if (is_0_deg && m_pElevator->IsLiftAtSetPoint()) {
+    frc2::WaitCommand(100_ms);
     m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::trapAngle);
   }
 

@@ -3,6 +3,7 @@
 ///            the license file in the root directory of this project.
 
 #include "commands/climber_command.h"
+#include <frc2/command/WaitCommand.h>
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -19,6 +20,7 @@ ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
     , m_RaiseClimberCommand{RaiseClimberCommand{climber}}
     , m_LowerClimberCommand{LowerClimberCommand{climber}}
     , m_TrapCommand{GoToTrapPositionCommand{shooter, elevator}}
+    // , m_SeqCommand{LowerClimberCommand{m_pClimber}, GoToTrapPositionCommand{m_pShooter, m_pElevator}, frc2::WaitCommand(400_ms), ShooterCommand{shooter}}
     , m_SeqCommand{LowerClimberCommand{m_pClimber}, GoToTrapPositionCommand{m_pShooter, m_pElevator}}
     , m_ShootCommand{m_pShooter} {}
 
