@@ -16,6 +16,7 @@
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
+#include "commands/shooter_command.h"
 
 class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand> {
  public:
