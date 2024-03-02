@@ -181,11 +181,11 @@ void RobotContainer::ConfigureBindings() {
   // INTAKE TRIGGERS
   auto intake = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
   auto outtakeManual = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperLeft);
+  auto elevatorReset = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
 
   // CLIMBER TRIGGERS
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto climberDown = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kDown);
-  auto climberZero = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
 
   // SHOOT TRIGGERS
   auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
@@ -245,8 +245,13 @@ void RobotContainer::ConfigureBindings() {
   // CLIMBER TRIGGER ACTIVATION
   startupClimberHomeTrigger.OnTrue(&m_ClimberHomeCommand);
 
-  climberZero.OnTrue(
-      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(90_deg); }, {&m_elevatorSubsystem}).ToPtr());
+  elevatorReset.OnTrue(frc2::InstantCommand(
+                           [this]() {
+                             m_elevatorSubsystem.SetCarriageAngle(90_deg);
+                             m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::lift::intakeHeight);
+                           },
+                           {&m_elevatorSubsystem})
+                           .ToPtr());
 
   climberUp.OnTrue(frc2::InstantCommand(
                        [this]() {
