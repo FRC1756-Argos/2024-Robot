@@ -13,7 +13,7 @@
 #include "constants/measure_up.h"
 
 GoToTrapPositionCommand::GoToTrapPositionCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator)
-    : m_pShooter{shooter}, m_pElevator{elevator}, m_allCommands{frc2::InstantCommand{[]() {}, {}}} {
+    : m_pShooter{shooter}, m_pElevator{elevator} {
   AddRequirements({m_pShooter, m_pElevator});
 }
 
