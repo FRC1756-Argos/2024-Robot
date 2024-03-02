@@ -108,10 +108,18 @@ RobotContainer::RobotContainer()
           auto cameraOffset = m_visionSubSystem.getShooterOffset();
 
           auto angle = m_visionSubSystem.getShooterAngle();
+          auto speed = m_visionSubSystem.getShooterSpeed();
           if (angle != std::nullopt) {
             units::degree_t finalAngle = angle.value() - units::degree_t(speeds::drive::medialInertialOffset *
                                                                          deadbandTranslationSpeeds.forwardSpeedPct);
             m_elevatorSubsystem.SetCarriageAngle(finalAngle);
+          }
+
+          if (speed.has_value()) {
+            m_ShooterSubSystem.ShooterGoToSpeed(speed.value());
+          } else {
+            m_ShooterSubSystem.ShooterGoToSpeed(
+                m_visionSubSystem.getShooterSpeed(15_ft, VisionSubsystem::InterpolationMode::LinearInterpolation));
           }
 
           if (horzOffset != std::nullopt && cameraOffset != std::nullopt) {
@@ -180,11 +188,11 @@ void RobotContainer::ConfigureBindings() {
   // INTAKE TRIGGERS
   auto intake = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
   auto outtakeManual = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperLeft);
+  auto elevatorReset = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
 
   // CLIMBER TRIGGERS
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto climberDown = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kDown);
-  auto climberZero = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
 
   // SHOOT TRIGGERS
   auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
@@ -244,8 +252,13 @@ void RobotContainer::ConfigureBindings() {
   // CLIMBER TRIGGER ACTIVATION
   startupClimberHomeTrigger.OnTrue(&m_ClimberHomeCommand);
 
-  climberZero.OnTrue(
-      frc2::InstantCommand([this]() { m_elevatorSubsystem.SetCarriageAngle(90_deg); }, {&m_elevatorSubsystem}).ToPtr());
+  elevatorReset.OnTrue(frc2::InstantCommand(
+                           [this]() {
+                             m_elevatorSubsystem.SetCarriageAngle(90_deg);
+                             m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::lift::intakeHeight);
+                           },
+                           {&m_elevatorSubsystem})
+                           .ToPtr());
 
   climberUp.OnTrue(frc2::InstantCommand(
                        [this]() {

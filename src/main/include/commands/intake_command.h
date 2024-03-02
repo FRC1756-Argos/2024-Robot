@@ -19,7 +19,8 @@ class IntakeCommand : public frc2::CommandHelper<frc2::Command, IntakeCommand> {
                 ShooterSubsystem* shooter,
                 ElevatorSubsystem* elevator,
                 argos_lib::SwappableControllersSubsystem* controllers,
-                SimpleLedSubsystem* leds);
+                SimpleLedSubsystem* leds,
+                bool endOnNoteAcquisition = false);
 
   void Initialize() override;
 
@@ -35,4 +36,5 @@ class IntakeCommand : public frc2::CommandHelper<frc2::Command, IntakeCommand> {
   ElevatorSubsystem* m_pElevator;
   argos_lib::SwappableControllersSubsystem* m_pControllers;
   SimpleLedSubsystem* m_pLeds;
+  bool m_endOnNoteAcquisition;
 };
