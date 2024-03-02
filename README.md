@@ -138,7 +138,7 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | LB              | Continue Climb Sequence |
 | RB              | Start Climb Sequence |
 | LT              | Trap |
-| RT              | Shooter Up Position |
+| RT              | Elevator Reset Position |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |
