@@ -36,17 +36,13 @@ void ClimberCommand::Execute() {
         ++button_count;
         break;
       case 1:
-        m_LowerClimberCommand.Schedule();
+        frc2::SequentialCommandGroup(m_LowerClimberCommand, m_TrapCommand);
         ++button_count;
         break;
       case 2:
-        m_TrapCommand.Schedule();
+        ShooterCommand{m_pShooter}.Schedule();
         ++button_count;
         break;
-      case 3:
-      ShooterCommand{m_pShooter}.Schedule();
-      ++button_count;
-      break;
       default:
         button_count = 0;
     }
