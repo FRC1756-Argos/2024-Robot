@@ -22,9 +22,6 @@ class LowerClimberCommand : public frc2::CommandHelper<frc2::Command, LowerClimb
 
   bool IsFinished() override;
 
-  bool GetIsLowerCLimbFinished();
-
  private:
   ClimberSubsystem* m_pClimber;
-  bool is_lower_climb_finished;
 };
