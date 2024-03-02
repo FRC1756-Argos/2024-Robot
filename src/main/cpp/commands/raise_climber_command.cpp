@@ -24,7 +24,7 @@ void RaiseClimberCommand::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool RaiseClimberCommand::IsFinished() {
-  return m_pClimber->IsClimberMoving();
+  return m_pClimber->IsClimberAtSetPoint();
 }
 
 bool RaiseClimberCommand::GetIsRaiseCLimbFinished() {

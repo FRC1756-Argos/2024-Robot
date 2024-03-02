@@ -114,3 +114,18 @@ void ClimberSubsystem::DisableClimberSoftLimits() {
   climberSoftLimits.ReverseSoftLimitEnable = false;
   m_primaryMotor.GetConfigurator().Apply(climberSoftLimits);
 }
+
+bool ClimberSubsystem::IsClimberAtSetPoint() {
+  // frc::SmartDashboard::PutString("ElevatorLiftMode", m_primaryMotor.GetControlMode().GetValue().ToString());
+  // frc::SmartDashboard::PutNumber("ElevatorLiftError", m_primaryMotor.GetClosedLoopError().GetValue());
+  // frc::SmartDashboard::PutNumber(
+  //     "ElevatorHeightError",
+  //    sensor_conversions::elevator::lift::ToHeight(units::turn_t{m_primaryMotor.GetClosedLoopError().GetValue()})
+  //        .to<double>());
+  if (m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltage &&
+      m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltageFOC) {
+    return false;
+  }
+  return units::math::abs(sensor_conversions::climber::ToHeight(
+             units::turn_t{m_primaryMotor.GetClosedLoopError().GetValue()})) < 0.25_in;
+}

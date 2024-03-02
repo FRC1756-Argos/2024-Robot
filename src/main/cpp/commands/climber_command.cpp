@@ -5,7 +5,7 @@
 #include "commands/climber_command.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <frc2/command/SequentialCommandGroup.h>
+#include <frc2/command/WaitCommand.h>
 
 ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
                                ShooterSubsystem* shooter,
@@ -18,10 +18,14 @@ ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
     , m_ReadyForClimbCommand{ReadyForClimbCommand{shooter, elevator}}
     , m_RaiseClimberCommand{RaiseClimberCommand{climber}}
     , m_LowerClimberCommand{LowerClimberCommand{climber}}
-    , m_TrapCommand{GoToTrapPositionCommand{shooter, elevator}} {}
+    , m_TrapCommand{GoToTrapPositionCommand{shooter, elevator}}
+    // , m_SeqCommand{LowerClimberCommand{m_pClimber}, GoToTrapPositionCommand{m_pShooter, m_pElevator}, frc2::WaitCommand(400_ms), ShooterCommand{shooter}}
+    , m_SeqCommand{LowerClimberCommand{m_pClimber}, GoToTrapPositionCommand{m_pShooter, m_pElevator}}
+    , m_ShootCommand{m_pShooter} {}
 
 // Called when the command is initially scheduled.
 void ClimberCommand::Initialize() {
+  end_command = false;
   m_ReadyForClimbCommand.Schedule();
   button_count = 0;
   m_TrapCommand.ResetIsTrapDone();
@@ -36,12 +40,13 @@ void ClimberCommand::Execute() {
         ++button_count;
         break;
       case 1:
-        m_LowerClimberCommand.Schedule();
+        m_SeqCommand.Schedule();
         ++button_count;
         break;
       case 2:
-        m_TrapCommand.Schedule();
+        m_ShootCommand.Schedule();
         ++button_count;
+        end_command = true;
         break;
       default:
         button_count = 0;
@@ -56,5 +61,5 @@ void ClimberCommand::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool ClimberCommand::IsFinished() {
-  return m_TrapCommand.GetIsTrapDone();
+  return end_command;
 }
