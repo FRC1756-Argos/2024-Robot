@@ -76,7 +76,15 @@ RobotContainer::RobotContainer()
                         m_visionSubSystem,
                         m_controllers,
                         m_ledSubSystem}
-    , m_autoSelector{{&m_autoNothing, &m_autoCenter2wing, &m_autoChoreoTest}, &m_autoNothing}
+    , m_autoSourceSideSubwoofer2Piece{m_intakeSubsystem,
+                                      m_ShooterSubSystem,
+                                      m_elevatorSubsystem,
+                                      m_swerveDrive,
+                                      m_visionSubSystem,
+                                      m_controllers,
+                                      m_ledSubSystem}
+    , m_autoSelector{{&m_autoNothing, &m_autoCenter2wing, &m_autoSourceSideSubwoofer2Piece, &m_autoChoreoTest},
+                     &m_autoNothing}
     , m_lateralNudgeRate{12 / 1_s}
     , m_rotationalNudgeRate{4 / 1_s}
     , m_distanceNudgeRate{12 / 1_s}
