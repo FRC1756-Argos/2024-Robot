@@ -69,9 +69,9 @@ RobotContainer::RobotContainer()
     , m_ClimberCommand{&m_climberSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_controllers}
     , m_autoNothing{}
     , m_autoChoreoTest{m_elevatorSubsystem, m_intakeSubsystem, m_ShooterSubSystem, m_swerveDrive, m_visionSubSystem}
-    , m_autoCenter2wing{m_elevatorSubsystem,
-                        m_intakeSubsystem,
+    , m_autoCenter2wing{m_intakeSubsystem,
                         m_ShooterSubSystem,
+                        m_elevatorSubsystem,
                         m_swerveDrive,
                         m_visionSubSystem,
                         m_controllers,
