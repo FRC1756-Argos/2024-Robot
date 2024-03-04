@@ -39,6 +39,7 @@ AutonomousCenter2Wing::AutonomousCenter2Wing(IntakeSubsystem& intake,
                                {&m_Shooter}},
           frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Center_2wing", true},
                                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true}},
+          AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true}}} {}
 
 // Called when the command is initially scheduled.
