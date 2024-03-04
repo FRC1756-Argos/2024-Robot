@@ -27,14 +27,13 @@ void IntakeCommand::Initialize() {
   m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::intakeAngle);
   m_pIntake->NoteDetectionOverride(false);
   m_pShooter->NoteDetectionOverride(false);
-  m_pIntake->Intake(m_pIntake->IsNotePresent() ? 0.4 : 1.0);
-  m_pShooter->Feed(m_pIntake->IsNotePresent() ? 0.5 : 0.3);
+  m_pIntake->Intake(m_pIntake->IsNotePresent() ? 0.5 : 1.0);
+  m_pShooter->Feed(0.3);
   m_pShooter->SetAmpAndTrapMode(false);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void IntakeCommand::Execute() {
-  m_pShooter->Feed(m_pIntake->IsNotePresent() ? 0.6 : 0.3);
   if (m_pShooter->IsNotePresent()) {
     m_pIntake->Intake(0);
     if (m_pLeds) {
@@ -46,7 +45,7 @@ void IntakeCommand::Execute() {
           argos_lib::TemporaryVibrationPattern(argos_lib::VibrationConstant(1.0), 500_ms));
     }
   } else {
-    m_pIntake->Intake(m_pIntake->IsNotePresent() ? 0.4 : 1.0);
+    m_pIntake->Intake(m_pIntake->IsNotePresent() ? 0.5 : 1.0);
   }
   if (m_pElevator->IsElevatorAtSetPoint()) {
     m_pIntake->NoteDetectionOverride(true);
