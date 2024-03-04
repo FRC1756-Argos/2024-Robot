@@ -26,12 +26,13 @@ AutonomousCenter2Wing::AutonomousCenter2Wing(IntakeSubsystem& intake,
     , m_Shooter{shooter}
     , m_Elevator{elevator}
     , m_Swerve{swerve}
-    , m_Vision{vision}  //, m_ShooterCommand{ShooterCommand{*shooter}}
+    , m_Vision{vision}
     , m_SeqCommands{frc2::SequentialCommandGroup{
           PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in},
           ShooterCommand{&m_Shooter, true},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Center_2wing", true},
-                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true}},
+          frc2::ParallelCommandGroup{
+              DriveChoreo{m_Swerve, "Center_2wing.1", true},
+              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
           ShooterCommand{&m_Shooter, true}}} {}
 
 // Called when the command is initially scheduled.

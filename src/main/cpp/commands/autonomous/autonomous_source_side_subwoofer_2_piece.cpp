@@ -27,12 +27,13 @@ AutonomousSourceSideSubwoofer2Piece::AutonomousSourceSideSubwoofer2Piece(
     , m_Shooter{shooter}
     , m_Elevator{elevator}
     , m_Swerve{swerve}
-    , m_Vision{vision}  //, m_ShooterCommand{ShooterCommand{*shooter}}
+    , m_Vision{vision}
     , m_SeqCommands{frc2::SequentialCommandGroup{
           PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in},
           ShooterCommand{&m_Shooter, true},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source_Side_Subwoofer", true},
-                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true}},
+          frc2::ParallelCommandGroup{
+              DriveChoreo{m_Swerve, "Source_Side_Subwoofer.1", true},
+              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true}}} {}
 

@@ -6,13 +6,16 @@
 
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
+#include <units/time.h>
+
+#include <chrono>
 
 #include "constants/measure_up.h"
 #include "subsystems/shooter_subsystem.h"
 
 class ShooterCommand : public frc2::CommandHelper<frc2::Command, ShooterCommand> {
  public:
-  explicit ShooterCommand(ShooterSubsystem* shooter, bool endAfterShot = false);
+  explicit ShooterCommand(ShooterSubsystem* shooter, bool endAfterShot = false, units::millisecond_t timeout = 500_ms);
 
   void Initialize() override;
 
@@ -27,4 +30,6 @@ class ShooterCommand : public frc2::CommandHelper<frc2::Command, ShooterCommand>
   bool m_endAfterShot;
   bool m_notePresent;
   bool m_noteShot;
+  units::millisecond_t m_timeout;
+  std::chrono::time_point<std::chrono::steady_clock> m_startTime;
 };
