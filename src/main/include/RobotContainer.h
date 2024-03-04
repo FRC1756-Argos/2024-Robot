@@ -109,13 +109,7 @@ class RobotContainer {
 
   AutoSelector m_autoSelector;
 
+  bool m_transitionedFromAuto;  ///< True indicates latest enable was during autonomous
+
   void ConfigureBindings();
-
-  /* —————————————————— PID TESTING SETPOINT NT OBJECTS —————————————————— */
-
-  nt::GenericEntry* p_wristSetpoint;
-  frc::SlewRateLimiter<units::scalar> m_lateralNudgeRate;
-  frc::SlewRateLimiter<units::scalar> m_rotationalNudgeRate;
-  frc::SlewRateLimiter<units::scalar> m_distanceNudgeRate;
-  argos_lib::GenericDebouncer<AlignLedStatus> m_alignLedDebouncer;
 };
