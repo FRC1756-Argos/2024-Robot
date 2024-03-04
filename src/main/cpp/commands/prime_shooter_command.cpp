@@ -9,14 +9,19 @@
 PrimeShooterCommand::PrimeShooterCommand(ShooterSubsystem& shooter,
                                          ElevatorSubsystem& elevator,
                                          VisionSubsystem& vision,
-                                         const units::inch_t distance)
-    : m_Shooter{shooter}, m_Elevator{elevator}, m_Vision{vision}, m_distance{distance} {
+                                         const units::inch_t distance,
+                                         const std::optional<units::revolutions_per_minute_t> customSpeed)
+    : m_Shooter{shooter}, m_Elevator{elevator}, m_Vision{vision}, m_distance{distance}, m_customSpeed{customSpeed} {
   AddRequirements({&m_Shooter, &m_Elevator});
 }
 
 // Called when the command is initially scheduled.
 void PrimeShooterCommand::Initialize() {
-  m_Shooter.ShooterGoToSpeed(m_Vision.getShooterSpeed(m_distance, VisionSubsystem::InterpolationMode::Polynomial));
+  if (m_customSpeed.has_value()) {
+    m_Shooter.ShooterGoToSpeed(m_customSpeed.value());
+  } else {
+    m_Shooter.ShooterGoToSpeed(m_Vision.getShooterSpeed(m_distance, VisionSubsystem::InterpolationMode::Polynomial));
+  }
   m_Elevator.ElevatorMoveToHeight(measure_up::elevator::lift::intakeHeight);
   m_Elevator.SetCarriageAngle(m_Vision.getShooterAngle(m_distance, VisionSubsystem::InterpolationMode::Polynomial));
 }
