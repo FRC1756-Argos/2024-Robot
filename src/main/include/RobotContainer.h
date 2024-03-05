@@ -19,6 +19,7 @@
 #include "commands/autonomous/autonomous_nothing.h"
 #include "commands/autonomous/autonomous_source1.h"
 #include "commands/autonomous/autonomous_source_side_subwoofer_2_piece.h"
+#include "commands/autonomous/autonomous_zero_note.h"
 #include "commands/climber_command.h"
 #include "commands/climber_homing_command.h"
 #include "commands/go_to_amp_position_command.h"
@@ -106,6 +107,7 @@ class RobotContainer {
   AutonomousSource1 m_autoSource1;
   AutonomousSourceSideSubwoofer2Piece m_autoSourceSideSubwoofer2Piece;
   AutonomousAmpSideSubwoofer2Piece m_autoAmpSideSubwoofer2Piece;
+  AutonomousZeroNote m_autoZeroNote;
 
   AutoSelector m_autoSelector;
 
