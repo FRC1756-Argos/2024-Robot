@@ -7,6 +7,9 @@
 #include <argos_lib/subsystems/swappable_controllers_subsystem.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
+#include <units/time.h>
+
+#include <chrono>
 
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/intake_subsystem.h"
@@ -20,7 +23,8 @@ class IntakeCommand : public frc2::CommandHelper<frc2::Command, IntakeCommand> {
                 ElevatorSubsystem* elevator,
                 argos_lib::SwappableControllersSubsystem* controllers,
                 SimpleLedSubsystem* leds,
-                bool endOnNoteAcquisition = false);
+                bool endOnNoteAcquisition = false,
+                units::millisecond_t timeout = 500_ms);
 
   void Initialize() override;
 
@@ -37,4 +41,6 @@ class IntakeCommand : public frc2::CommandHelper<frc2::Command, IntakeCommand> {
   argos_lib::SwappableControllersSubsystem* m_pControllers;
   SimpleLedSubsystem* m_pLeds;
   bool m_endOnNoteAcquisition;
+  units::millisecond_t m_timeout;
+  std::chrono::time_point<std::chrono::steady_clock> m_startTime;
 };
