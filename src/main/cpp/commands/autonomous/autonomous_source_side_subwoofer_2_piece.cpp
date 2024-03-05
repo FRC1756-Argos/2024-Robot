@@ -4,8 +4,10 @@
 
 #include "commands/autonomous/autonomous_source_side_subwoofer_2_piece.h"
 
+#include <frc2/command/InstantCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
+#include <units/angular_velocity.h>
 #include <units/length.h>
 
 #include "commands/auto_aim_command.h"
@@ -29,11 +31,15 @@ AutonomousSourceSideSubwoofer2Piece::AutonomousSourceSideSubwoofer2Piece(
     , m_Swerve{swerve}
     , m_Vision{vision}
     , m_SeqCommands{frc2::SequentialCommandGroup{
-          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in},
+          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in, 2000_rpm},
           ShooterCommand{&m_Shooter, true},
-          frc2::ParallelCommandGroup{
-              DriveChoreo{m_Swerve, "Source_Side_Subwoofer.1", true},
-              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
+          frc2::InstantCommand{[this]() {
+                                 m_Shooter.ShooterGoToSpeed(m_Vision.getShooterSpeed(
+                                     15_ft, VisionSubsystem::InterpolationMode::LinearInterpolation));
+                               },
+                               {&m_Shooter}},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source_Side_Subwoofer.1", true},
+                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true}}} {}
 
