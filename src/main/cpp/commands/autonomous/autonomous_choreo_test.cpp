@@ -20,7 +20,7 @@ AutonomousChoreoTest::AutonomousChoreoTest(ElevatorSubsystem& elevator,
     , m_Shooter{shooter}
     , m_Swerve{swerve}
     , m_Vision{vision}
-    , m_allCommands{frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "TestPath", true},
+    , m_allCommands{frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "TestPath.1", true},
                                                PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 12_ft}}} {}
 
 // Called when the command is initially scheduled.

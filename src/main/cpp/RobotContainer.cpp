@@ -90,7 +90,7 @@ RobotContainer::RobotContainer()
                                       m_visionSubSystem,
                                       m_controllers,
                                       m_ledSubSystem}
-    , m_autoAmpSideSUbwoofer2Piece{m_intakeSubsystem,
+    , m_autoAmpSideSubwoofer2Piece{m_intakeSubsystem,
                                    m_ShooterSubSystem,
                                    m_elevatorSubsystem,
                                    m_swerveDrive,
@@ -101,6 +101,7 @@ RobotContainer::RobotContainer()
                       &m_autoCenter2wing,
                       &m_autoSource1,
                       &m_autoSourceSideSubwoofer2Piece,
+                      &m_autoAmpSideSubwoofer2Piece,
                       &m_autoChoreoTest},
                      &m_autoNothing}
     , m_transitionedFromAuto{false} {

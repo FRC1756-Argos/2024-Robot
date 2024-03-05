@@ -11,13 +11,15 @@ IntakeCommand::IntakeCommand(IntakeSubsystem* intake,
                              ElevatorSubsystem* elevator,
                              argos_lib::SwappableControllersSubsystem* controllers,
                              SimpleLedSubsystem* leds,
-                             bool endOnNoteAcquisition)
+                             bool endOnNoteAcquisition,
+                             units::millisecond_t timeout)
     : m_pIntake{intake}
     , m_pShooter{shooter}
     , m_pElevator{elevator}
     , m_pControllers{controllers}
     , m_pLeds{leds}
-    , m_endOnNoteAcquisition{endOnNoteAcquisition} {
+    , m_endOnNoteAcquisition{endOnNoteAcquisition}
+    , m_timeout{timeout} {
   AddRequirements({m_pIntake, m_pShooter, m_pElevator});
 }
 
@@ -30,6 +32,7 @@ void IntakeCommand::Initialize() {
   m_pIntake->Intake(m_pIntake->IsNotePresent() ? 0.5 : 1.0);
   m_pShooter->Feed(0.3);
   m_pShooter->SetAmpAndTrapMode(false);
+  m_startTime = std::chrono::steady_clock::now();
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -74,5 +77,6 @@ void IntakeCommand::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool IntakeCommand::IsFinished() {
-  return m_endOnNoteAcquisition && m_pShooter->IsNotePresent();
+  return m_endOnNoteAcquisition &&
+         (m_pShooter->IsNotePresent() || units::second_t{std::chrono::steady_clock::now() - m_startTime} > m_timeout);
 }

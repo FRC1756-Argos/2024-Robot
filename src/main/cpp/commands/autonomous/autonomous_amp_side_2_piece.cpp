@@ -29,7 +29,7 @@ AutonomousAmpSideSubwoofer2Piece::AutonomousAmpSideSubwoofer2Piece(
     , m_Shooter{shooter}
     , m_Elevator{elevator}
     , m_Swerve{swerve}
-    , m_Vision{vision}  //, m_ShooterCommand{ShooterCommand{*shooter}}
+    , m_Vision{vision}
     , m_SeqCommands{frc2::SequentialCommandGroup{
           PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in, 2000_rpm},
           ShooterCommand{&m_Shooter, true},
@@ -38,8 +38,9 @@ AutonomousAmpSideSubwoofer2Piece::AutonomousAmpSideSubwoofer2Piece(
                                      15_ft, VisionSubsystem::InterpolationMode::LinearInterpolation));
                                },
                                {&m_Shooter}},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Amp_side_subwoofer", true},
-                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true}},
+          frc2::ParallelCommandGroup{
+              DriveChoreo{m_Swerve, "Amp_side_subwoofer.1", true},
+              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true}}} {}
 
