@@ -97,17 +97,22 @@ RobotContainer::RobotContainer()
                     m_visionSubSystem,
                     m_controllers,
                     m_ledSubSystem}
+    , m_autoAmpSideSUbwoofer2Piece{m_intakeSubsystem,
+                                   m_ShooterSubSystem,
+                                   m_elevatorSubsystem,
+                                   m_swerveDrive,
+                                   m_visionSubSystem,
+                                   m_controllers,
+                                   m_ledSubSystem}
     , m_autoSelector{{&m_autoNothing,
                       &m_autoCenter2wing,
                       &m_autoSource1,
                       &m_autoSourceSideSubwoofer2Piece,
-                      &m_autoChoreoTest,
-                      &m_autoSource2},
+                      &m_autoAmpSideSUbwoofer2Piece,
+                      &m_autoSource2,
+                      &m_autoChoreoTest},
                      &m_autoNothing}
-    , m_lateralNudgeRate{12 / 1_s}
-    , m_rotationalNudgeRate{4 / 1_s}
-    , m_distanceNudgeRate{12 / 1_s}
-    , m_alignLedDebouncer{50_ms} {
+    , m_transitionedFromAuto{false} {
   // Initialize all of your commands and subsystems here
 
   AllianceChanged();
@@ -259,6 +264,21 @@ void RobotContainer::ConfigureBindings() {
       {argos_lib::XboxController::Button::kBack, argos_lib::XboxController::Button::kStart});
 
   /* ————————————————————————— TRIGGER ACTIVATION ———————————————————————— */
+
+  // Restart shooter on transition from auto to teleop
+  robotEnableTrigger.OnTrue(frc2::InstantCommand([this]() {
+                              if (frc::DriverStation::IsAutonomous()) {
+                                m_transitionedFromAuto = true;
+                              } else {
+                                if (frc::DriverStation::IsTeleop()) {
+                                  if (m_transitionedFromAuto) {
+                                    m_ShooterSubSystem.ShooterGoToSpeed(m_visionSubSystem.getShooterSpeed(
+                                        15_ft, VisionSubsystem::InterpolationMode::LinearInterpolation));
+                                  }
+                                }
+                                m_transitionedFromAuto = false;
+                              }
+                            }).ToPtr());
 
   // DRIVE TRIGGER ACTIVATION
   fieldHome.OnTrue(frc2::InstantCommand([this]() { m_swerveDrive.FieldHome(); }, {&m_swerveDrive}).ToPtr());

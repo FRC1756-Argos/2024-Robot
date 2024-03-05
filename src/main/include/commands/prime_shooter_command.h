@@ -8,6 +8,8 @@
 #include <frc2/command/CommandHelper.h>
 #include <units/length.h>
 
+#include <optional>
+
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
 #include "subsystems/vision_subsystem.h"
@@ -17,7 +19,8 @@ class PrimeShooterCommand : public frc2::CommandHelper<frc2::Command, PrimeShoot
   PrimeShooterCommand(ShooterSubsystem& shooter,
                       ElevatorSubsystem& elevator,
                       VisionSubsystem& vision,
-                      const units::inch_t distance);
+                      const units::inch_t distance,
+                      const std::optional<units::revolutions_per_minute_t> customSpeed = std::nullopt);
 
   void Initialize() override;
 
@@ -32,4 +35,5 @@ class PrimeShooterCommand : public frc2::CommandHelper<frc2::Command, PrimeShoot
   ElevatorSubsystem& m_Elevator;
   VisionSubsystem& m_Vision;
   const units::inch_t m_distance;
+  const std::optional<units::revolutions_per_minute_t> m_customSpeed;
 };

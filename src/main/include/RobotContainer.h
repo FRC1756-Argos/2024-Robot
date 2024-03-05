@@ -13,6 +13,7 @@
 
 #include "Constants.h"
 #include "commands/auto_aim_command.h"
+#include "commands/autonomous/autonomous_amp_side_2_piece.h"
 #include "commands/autonomous/autonomous_center2_wing.h"
 #include "commands/autonomous/autonomous_choreo_test.h"
 #include "commands/autonomous/autonomous_nothing.h"
@@ -106,16 +107,11 @@ class RobotContainer {
   AutonomousSource1 m_autoSource1;
   AutonomousSourceSideSubwoofer2Piece m_autoSourceSideSubwoofer2Piece;
   AutonomousSource2 m_autoSource2;
+  AutonomousAmpSideSubwoofer2Piece m_autoAmpSideSUbwoofer2Piece;
 
   AutoSelector m_autoSelector;
 
+  bool m_transitionedFromAuto;  ///< True indicates latest enable was during autonomous
+
   void ConfigureBindings();
-
-  /* —————————————————— PID TESTING SETPOINT NT OBJECTS —————————————————— */
-
-  nt::GenericEntry* p_wristSetpoint;
-  frc::SlewRateLimiter<units::scalar> m_lateralNudgeRate;
-  frc::SlewRateLimiter<units::scalar> m_rotationalNudgeRate;
-  frc::SlewRateLimiter<units::scalar> m_distanceNudgeRate;
-  argos_lib::GenericDebouncer<AlignLedStatus> m_alignLedDebouncer;
 };
