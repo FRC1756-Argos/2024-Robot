@@ -38,8 +38,9 @@ AutonomousSourceSideSubwoofer2Piece::AutonomousSourceSideSubwoofer2Piece(
                                      15_ft, VisionSubsystem::InterpolationMode::LinearInterpolation));
                                },
                                {&m_Shooter}},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source_Side_Subwoofer.1", true},
-                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
+          frc2::ParallelCommandGroup{
+              DriveChoreo{m_Swerve, "Source_Side_Subwoofer.1", true},
+              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true}}} {}
 
