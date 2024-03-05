@@ -146,6 +146,30 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 
 ## Software Checkout
 
+1. Swerve Drive
+    * Forward/reverse
+    * Left/right strafe
+    * Clockwise/counterclockwise rotation
+2. Intake
+    * Intake note partially
+    * Reverse note out of intake
+    * Intake note fully ensuring note does not enter shooter flywheels
+    * Operator shooter position reset
+3. Manual shooter position setpoints (ensure shot success)
+    * Amp
+    * Subwoofer
+    * Low podium
+    * High podium
+4. Vision
+    * Target Red(4) or Blue(7) speaker april tags with reverse camera
+    * Ensure robot only targets tag for assigned alliance
+5. Climb sequence
+    * Prepare to climb: shooter vertical, hooks up
+    * Main sequence: lower hooks, raise shooter, score note
+    * Reset shooter
+6. Align wheels forward
+7. Shut down robot, swap battery
+
 ## Software Versions
 
 We're using the following dependencies:
