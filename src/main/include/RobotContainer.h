@@ -105,7 +105,7 @@ class RobotContainer {
   AutonomousCenter2Wing m_autoCenter2wing;
   AutonomousSource1 m_autoSource1;
   AutonomousSourceSideSubwoofer2Piece m_autoSourceSideSubwoofer2Piece;
-  AutonomousAmpSideSubwoofer2Piece m_autoAmpSideSUbwoofer2Piece;
+  AutonomousAmpSideSubwoofer2Piece m_autoAmpSideSubwoofer2Piece;
 
   AutoSelector m_autoSelector;
 
