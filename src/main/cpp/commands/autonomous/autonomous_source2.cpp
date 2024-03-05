@@ -9,6 +9,7 @@
 #include <units/length.h>
 
 #include "commands/auto_aim_command.h"
+#include "commands/autonomous/autonomous_source1.h"
 #include "commands/drive_choreo.h"
 #include "commands/intake_command.h"
 #include "commands/prime_shooter_command.h"
@@ -28,12 +29,13 @@ AutonomousSource2::AutonomousSource2(IntakeSubsystem& intake,
     , m_Swerve{swerve}
     , m_Vision{vision}  //, m_ShooterCommand{ShooterCommand{*shooter}}
     , m_SeqCommands{frc2::SequentialCommandGroup{
-          frc2::ParallelCommandGroup{PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft},
-                                     DriveChoreo{m_Swerve, "Source1preload.2", true}},
+          AutonomousSource1{m_Intake, m_Shooter, m_Elevator, m_Swerve, m_Vision, controllers, leds},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.2", false},
+                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true}},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.3", false},
+                                     PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-          ShooterCommand{&m_Shooter, true},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.2", true}, IntakeCommand{}},
-      }} {}
+          ShooterCommand{&m_Shooter, true}}} {}
 
 // Called when the command is initially scheduled.
 void AutonomousSource2::Initialize() {
