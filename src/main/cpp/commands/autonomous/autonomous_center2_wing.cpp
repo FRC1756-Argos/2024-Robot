@@ -4,8 +4,10 @@
 
 #include "commands/autonomous/autonomous_center2_wing.h"
 
+#include <frc2/command/InstantCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
+#include <units/angular_velocity.h>
 #include <units/length.h>
 
 #include "commands/auto_aim_command.h"
@@ -28,10 +30,16 @@ AutonomousCenter2Wing::AutonomousCenter2Wing(IntakeSubsystem& intake,
     , m_Swerve{swerve}
     , m_Vision{vision}  //, m_ShooterCommand{ShooterCommand{*shooter}}
     , m_SeqCommands{frc2::SequentialCommandGroup{
-          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in},
+          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in, 2000_rpm},
           ShooterCommand{&m_Shooter, true},
+          frc2::InstantCommand{[this]() {
+                                 m_Shooter.ShooterGoToSpeed(m_Vision.getShooterSpeed(
+                                     15_ft, VisionSubsystem::InterpolationMode::LinearInterpolation));
+                               },
+                               {&m_Shooter}},
           frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Center_2wing", true},
                                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true}},
+          AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true}}} {}
 
 // Called when the command is initially scheduled.
