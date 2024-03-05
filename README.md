@@ -107,7 +107,7 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | DPad Right      | Unused |
 | DPad Down       | Shooter Feed Backwards |
 | DPad Left       | Unused |
-| A               | Unused |
+| A               | Aim While Moving |
 | B               | Unused |
 | X               | Unused |
 | Y               | Field Home (hold) |
