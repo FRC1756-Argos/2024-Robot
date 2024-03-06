@@ -26,7 +26,7 @@ AutonomousSource1::AutonomousSource1(IntakeSubsystem& intake,
     , m_Shooter{shooter}
     , m_Elevator{elevator}
     , m_Swerve{swerve}
-    , m_Vision{vision}  //, m_ShooterCommand{ShooterCommand{*shooter}}
+    , m_Vision{vision}
     , m_SeqCommands{frc2::SequentialCommandGroup{
           frc2::ParallelCommandGroup{PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft},
                                      DriveChoreo{m_Swerve, "Source1preload.1", true}},
