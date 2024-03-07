@@ -20,7 +20,8 @@ class PrimeShooterCommand : public frc2::CommandHelper<frc2::Command, PrimeShoot
                       ElevatorSubsystem& elevator,
                       VisionSubsystem& vision,
                       const units::inch_t distance,
-                      const std::optional<units::revolutions_per_minute_t> customSpeed = std::nullopt);
+                      const std::optional<units::revolutions_per_minute_t> customSpeed = std::nullopt,
+                      bool wait = true);
 
   void Initialize() override;
 
@@ -36,4 +37,5 @@ class PrimeShooterCommand : public frc2::CommandHelper<frc2::Command, PrimeShoot
   VisionSubsystem& m_Vision;
   const units::inch_t m_distance;
   const std::optional<units::revolutions_per_minute_t> m_customSpeed;
+  bool m_wait;
 };
