@@ -267,6 +267,9 @@ void RobotContainer::ConfigureBindings() {
   m_controllers.OperatorController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
   m_controllers.OperatorController().SetButtonDebounce(argos_lib::XboxController::Button::kStart, {1500_ms, 0_ms});
 
+  auto fireTrigger = m_controllers.OperatorController().TriggerDebounced(argos_lib::XboxController::Button::kStart) &&
+                     !m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kBack);
+
   // SWAP CONTROLLER TRIGGERS
   frc2::Trigger driverTriggerSwapCombo = m_controllers.DriverController().TriggerDebounced(
       {argos_lib::XboxController::Button::kBack, argos_lib::XboxController::Button::kStart});
@@ -361,7 +364,14 @@ void RobotContainer::ConfigureBindings() {
   (feedForward || feedBackward)
       .OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.0); }, {&m_ShooterSubSystem}).ToPtr());
 
-  //
+  fireTrigger.OnTrue(frc2::InstantCommand(
+                         [this]() {
+                           m_ledSubSystem.FireEverywhere();
+                           m_ledSubSystem.SetDisableAnimation([this]() { m_ledSubSystem.FireEverywhere(false); });
+                         },
+                         {&m_ledSubSystem})
+                         .ToPtr());
+
   // SWAP CONTROLLERS TRIGGER ACTIVATION
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
       .WhileTrue(argos_lib::SwapControllersCommand(&m_controllers).ToPtr());
