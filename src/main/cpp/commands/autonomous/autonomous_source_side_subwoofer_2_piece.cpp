@@ -33,9 +33,9 @@ AutonomousSourceSideSubwoofer2Piece::AutonomousSourceSideSubwoofer2Piece(
     , m_SeqCommands{frc2::SequentialCommandGroup{
           PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in, 5000_rpm},
           ShooterCommand{&m_Shooter, true},
-          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft, std::nullopt, false},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source_Side_Subwoofer.1", true},
-                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true}},
+          frc2::ParallelCommandGroup{
+              DriveChoreo{m_Swerve, "Source_Side_Subwoofer.1", true},
+              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true}}} {}
 
