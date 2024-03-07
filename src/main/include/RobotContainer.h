@@ -18,6 +18,7 @@
 #include "commands/autonomous/autonomous_choreo_test.h"
 #include "commands/autonomous/autonomous_nothing.h"
 #include "commands/autonomous/autonomous_source1.h"
+#include "commands/autonomous/autonomous_source2.h"
 #include "commands/autonomous/autonomous_source_side_subwoofer_2_piece.h"
 #include "commands/autonomous/autonomous_source_side_subwoofer_4_piece.h"
 #include "commands/autonomous/autonomous_zero_note.h"
@@ -107,6 +108,7 @@ class RobotContainer {
   AutonomousCenter2Wing m_autoCenter2wing;
   AutonomousSource1 m_autoSource1;
   AutonomousSourceSideSubwoofer2Piece m_autoSourceSideSubwoofer2Piece;
+  AutonomousSource2 m_autoSource2;
   AutonomousAmpSideSubwoofer2Piece m_autoAmpSideSubwoofer2Piece;
   AutonomousZeroNote m_autoZeroNote;
   AutonomousSourceSideSubwoofer4Piece m_autoSourceSideSubwoofer4Piece;
