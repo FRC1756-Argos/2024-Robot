@@ -60,7 +60,7 @@ RobotContainer::RobotContainer()
                        &m_visionSubSystem,
                        &m_controllers,
                        &m_ledSubSystem}
-    , m_ClimberHomeCommand(m_climberSubsystem)
+    , m_ClimberHomeCommand(m_climberSubsystem, m_instance)
     , m_GoToAmpPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToHighPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, true}
     , m_GoToLowPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, false}
