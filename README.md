@@ -24,6 +24,7 @@ Robot code for 2024 FRC season
 | Cat Yellow | Solid | All | Aim in progress | Aim active |
 | Red | Solid | All | No target found | Aim active |
 | Green | Solid | All | Target locked | Aim active |
+| :fire: | :fire: | All | :fire: :fire: :fire: | Operator command |
 
 ### Controller Vibration Feedback
 
@@ -140,7 +141,7 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | LT              | Trap |
 | RT              | Elevator Reset Position |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
-| Start           | Swap (hold with <kbd>Back</kbd>) |
+| Start           | :fire: :fire: :fire: or Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |
 | Right JS Button | Unused |
 
