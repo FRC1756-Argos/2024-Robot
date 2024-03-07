@@ -105,6 +105,13 @@ RobotContainer::RobotContainer()
                                    m_controllers,
                                    m_ledSubSystem}
     , m_autoZeroNote{m_swerveDrive}
+    , m_autoSourceSideSubwoofer4Piece{m_intakeSubsystem,
+                                      m_ShooterSubSystem,
+                                      m_elevatorSubsystem,
+                                      m_swerveDrive,
+                                      m_visionSubSystem,
+                                      m_controllers,
+                                      m_ledSubSystem}
     , m_autoSelector{{&m_autoNothing,
                       &m_autoCenter2wing,
                       &m_autoSource1,
@@ -112,6 +119,7 @@ RobotContainer::RobotContainer()
                       &m_autoSource2,
                       &m_autoZeroNote,
                       &m_autoAmpSideSubwoofer2Piece,
+                      &m_autoSourceSideSubwoofer4Piece,
                       &m_autoChoreoTest},
                      &m_autoNothing}
     , m_transitionedFromAuto{false} {
@@ -259,6 +267,9 @@ void RobotContainer::ConfigureBindings() {
   m_controllers.OperatorController().SetButtonDebounce(argos_lib::XboxController::Button::kBack, {1500_ms, 0_ms});
   m_controllers.OperatorController().SetButtonDebounce(argos_lib::XboxController::Button::kStart, {1500_ms, 0_ms});
 
+  auto fireTrigger = m_controllers.OperatorController().TriggerDebounced(argos_lib::XboxController::Button::kStart) &&
+                     !m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kBack);
+
   // SWAP CONTROLLER TRIGGERS
   frc2::Trigger driverTriggerSwapCombo = m_controllers.DriverController().TriggerDebounced(
       {argos_lib::XboxController::Button::kBack, argos_lib::XboxController::Button::kStart});
@@ -353,7 +364,14 @@ void RobotContainer::ConfigureBindings() {
   (feedForward || feedBackward)
       .OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.Feed(0.0); }, {&m_ShooterSubSystem}).ToPtr());
 
-  //
+  fireTrigger.OnTrue(frc2::InstantCommand(
+                         [this]() {
+                           m_ledSubSystem.FireEverywhere();
+                           m_ledSubSystem.SetDisableAnimation([this]() { m_ledSubSystem.FireEverywhere(false); });
+                         },
+                         {&m_ledSubSystem})
+                         .ToPtr());
+
   // SWAP CONTROLLERS TRIGGER ACTIVATION
   (driverTriggerSwapCombo || operatorTriggerSwapCombo)
       .WhileTrue(argos_lib::SwapControllersCommand(&m_controllers).ToPtr());

@@ -10,8 +10,14 @@ PrimeShooterCommand::PrimeShooterCommand(ShooterSubsystem& shooter,
                                          ElevatorSubsystem& elevator,
                                          VisionSubsystem& vision,
                                          const units::inch_t distance,
-                                         const std::optional<units::revolutions_per_minute_t> customSpeed)
-    : m_Shooter{shooter}, m_Elevator{elevator}, m_Vision{vision}, m_distance{distance}, m_customSpeed{customSpeed} {
+                                         const std::optional<units::revolutions_per_minute_t> customSpeed,
+                                         bool wait)
+    : m_Shooter{shooter}
+    , m_Elevator{elevator}
+    , m_Vision{vision}
+    , m_distance{distance}
+    , m_customSpeed{customSpeed}
+    , m_wait{wait} {
   AddRequirements({&m_Shooter, &m_Elevator});
 }
 
@@ -38,5 +44,5 @@ void PrimeShooterCommand::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool PrimeShooterCommand::IsFinished() {
-  return m_Shooter.ShooterAtSpeed() && m_Elevator.IsElevatorAtSetPoint();
+  return !m_wait || (m_Shooter.ShooterAtSpeed() && m_Elevator.IsElevatorAtSetPoint());
 }
