@@ -137,26 +137,24 @@ std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
     if (camera && camera.value() == whichCamera::PRIMARY_CAMERA) {
       return finalAngleOffset;
     } else if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
-      return finalAngleOffset - (units::degree_t)(10.0 * (distance.value().to<double>() * 0.011));
+      return finalAngleOffset - (units::degree_t)(measure_up::shooter_targets::frontSideSpinFactor *
+                                                  (distance.value().to<double>() * 0.011));
     }
   } else if (distance) {
-    units::degree_t accountLongerSpin = (units::degree_t)(2.0 * (distance.value().to<double>() * 0.011));
+    units::degree_t accountLongerSpin =
+        (units::degree_t)(measure_up::shooter_targets::longShotSpinFactor * (distance.value().to<double>() * 0.011));
     const auto targetValues = GetSeeingCamera();
-    if (camera && camera.value() == whichCamera::PRIMARY_CAMERA) {
-      if (targetValues &&
-          targetValues.value().tagPose.Rotation().Z() > measure_up::shooter_targets::offsetRotationThreshold) {
+    if (targetValues &&
+        targetValues.value().tagPose.Rotation().Z() > measure_up::shooter_targets::offsetRotationThreshold) {
+      if (camera && camera.value() == whichCamera::PRIMARY_CAMERA) {
         accountLongerSpin += 0.8_deg;
-      } else if (targetValues && targetValues.value().tagPose.Rotation().Z() < 0_deg) {
-        accountLongerSpin = 0.0_deg;
-      }
-    } else if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
-      if (targetValues &&
-          targetValues.value().tagPose.Rotation().Z() > measure_up::shooter_targets::offsetRotationThreshold) {
+      } else if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
         accountLongerSpin -= 0.8_deg;
-      } else if (targetValues && targetValues.value().tagPose.Rotation().Z() < 0_deg) {
-        accountLongerSpin = 0.0_deg;
       }
+    } else if (targetValues && targetValues.value().tagPose.Rotation().Z() < 0_deg) {
+      accountLongerSpin = 0.0_deg;
     }
+
     return accountLongerSpin + finalAngleOffset;
   }
   return std::nullopt;
