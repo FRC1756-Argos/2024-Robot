@@ -12,6 +12,8 @@
 #include <units/angular_velocity.h>
 #include <units/length.h>
 
+#include <string>
+
 #include "argos_lib/config/config_types.h"
 #include "argos_lib/general/interpolation.h"
 #include "constants/interpolation_maps.h"
@@ -20,6 +22,8 @@
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/NetworkTableValue.h"
 #include "swerve_drive_subsystem.h"
+
+enum class whichCamera { PRIMARY_CAMERA = 0, SECONDARY_CAMERA };
 
 class LimelightTarget {
  private:
@@ -65,7 +69,7 @@ class LimelightTarget {
    *
    * @return tValues
    */
-  tValues GetTarget(bool filter);
+  tValues GetTarget(bool filter, std::string cameraName);
 
   /**
    * @brief Does the camera see a target?
@@ -75,7 +79,7 @@ class LimelightTarget {
    */
   bool HasTarget();
 
-  void ResetFilters();
+  void ResetFilters(std::string cameraName);
 
   void ResetOnNextTarget();
 };
@@ -139,7 +143,14 @@ class VisionSubsystem : public frc2::SubsystemBase {
    *
    * @return LimelightTarget::tValues
    */
-  [[nodiscard]] LimelightTarget::tValues GetCameraTargetValues();
+  [[nodiscard]] LimelightTarget::tValues GetPrimaryCameraTargetValues();
+
+  /**
+   * @brief Get the robot poses and latencies from secondary camera
+   *
+   * @return LimelightTarget::tValues
+   */
+  [[nodiscard]] LimelightTarget::tValues GetSecondaryCameraTargetValues();
 
   /**
    * @brief Get the current offset to the retroreflective tape
@@ -166,7 +177,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
   /// @brief it disables (duh)
   void Disable();
 
-  [[nodiscard]] units::degree_t getShooterAngle(const units::inch_t distance, const InterpolationMode mode) const;
+  [[nodiscard]] units::degree_t getShooterAngle(const units::inch_t distance, const InterpolationMode mode);
   [[nodiscard]] std::optional<units::degree_t> getShooterAngle();
 
   [[nodiscard]] std::optional<units::degree_t> getShooterOffset();
@@ -180,6 +191,10 @@ class VisionSubsystem : public frc2::SubsystemBase {
   [[nodiscard]] std::optional<units::degree_t> GetHorizontalOffsetToTrap();
 
   [[nodiscard]] std::optional<units::degree_t> GetOrientationToTrap();
+
+  [[nodiscard]] std::optional<whichCamera> getWhichCamera();
+
+  [[nodiscard]] std::optional<LimelightTarget::tValues> GetSeeingCamera();
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be

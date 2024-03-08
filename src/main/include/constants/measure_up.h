@@ -37,6 +37,7 @@ namespace measure_up {
     constexpr auto offsetRotationThreshold = 50_deg;
     constexpr auto speakerOpeningHeightFromGround = 80.5_in;
     constexpr auto cameraHeightToAprilTag = 28.63_in;
+    constexpr auto secondaryCameraToShooter = 18_in;
   }  // namespace shooter_targets
   namespace camera_front {
     constexpr auto cameraX = 0_in;  /// @todo real mounting offsets
