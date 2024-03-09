@@ -60,7 +60,7 @@ bool AutonomousSourceSideSubwoofer5Piece::IsFinished() {
 }
 
 std::string AutonomousSourceSideSubwoofer5Piece::GetName() const {
-  return "08. Source Side Subwoofer 5 Piece";
+  return "07. Source Side Subwoofer 5 Piece";
 }
 
 frc2::Command* AutonomousSourceSideSubwoofer5Piece::GetCommand() {

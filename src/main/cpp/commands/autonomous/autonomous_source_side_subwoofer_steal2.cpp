@@ -67,7 +67,7 @@ bool AutonomousSourceSideSteal2::IsFinished() {
 }
 
 std::string AutonomousSourceSideSteal2::GetName() const {
-  return "09. Source-side subwoofer steal 2";
+  return "08. Source-side subwoofer steal 2";
 }
 
 frc2::Command* AutonomousSourceSideSteal2::GetCommand() {

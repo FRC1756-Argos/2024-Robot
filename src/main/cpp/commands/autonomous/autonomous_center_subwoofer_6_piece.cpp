@@ -64,7 +64,7 @@ bool AutonomousCenterSubwoofer6Piece::IsFinished() {
 }
 
 std::string AutonomousCenterSubwoofer6Piece::GetName() const {
-  return "10. Center Subwoofer 6 Piece";
+  return "04. Center Subwoofer 6 Piece";
 }
 
 frc2::Command* AutonomousCenterSubwoofer6Piece::GetCommand() {

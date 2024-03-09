@@ -64,7 +64,7 @@ bool AutonomousCenter2Wing::IsFinished() {
 }
 
 std::string AutonomousCenter2Wing::GetName() const {
-  return "01. Center 2";
+  return "02. Center 2";
 }
 
 frc2::Command* AutonomousCenter2Wing::GetCommand() {
