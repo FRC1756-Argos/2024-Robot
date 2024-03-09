@@ -29,23 +29,19 @@ AutonomousSourceSideSteal2::AutonomousSourceSideSteal2(IntakeSubsystem& intake,
     , m_Swerve{swerve}
     , m_Vision{vision}
     , m_SeqCommands{frc2::SequentialCommandGroup{
-          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in, 2000_rpm},
+          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in, 5000_rpm},
           ShooterCommand{&m_Shooter, true},
-          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 10_ft, 5000_rpm, false},
           frc2::ParallelCommandGroup{
-              DriveChoreo{m_Swerve, "Source_Side_Subwoofer_Steal2.1", true},  ///< @todo: Update to match choreo
-              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
-          AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-          ShooterCommand{&m_Shooter, true},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source_Side_Subwoofer_Steal2.2", false},
-                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true}},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source_Side_Subwoofer_Steal2.3", false},
+              DriveChoreo{m_Swerve, "Source_Side_Subwoofer_3.1", true},
+              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 3.5_s}},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source_Side_Subwoofer_3.2", false},
                                      PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source_Side_Subwoofer_Steal2.4", false},
-                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true}},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source_Side_Subwoofer_Steal2.5", false},
+          frc2::ParallelCommandGroup{
+              DriveChoreo{m_Swerve, "Source_Side_Subwoofer_3.3", false},
+              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source_Side_Subwoofer_3.4", false},
                                      PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true}}} {}
