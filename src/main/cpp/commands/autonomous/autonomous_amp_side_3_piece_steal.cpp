@@ -39,17 +39,17 @@ AutonomousAmpSideSubwoofer3PieceSteal::AutonomousAmpSideSubwoofer3PieceSteal(
                                },
                                {&m_Shooter}},
           frc2::ParallelCommandGroup{
-              DriveChoreo{m_Swerve, "Amp_side_3_Mid.1", true},
+              DriveChoreo{m_Swerve, "Amp_Side_3_Mid.1", true},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true},
           frc2::ParallelCommandGroup{
-              DriveChoreo{m_Swerve, "Amp_side_3_Mid.2", false},
+              DriveChoreo{m_Swerve, "Amp_Side_3_Mid.2", false},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true},
           frc2::ParallelCommandGroup{
-              DriveChoreo{m_Swerve, "Amp_side_3_Mid.3", false},
+              DriveChoreo{m_Swerve, "Amp_Side_3_Mid.3", false},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}}}} {}
 
 // Called when the command is initially scheduled.
