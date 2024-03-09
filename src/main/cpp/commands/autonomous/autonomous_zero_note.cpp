@@ -35,7 +35,7 @@ bool AutonomousZeroNote::IsFinished() {
 }
 
 std::string AutonomousZeroNote::GetName() const {
-  return "07. Zero Note - Just Move";
+  return "11. Zero Note - Just Move";
 }
 
 frc2::Command* AutonomousZeroNote::GetCommand() {

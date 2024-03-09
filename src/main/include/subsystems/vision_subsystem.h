@@ -182,6 +182,10 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] std::optional<units::degree_t> getShooterOffset();
 
+  [[nodiscard]] std::optional<units::degree_t> getShooterAngleWithInertia(double medialSpeedPct);
+
+  [[nodiscard]] std::optional<double> getRotationSpeedWithInertia(double lateralSpeedPct);
+
   [[nodiscard]] units::angular_velocity::revolutions_per_minute_t getShooterSpeed(const units::inch_t distance,
                                                                                   const InterpolationMode mode) const;
   [[nodiscard]] std::optional<units::angular_velocity::revolutions_per_minute_t> getShooterSpeed();

@@ -54,7 +54,7 @@ bool AutonomousSource1::IsFinished() {
 }
 
 std::string AutonomousSource1::GetName() const {
-  return "02. 1 Preloaded Source ";
+  return "09. 1 Preloaded Source ";
 }
 
 frc2::Command* AutonomousSource1::GetCommand() {
