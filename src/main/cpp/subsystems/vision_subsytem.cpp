@@ -6,6 +6,8 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/math.h>
 
+#include <Constants.h>
+
 #include "constants/field_points.h"
 #include "subsystems/vision_subsystem.h"
 
@@ -125,6 +127,37 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
   return std::nullopt;
 }
 
+std::optional<units::degree_t> VisionSubsystem::getShooterAngleWithInertia(double medialSpeedPct) {
+  auto angle = getShooterAngle();
+  if (angle) {
+    units::degree_t finalAngle = angle.value() - units::degree_t(speeds::drive::medialInertialOffset * medialSpeedPct);
+
+    const auto camera = getWhichCamera();
+    if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
+      finalAngle = angle.value() + units::degree_t(speeds::drive::medialInertialOffset * medialSpeedPct);
+    }
+
+    return finalAngle;
+  }
+
+  return std::nullopt;
+}
+
+std::optional<double> VisionSubsystem::getRotationSpeedWithInertia(double lateralSpeedPct) {
+  auto horzOffset = GetHorizontalOffsetToTarget();
+  auto shooterOffset = getShooterOffset();
+
+  if (horzOffset && shooterOffset) {
+    double offset = horzOffset.value().to<double>();
+    offset -= shooterOffset.value().to<double>();
+    double finalOffset = offset - speeds::drive::lateralInertialOffset * lateralSpeedPct;
+
+    return (-finalOffset * 0.016);
+  }
+
+  return std::nullopt;
+}
+
 std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
   auto distance = GetDistanceToSpeaker();
   const auto camera = getWhichCamera();
@@ -133,7 +166,12 @@ std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
     finalAngleOffset = units::math::atan2(measure_up::shooter_targets::cameraOffsetFromShooter, distance.value());
   }
 
-  if (distance && distance.value() < measure_up::shooter_targets::offsetDistanceThreshold) {
+  units::inch_t offSetDistanceThreshold = measure_up::shooter_targets::offsetDistanceThreshold;
+  if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
+    offSetDistanceThreshold = measure_up::shooter_targets::offsetDistThresholdSecondaryCam;
+  }
+
+  if (distance && distance.value() < offSetDistanceThreshold) {
     if (camera && camera.value() == whichCamera::PRIMARY_CAMERA) {
       return finalAngleOffset;
     } else if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {

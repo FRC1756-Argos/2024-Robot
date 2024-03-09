@@ -34,6 +34,7 @@ namespace measure_up {
     constexpr auto trapOpeningHeight = 36.25_in;
     constexpr auto cameraOffsetFromShooter = 21.0_in;
     constexpr auto offsetDistanceThreshold = 140_in;
+    constexpr auto offsetDistThresholdSecondaryCam = 210_in;
     constexpr auto offsetRotationThreshold = 50_deg;
     constexpr auto speakerOpeningHeightFromGround = 80.5_in;
     constexpr auto cameraHeightToAprilTag = 28.63_in;
@@ -75,7 +76,7 @@ namespace measure_up {
       constexpr auto maxAngle = 270_deg;
       constexpr auto intakeAngle = 40_deg;
       constexpr auto ampAngle = 135_deg;
-      constexpr auto podiumHighAngle = 28_deg;
+      constexpr auto podiumHighAngle = 27_deg;
       constexpr auto podiumLowAngle = 36_deg;
       constexpr auto subwooferAngle = 135_deg;
       constexpr auto trapAngle = -110_deg;
