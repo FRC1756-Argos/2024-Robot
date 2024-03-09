@@ -73,7 +73,7 @@ bool AutonomousAmpSideSubwoofer3PieceSteal::IsFinished() {
 }
 
 std::string AutonomousAmpSideSubwoofer3PieceSteal::GetName() const {
-  return "10. Amp Side Subwoofer 3 Piece Steal";
+  return "12. Amp Side Subwoofer 3 Piece Steal";
 }
 
 frc2::Command* AutonomousAmpSideSubwoofer3PieceSteal::GetCommand() {
