@@ -170,16 +170,11 @@ RobotContainer::RobotContainer()
         frc::SmartDashboard::PutBoolean("(DRIVER) IsAimingActive", m_visionSubSystem.IsAimWhileMoveActive());
 
         if (m_visionSubSystem.IsAimWhileMoveActive()) {
-          auto horzOffset = m_visionSubSystem.GetHorizontalOffsetToTarget();
-          auto cameraOffset = m_visionSubSystem.getShooterOffset();
-
-          auto angle = m_visionSubSystem.getShooterAngle();
           auto speed = m_visionSubSystem.getShooterSpeed();
-          if (angle != std::nullopt) {
-            units::degree_t finalAngle = angle.value() - units::degree_t(speeds::drive::medialInertialOffset *
-                                                                         deadbandTranslationSpeeds.forwardSpeedPct);
-            m_elevatorSubsystem.SetCarriageAngle(finalAngle);
-          }
+          auto rotationWithInertia =
+              m_visionSubSystem.getRotationSpeedWithInertia(deadbandTranslationSpeeds.leftSpeedPct);
+          auto shooterAngleWithInertia =
+              m_visionSubSystem.getShooterAngleWithInertia(deadbandTranslationSpeeds.forwardSpeedPct);
 
           if (speed.has_value()) {
             m_ShooterSubSystem.ShooterGoToSpeed(speed.value());
@@ -188,12 +183,10 @@ RobotContainer::RobotContainer()
                 m_visionSubSystem.getShooterSpeed(15_ft, VisionSubsystem::InterpolationMode::LinearInterpolation));
           }
 
-          if (horzOffset != std::nullopt && cameraOffset != std::nullopt) {
-            auto lateralSpeedPct = deadbandTranslationSpeeds.leftSpeedPct;
-            double offset = horzOffset.value().to<double>();
-            offset -= cameraOffset.value().to<double>();
-            auto finalOffset = offset - speeds::drive::lateralInertialOffset * lateralSpeedPct;
-            rotateSpeed = -finalOffset * 0.016;
+          if (rotationWithInertia && shooterAngleWithInertia) {
+            m_elevatorSubsystem.SetCarriageAngle(shooterAngleWithInertia.value());
+            rotateSpeed = rotationWithInertia.value();
+
             // simmer down the translation speeds
             deadbandTranslationSpeeds.forwardSpeedPct *= speeds::drive::aimSpeedReductionPct;
             deadbandTranslationSpeeds.leftSpeedPct *= speeds::drive::aimSpeedReductionPct;
