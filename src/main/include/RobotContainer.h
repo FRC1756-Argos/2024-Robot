@@ -46,6 +46,8 @@
 #include "subsystems/vision_subsystem.h"
 #include "utils/auto_selector.h"
 
+#include "commands/reverse_climb_command.h"
+
 /**
  * @brief  Command-based is a "declarative" paradigm, very little robot logic should
  *         actually be handled in the {@link Robot} periodic methods (other than the

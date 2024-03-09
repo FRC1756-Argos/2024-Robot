@@ -19,6 +19,8 @@
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
 
+#include "commands/reverse_climb_command.h"
+
 class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand> {
  public:
   ClimberCommand(ClimberSubsystem* climber,
@@ -44,6 +46,7 @@ class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand>
   LowerClimberCommand m_LowerClimberCommand;
   frc2::SequentialCommandGroup m_SeqCommand;
   ShooterCommand m_ShootCommand;
+  ReverseClimbCommand m_ReverseClimbCommand;
 
   argos_lib::SwappableControllersSubsystem* m_pControllers;
   int button_count;

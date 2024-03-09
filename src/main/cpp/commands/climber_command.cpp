@@ -4,6 +4,7 @@
 
 #include "commands/climber_command.h"
 
+
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/WaitCommand.h>
 
@@ -21,7 +22,8 @@ ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
     , m_TrapCommand{GoToTrapPositionCommand{shooter, elevator}}
     // , m_SeqCommand{LowerClimberCommand{m_pClimber}, GoToTrapPositionCommand{m_pShooter, m_pElevator}, frc2::WaitCommand(400_ms), ShooterCommand{shooter}}
     , m_SeqCommand{LowerClimberCommand{m_pClimber}, GoToTrapPositionCommand{m_pShooter, m_pElevator}}
-    , m_ShootCommand{m_pShooter} {}
+    , m_ShootCommand{m_pShooter}
+    , m_ReverseClimbCommand{ReverseClimbCommand{climber, shooter, elevator}} {}
 
 // Called when the command is initially scheduled.
 void ClimberCommand::Initialize() {
@@ -53,6 +55,11 @@ void ClimberCommand::Execute() {
         button_count = 0;
     }
   }
+  /*
+  if(m_pControllers->OperatorController().GetRawButtonPressed(argos_lib::XboxController::Button::kLeftTrigger)){
+    m_ReverseClimbCommand.Schedule();
+    button_count = 1;
+  }*/
   if (m_pClimber->IsClimberManualOverride()) {
     Cancel();
   }
