@@ -44,9 +44,6 @@ void ClimberHomingCommand::End(bool interrupted) {
     m_climberSubsystem.SetHomeFailed(false);
   } else {
     m_climberSubsystem.SetHomeFailed(true);
-    if (m_instance == argos_lib::RobotInstance::Competition) {
-      m_climberSubsystem.SetHeight(measure_up::climber::climberStagingHeight);
-    }
   }
 }
 

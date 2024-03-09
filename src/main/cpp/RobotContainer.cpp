@@ -335,6 +335,15 @@ void RobotContainer::ConfigureBindings() {
           frc2::InstantCommand([this]() { m_visionSubSystem.SetAimWhileMove(false); }, {&m_visionSubSystem}).ToPtr());
   // CLIMBER TRIGGER ACTIVATION
   startupClimberHomeTrigger.OnTrue(&m_ClimberHomeCommand);
+  (!ClimberHomeRequiredTrigger && robotEnableTrigger)
+      .OnTrue(frc2::InstantCommand(
+                  [this]() {
+                    if (m_instance == argos_lib::RobotInstance::Competition) {
+                      m_climberSubsystem.SetHeight(measure_up::climber::climberStagingHeight);
+                    }
+                  },
+                  {&m_climberSubsystem})
+                  .ToPtr());
 
   elevatorReset.OnTrue(frc2::InstantCommand(
                            [this]() {
