@@ -3,9 +3,12 @@
 ///            the license file in the root directory of this project.
 
 #include "commands/ready_for_climb_command.h"
+
 #include "constants/measure_up.h"
 
-ReadyForClimbCommand::ReadyForClimbCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator, ClimberSubsystem* climber)
+ReadyForClimbCommand::ReadyForClimbCommand(ShooterSubsystem* shooter,
+                                           ElevatorSubsystem* elevator,
+                                           ClimberSubsystem* climber)
     : m_pShooter{shooter}, m_pElevator{elevator}, m_pClimber{climber} {
   AddRequirements({m_pShooter, m_pElevator});
 }

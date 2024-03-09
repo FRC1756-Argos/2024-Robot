@@ -7,9 +7,9 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
+#include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
-#include "subsystems/climber_subsystem.h"
 
 class ReadyForClimbCommand : public frc2::CommandHelper<frc2::Command, ReadyForClimbCommand> {
  public:

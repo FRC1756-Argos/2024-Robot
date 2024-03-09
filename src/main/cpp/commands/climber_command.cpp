@@ -53,7 +53,7 @@ void ClimberCommand::Execute() {
         button_count = 0;
     }
   }
-  if(m_pClimber->IsClimberManualOverride()){
+  if (m_pClimber->IsClimberManualOverride()) {
     Cancel();
   }
 }
