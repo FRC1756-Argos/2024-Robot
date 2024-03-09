@@ -104,6 +104,13 @@ RobotContainer::RobotContainer()
                                    m_visionSubSystem,
                                    m_controllers,
                                    m_ledSubSystem}
+    , m_autoAmpSideSubwoofer3PieceSteal{m_intakeSubsystem,
+                                        m_ShooterSubSystem,
+                                        m_elevatorSubsystem,
+                                        m_swerveDrive,
+                                        m_visionSubSystem,
+                                        m_controllers,
+                                        m_ledSubSystem}
     , m_autoZeroNote{m_swerveDrive}
     , m_autoSourceSideSubwoofer4Piece{m_intakeSubsystem,
                                       m_ShooterSubSystem,
@@ -119,6 +126,7 @@ RobotContainer::RobotContainer()
                       &m_autoSource2,
                       &m_autoZeroNote,
                       &m_autoAmpSideSubwoofer2Piece,
+                      &m_autoAmpSideSubwoofer3PieceSteal,
                       &m_autoSourceSideSubwoofer4Piece,
                       &m_autoChoreoTest},
                      &m_autoNothing}

@@ -14,6 +14,7 @@
 #include "Constants.h"
 #include "commands/auto_aim_command.h"
 #include "commands/autonomous/autonomous_amp_side_2_piece.h"
+#include "commands/autonomous/autonomous_amp_side_3_piece_steal.h";
 #include "commands/autonomous/autonomous_center2_wing.h"
 #include "commands/autonomous/autonomous_choreo_test.h"
 #include "commands/autonomous/autonomous_nothing.h"
@@ -110,6 +111,7 @@ class RobotContainer {
   AutonomousSourceSideSubwoofer2Piece m_autoSourceSideSubwoofer2Piece;
   AutonomousSource2 m_autoSource2;
   AutonomousAmpSideSubwoofer2Piece m_autoAmpSideSubwoofer2Piece;
+  AutonomousAmpSideSubwoofer3PieceSteal m_autoAmpSideSubwoofer3PieceSteal;
   AutonomousZeroNote m_autoZeroNote;
   AutonomousSourceSideSubwoofer4Piece m_autoSourceSideSubwoofer4Piece;
 
