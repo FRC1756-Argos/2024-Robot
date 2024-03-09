@@ -8,10 +8,12 @@
 
 #include <chrono>
 
+#include "constants/measure_up.h"
+
 using namespace std::chrono_literals;
 
-ClimberHomingCommand::ClimberHomingCommand(ClimberSubsystem& subsystem)
-    : m_climberSubsystem(subsystem), m_climberMovingDebounce{{0_ms, 250_ms}, true} {
+ClimberHomingCommand::ClimberHomingCommand(ClimberSubsystem& subsystem, const argos_lib::RobotInstance instance)
+    : m_climberSubsystem(subsystem), m_climberMovingDebounce{{0_ms, 250_ms}, true}, m_instance{instance} {
   AddRequirements({&m_climberSubsystem});
 }
 

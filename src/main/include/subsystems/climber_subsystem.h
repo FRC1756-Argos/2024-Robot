@@ -13,9 +13,6 @@
 class ClimberSubsystem : public frc2::SubsystemBase {
  public:
   explicit ClimberSubsystem(argos_lib::RobotInstance robotInstance);
-  void SetExtensionSpeed(double speed);
-
-  void SetExtensionLength(units::inch_t length);
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.

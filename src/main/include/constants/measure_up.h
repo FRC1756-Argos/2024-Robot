@@ -56,6 +56,7 @@ namespace measure_up {
     constexpr auto upperLimit = 24.5_in;   // approx 19.5in of travel, get better value later
     constexpr auto climbRaisedHeight = 24_in;
     constexpr auto climbLoweredHeight = 4_in;
+    constexpr auto climberStagingHeight = 15.5_in;
   }  // namespace climber
 
   namespace elevator {
