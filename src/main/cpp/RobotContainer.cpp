@@ -268,6 +268,9 @@ void RobotContainer::ConfigureBindings() {
   // CLIMBER TRIGGERS
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto climberDown = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kDown);
+  auto climberSequenceTrigger =
+      m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
+  // auto reverseClimbTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
 
   // SHOOT TRIGGERS
   auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
@@ -280,10 +283,6 @@ void RobotContainer::ConfigureBindings() {
   auto highPodiumPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kX);
   auto lowPodiumPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kB);
   auto subwooferPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kY);
-  auto trapPositionTrigger =
-      m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
-  auto climberSequenceTrigger =
-      m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
 
   // ELEVATOR TRIGGERS
   auto elevatorLiftManualInput = (frc2::Trigger{[this]() {
@@ -433,7 +432,6 @@ void RobotContainer::ConfigureBindings() {
   highPodiumPositionTrigger.OnTrue(&m_GoToHighPodiumPositionCommand);
   lowPodiumPositionTrigger.OnTrue(&m_GoToLowPodiumPositionCommand);
   subwooferPositionTrigger.OnTrue(&m_GoToSubwooferPositionCommand);
-  trapPositionTrigger.OnTrue(&m_GoToTrapPositionCommand);
 
   std::cout << "&swerve" << &m_swerveDrive << '\n';
 }
