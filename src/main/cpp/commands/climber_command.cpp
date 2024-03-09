@@ -15,7 +15,7 @@ ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
     , m_pShooter{shooter}
     , m_pElevator{elevator}
     , m_pControllers{controllers}
-    , m_ReadyForClimbCommand{ReadyForClimbCommand{shooter, elevator}}
+    , m_ReadyForClimbCommand{ReadyForClimbCommand{shooter, elevator, climber}}
     , m_RaiseClimberCommand{RaiseClimberCommand{climber}}
     , m_LowerClimberCommand{LowerClimberCommand{climber}}
     , m_TrapCommand{GoToTrapPositionCommand{shooter, elevator}}
@@ -25,10 +25,11 @@ ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
 
 // Called when the command is initially scheduled.
 void ClimberCommand::Initialize() {
+  m_pClimber->SetClimberManualOverride(false);
   end_command = false;
-  m_ReadyForClimbCommand.Schedule();
   button_count = 0;
   m_TrapCommand.ResetIsTrapDone();
+  m_ReadyForClimbCommand.Schedule();
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -51,6 +52,9 @@ void ClimberCommand::Execute() {
       default:
         button_count = 0;
     }
+  }
+  if (m_pClimber->IsClimberManualOverride()) {
+    Cancel();
   }
 }
 
