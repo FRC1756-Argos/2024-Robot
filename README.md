@@ -138,8 +138,8 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | DPad Left       | Unused |
 | LB              | Continue Climb Sequence |
 | RB              | Start Climb Sequence |
-| LT              | Trap |
-| RT              | Elevator Reset Position |
+| LT              | Reverse Trap |
+| RT              | Crossfield Position |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | :fire: :fire: :fire: or Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |
