@@ -60,7 +60,7 @@ RobotContainer::RobotContainer()
                        &m_visionSubSystem,
                        &m_controllers,
                        &m_ledSubSystem}
-    , m_ClimberHomeCommand(m_climberSubsystem)
+    , m_ClimberHomeCommand(m_climberSubsystem, m_instance)
     , m_GoToAmpPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToHighPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, true}
     , m_GoToLowPodiumPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem, false}
@@ -97,6 +97,13 @@ RobotContainer::RobotContainer()
                     m_visionSubSystem,
                     m_controllers,
                     m_ledSubSystem}
+    , m_autoSourceSideSteal2{m_intakeSubsystem,
+                             m_ShooterSubSystem,
+                             m_elevatorSubsystem,
+                             m_swerveDrive,
+                             m_visionSubSystem,
+                             m_controllers,
+                             m_ledSubSystem}
     , m_autoAmpSideSubwoofer2Piece{m_intakeSubsystem,
                                    m_ShooterSubSystem,
                                    m_elevatorSubsystem,
@@ -119,15 +126,40 @@ RobotContainer::RobotContainer()
                                       m_visionSubSystem,
                                       m_controllers,
                                       m_ledSubSystem}
+    , m_autoCenterSubwoofer4Piece{m_intakeSubsystem,
+                                  m_ShooterSubSystem,
+                                  m_elevatorSubsystem,
+                                  m_swerveDrive,
+                                  m_visionSubSystem,
+                                  m_controllers,
+                                  m_ledSubSystem}
+    , m_autoCenterSubwoofer6Piece{m_intakeSubsystem,
+                                  m_ShooterSubSystem,
+                                  m_elevatorSubsystem,
+                                  m_swerveDrive,
+                                  m_visionSubSystem,
+                                  m_controllers,
+                                  m_ledSubSystem}
+    , m_autoSourceSideSubwoofer5Piece{m_intakeSubsystem,
+                                      m_ShooterSubSystem,
+                                      m_elevatorSubsystem,
+                                      m_swerveDrive,
+                                      m_visionSubSystem,
+                                      m_controllers,
+                                      m_ledSubSystem}
     , m_autoSelector{{&m_autoNothing,
                       &m_autoCenter2wing,
                       &m_autoSource1,
                       &m_autoSourceSideSubwoofer2Piece,
                       &m_autoSource2,
+                      &m_autoSourceSideSteal2,
                       &m_autoZeroNote,
                       &m_autoAmpSideSubwoofer2Piece,
                       &m_autoAmpSideSubwoofer3PieceSteal,
                       &m_autoSourceSideSubwoofer4Piece,
+                      &m_autoCenterSubwoofer4Piece,
+                      &m_autoCenterSubwoofer6Piece,
+                      &m_autoSourceSideSubwoofer5Piece,
                       &m_autoChoreoTest},
                      &m_autoNothing}
     , m_transitionedFromAuto{false} {
@@ -319,10 +351,19 @@ void RobotContainer::ConfigureBindings() {
           frc2::InstantCommand([this]() { m_visionSubSystem.SetAimWhileMove(false); }, {&m_visionSubSystem}).ToPtr());
   // CLIMBER TRIGGER ACTIVATION
   startupClimberHomeTrigger.OnTrue(&m_ClimberHomeCommand);
+  (!ClimberHomeRequiredTrigger && robotEnableTrigger)
+      .OnTrue(frc2::InstantCommand(
+                  [this]() {
+                    if (m_instance == argos_lib::RobotInstance::Competition) {
+                      m_climberSubsystem.SetHeight(measure_up::climber::climberStagingHeight);
+                    }
+                  },
+                  {&m_climberSubsystem})
+                  .ToPtr());
 
   elevatorReset.OnTrue(frc2::InstantCommand(
                            [this]() {
-                             m_elevatorSubsystem.SetCarriageAngle(90_deg);
+                             m_elevatorSubsystem.SetCarriageAngle(-15_deg);
                              m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::lift::intakeHeight);
                            },
                            {&m_elevatorSubsystem})

@@ -16,12 +16,16 @@
 #include "commands/autonomous/autonomous_amp_side_2_piece.h"
 #include "commands/autonomous/autonomous_amp_side_3_piece_steal.h";
 #include "commands/autonomous/autonomous_center2_wing.h"
+#include "commands/autonomous/autonomous_center_subwoofer_4_piece.h"
+#include "commands/autonomous/autonomous_center_subwoofer_6_piece.h"
 #include "commands/autonomous/autonomous_choreo_test.h"
 #include "commands/autonomous/autonomous_nothing.h"
 #include "commands/autonomous/autonomous_source1.h"
 #include "commands/autonomous/autonomous_source2.h"
 #include "commands/autonomous/autonomous_source_side_subwoofer_2_piece.h"
 #include "commands/autonomous/autonomous_source_side_subwoofer_4_piece.h"
+#include "commands/autonomous/autonomous_source_side_subwoofer_5_piece.h"
+#include "commands/autonomous/autonomous_source_side_subwoofer_steal2.h"
 #include "commands/autonomous/autonomous_zero_note.h"
 #include "commands/climber_command.h"
 #include "commands/climber_homing_command.h"
@@ -110,10 +114,14 @@ class RobotContainer {
   AutonomousSource1 m_autoSource1;
   AutonomousSourceSideSubwoofer2Piece m_autoSourceSideSubwoofer2Piece;
   AutonomousSource2 m_autoSource2;
+  AutonomousSourceSideSteal2 m_autoSourceSideSteal2;
   AutonomousAmpSideSubwoofer2Piece m_autoAmpSideSubwoofer2Piece;
   AutonomousAmpSideSubwoofer3PieceSteal m_autoAmpSideSubwoofer3PieceSteal;
   AutonomousZeroNote m_autoZeroNote;
   AutonomousSourceSideSubwoofer4Piece m_autoSourceSideSubwoofer4Piece;
+  AutonomousCenterSubwoofer4Piece m_autoCenterSubwoofer4Piece;
+  AutonomousCenterSubwoofer6Piece m_autoCenterSubwoofer6Piece;
+  AutonomousSourceSideSubwoofer5Piece m_autoSourceSideSubwoofer5Piece;
 
   AutoSelector m_autoSelector;
 

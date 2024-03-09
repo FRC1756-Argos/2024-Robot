@@ -32,15 +32,20 @@ AutonomousSourceSideSubwoofer4Piece::AutonomousSourceSideSubwoofer4Piece(
     , m_Swerve{swerve}
     , m_Vision{vision}  //, m_ShooterCommand{ShooterCommand{*shooter}}
     , m_SeqCommands{frc2::SequentialCommandGroup{
-          AutonomousSourceSideSubwoofer2Piece{m_Intake, m_Shooter, m_Elevator, m_Swerve, m_Vision, controllers, leds},
-          frc2::ParallelCommandGroup{
-              DriveChoreo{m_Swerve, "Source_Side_Subwoofer.2", false},
-              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
+          frc2::ParallelCommandGroup{PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft},
+                                     DriveChoreo{m_Swerve, "Source1preload.1", true}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true},
-          frc2::ParallelCommandGroup{
-              DriveChoreo{m_Swerve, "Source_Side_Subwoofer.3", false},
-              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.2", false},
+                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 4_s}},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.3", false},
+                                     PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
+          AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+          ShooterCommand{&m_Shooter, true},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.4", false},
+                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 4_s}},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.5", false},
+                                     PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true}}} {}
 

@@ -37,6 +37,9 @@ namespace measure_up {
     constexpr auto offsetRotationThreshold = 50_deg;
     constexpr auto speakerOpeningHeightFromGround = 80.5_in;
     constexpr auto cameraHeightToAprilTag = 28.63_in;
+    constexpr auto secondaryCameraToShooter = 18_in;
+    constexpr double frontSideSpinFactor = 10.0;
+    constexpr double longShotSpinFactor = 2.0;
   }  // namespace shooter_targets
   namespace camera_front {
     constexpr auto cameraX = 0_in;  /// @todo real mounting offsets
@@ -53,6 +56,7 @@ namespace measure_up {
     constexpr auto upperLimit = 24.5_in;   // approx 19.5in of travel, get better value later
     constexpr auto climbRaisedHeight = 24_in;
     constexpr auto climbLoweredHeight = 4_in;
+    constexpr auto climberStagingHeight = 15.5_in;
   }  // namespace climber
 
   namespace elevator {

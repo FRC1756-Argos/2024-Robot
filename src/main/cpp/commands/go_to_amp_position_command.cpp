@@ -13,7 +13,8 @@ GoToAmpPositionCommand::GoToAmpPositionCommand(ShooterSubsystem* shooter, Elevat
 
 // Called when the command is initially scheduled.
 void GoToAmpPositionCommand::Initialize() {
-  m_pShooter->SetAmpAndTrapMode(true);
+  m_pShooter->SetAmpMode(true);
+  m_pShooter->SetTrapMode(false);
   m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::ampHeight);
   m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::ampAngle);
 }

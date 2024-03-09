@@ -20,7 +20,8 @@ GoToTrapPositionCommand::GoToTrapPositionCommand(ShooterSubsystem* shooter, Elev
 // Called when the command is initially scheduled.
 void GoToTrapPositionCommand::Initialize() {
   is_trap_done = false;
-  m_pShooter->SetAmpAndTrapMode(true);
+  m_pShooter->SetTrapMode(true);
+  m_pShooter->SetAmpMode(false);
   m_pShooter->Disable();
   m_pElevator->SetCarriageAngle(90_deg);
   is_0_deg = false;
