@@ -355,7 +355,7 @@ void RobotContainer::ConfigureBindings() {
 
   elevatorReset.OnTrue(frc2::InstantCommand(
                            [this]() {
-                             m_elevatorSubsystem.SetCarriageAngle(190_deg);
+                             m_elevatorSubsystem.SetCarriageAngle(-15_deg);
                              m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::lift::intakeHeight);
                            },
                            {&m_elevatorSubsystem})
