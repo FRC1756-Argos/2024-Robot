@@ -36,6 +36,7 @@
 #include "commands/lower_climber_command.h"
 #include "commands/raise_climber_command.h"
 #include "commands/ready_for_climb_command.h"
+#include "commands/reverse_climb_command.h"
 #include "commands/shooter_command.h"
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
@@ -45,8 +46,6 @@
 #include "subsystems/swerve_drive_subsystem.h"
 #include "subsystems/vision_subsystem.h"
 #include "utils/auto_selector.h"
-
-#include "commands/reverse_climb_command.h"
 
 /**
  * @brief  Command-based is a "declarative" paradigm, very little robot logic should

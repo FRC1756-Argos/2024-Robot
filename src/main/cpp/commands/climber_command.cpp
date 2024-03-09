@@ -4,7 +4,6 @@
 
 #include "commands/climber_command.h"
 
-
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/WaitCommand.h>
 

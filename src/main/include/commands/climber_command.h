@@ -14,12 +14,11 @@
 #include "commands/lower_climber_command.h"
 #include "commands/raise_climber_command.h"
 #include "commands/ready_for_climb_command.h"
+#include "commands/reverse_climb_command.h"
 #include "commands/shooter_command.h"
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
-
-#include "commands/reverse_climb_command.h"
 
 class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand> {
  public:
