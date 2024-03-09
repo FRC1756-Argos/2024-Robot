@@ -31,7 +31,8 @@ void IntakeCommand::Initialize() {
   m_pShooter->NoteDetectionOverride(false);
   m_pIntake->Intake(m_pIntake->IsNotePresent() ? 0.5 : 1.0);
   m_pShooter->Feed(0.3);
-  m_pShooter->SetAmpAndTrapMode(false);
+  m_pShooter->SetTrapMode(false);
+  m_pShooter->SetAmpMode(false);
   m_startTime = std::chrono::steady_clock::now();
 }
 

@@ -22,7 +22,8 @@ ShooterSubsystem::ShooterSubsystem(const argos_lib::RobotInstance robotInstance)
           GetCANAddr(address::comp_bot::shooter::feedMotor, address::practice_bot::shooter::feedMotor, robotInstance))
     , m_robotInstance(robotInstance)
     , m_velocityControl{0_tps}
-    , m_ampAndTrapMode(false) {
+    , m_trapMode(false)
+    , m_ampMode(false) {
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::shooter::primaryMotor,
                                          motorConfig::practice_bot::shooter::primaryMotor>(
       m_primaryMotor, 100_ms, robotInstance);
@@ -43,7 +44,9 @@ void ShooterSubsystem::Shoot(double speed) {
 }
 
 void ShooterSubsystem::Shoot() {
-  if (m_ampAndTrapMode) {
+  if (m_ampMode) {
+    m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.9);
+  } else if (m_trapMode) {
     m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.3);
   } else {
     m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 1.0);
@@ -81,8 +84,12 @@ void ShooterSubsystem::NoteDetectionOverride(bool override) {
   m_feedMotor.OverrideLimitSwitchesEnable(!override);
 }
 
-void ShooterSubsystem::SetAmpAndTrapMode(bool ampAndTrapMode) {
-  m_ampAndTrapMode = ampAndTrapMode;
+void ShooterSubsystem::SetAmpMode(bool ampMode) {
+  m_ampMode = ampMode;
+}
+
+void ShooterSubsystem::SetTrapMode(bool trapMode) {
+  m_trapMode = trapMode;
 }
 
 [[nodiscard]] bool ShooterSubsystem::ShooterAtSpeed() {
