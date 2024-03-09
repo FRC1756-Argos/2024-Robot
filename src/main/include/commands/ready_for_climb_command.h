@@ -9,10 +9,11 @@
 
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/shooter_subsystem.h"
+#include "subsystems/climber_subsystem.h"
 
 class ReadyForClimbCommand : public frc2::CommandHelper<frc2::Command, ReadyForClimbCommand> {
  public:
-  explicit ReadyForClimbCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator);
+  explicit ReadyForClimbCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator, ClimberSubsystem* climber);
 
   void Initialize() override;
 
@@ -27,5 +28,6 @@ class ReadyForClimbCommand : public frc2::CommandHelper<frc2::Command, ReadyForC
  private:
   ShooterSubsystem* m_pShooter;
   ElevatorSubsystem* m_pElevator;
+  ClimberSubsystem* m_pClimber;
   bool is_ready_climb_finished;
 };
