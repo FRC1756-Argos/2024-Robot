@@ -31,7 +31,11 @@ void DriveChoreo::Initialize() {
       m_Drive.InitializeOdometry(m_trajectory.GetInitialPose());
     }
     // Driver still wants orientation relative to alliance station
-    m_Drive.FieldHome(m_trajectory.GetInitialPose().Rotation().Degrees(), false);
+    if (alliance && alliance.value() == frc::DriverStation::Alliance::kRed) {
+      m_Drive.FieldHome(-m_trajectory.GetInitialPose().Rotation().Degrees(), false);
+    } else {
+      m_Drive.FieldHome(m_trajectory.GetInitialPose().Rotation().Degrees(), false);
+    }
   }
   m_ChoreoCommand.Initialize();
 }
