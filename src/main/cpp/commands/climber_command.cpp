@@ -15,11 +15,10 @@ ClimberCommand::ClimberCommand(ClimberSubsystem* climber,
     , m_pShooter{shooter}
     , m_pElevator{elevator}
     , m_pControllers{controllers}
+    , m_TrapCommand{GoToTrapPositionCommand{shooter, elevator}}
     , m_ReadyForClimbCommand{ReadyForClimbCommand{shooter, elevator, climber}}
     , m_RaiseClimberCommand{RaiseClimberCommand{climber}}
     , m_LowerClimberCommand{LowerClimberCommand{climber}}
-    , m_TrapCommand{GoToTrapPositionCommand{shooter, elevator}}
-    // , m_SeqCommand{LowerClimberCommand{m_pClimber}, GoToTrapPositionCommand{m_pShooter, m_pElevator}, frc2::WaitCommand(400_ms), ShooterCommand{shooter}}
     , m_SeqCommand{LowerClimberCommand{m_pClimber}, GoToTrapPositionCommand{m_pShooter, m_pElevator}}
     , m_ShootCommand{m_pShooter}
     , m_ReverseClimbCommand{ReverseClimbCommand{climber, shooter, elevator}} {}

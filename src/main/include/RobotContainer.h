@@ -21,7 +21,7 @@
 #include "commands/autonomous/autonomous_nothing.h"
 #include "commands/autonomous/autonomous_source1.h"
 #include "commands/autonomous/autonomous_source2.h"
-#include "commands/autonomous/autonomous_source_side_3_piece_steal.h";
+#include "commands/autonomous/autonomous_source_side_3_piece_steal.h"
 #include "commands/autonomous/autonomous_source_side_subwoofer_2_piece.h"
 #include "commands/autonomous/autonomous_source_side_subwoofer_4_piece.h"
 #include "commands/autonomous/autonomous_source_side_subwoofer_5_piece.h"

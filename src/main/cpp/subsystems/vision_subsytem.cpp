@@ -333,23 +333,23 @@ std::optional<units::degree_t> VisionSubsystem::GetOrientationToTrap() {
 void VisionSubsystem::SetPipeline(uint16_t tag) {
   std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
 
-  uint16_t pipeline = 0;
-  switch (tag) {
-    case field_points::red_alliance::april_tags::speakerCenter.id:
-      pipeline = 0;
-      break;
-    case field_points::red_alliance::april_tags::amp.id:
-      pipeline = 2;
-      break;
-    case field_points::blue_alliance::april_tags::amp.id:
-      pipeline = 3;
-      break;
-    case field_points::blue_alliance::april_tags::speakerCenter.id:
-      pipeline = 1;
-      break;
-    default:
-      break;
-  }
+  // uint16_t pipeline = 0;
+  // switch (tag) {
+  //   case field_points::red_alliance::april_tags::speakerCenter.id:
+  //     pipeline = 0;
+  //     break;
+  //   case field_points::red_alliance::april_tags::amp.id:
+  //     pipeline = 2;
+  //     break;
+  //   case field_points::blue_alliance::april_tags::amp.id:
+  //     pipeline = 3;
+  //     break;
+  //   case field_points::blue_alliance::april_tags::speakerCenter.id:
+  //     pipeline = 1;
+  //     break;
+  //   default:
+  //     break;
+  // }
   frc::SmartDashboard::PutNumber("(Vision) Setting Pipeline", tag);
 
   table->PutNumber("pipeline", tag);

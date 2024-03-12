@@ -8,22 +8,22 @@ using BaseTalon = ctre::phoenix6::hardware::core::CoreTalonFX;
 
 void argos_lib::status_frame_config::SetMotorStatusFrameRates(
     BaseTalon& motor, argos_lib::status_frame_config::MotorPresetMode motorMode) {
-  uint8_t generalStatusPeriod = 30;         // Status 1
-  uint8_t feedback0Period = 30;             // Status 2
-  uint8_t quadraturePeriod = 200;           // Status 3
-  uint8_t ainTempVBatPeriod = 200;          // Status 4
-  uint8_t miscPeriod = 200;                 // Status 6
-  uint8_t commStatusPeriod = 50;            // Status 7
-  uint8_t pulseWidthPeriod = 200;           // Status 8
-  uint8_t motionProfBufferPeriod = 255;     // Status 9
-  uint8_t motionProfTargetPeriod = 255;     // Status 10
-  uint8_t gadgeteerPeriod = 255;            // Status 11
-  uint8_t feedback1Period = 255;            // Status 12
-  uint8_t primaryPIDFPeriod = 200;          // Status 13
-  uint8_t auxPIDFPeriod = 200;              // Status 14
-  uint8_t firmwareAPIStatusPeriod = 255;    // Status 15
-  uint8_t auxMotionProfTargetPeriod = 255;  // Status 17
-  uint8_t brushlessStatusPeriod = 255;      // Status ??
+  [[maybe_unused]] uint8_t generalStatusPeriod = 30;         // Status 1
+  [[maybe_unused]] uint8_t feedback0Period = 30;             // Status 2
+  [[maybe_unused]] uint8_t quadraturePeriod = 200;           // Status 3
+  [[maybe_unused]] uint8_t ainTempVBatPeriod = 200;          // Status 4
+  [[maybe_unused]] uint8_t miscPeriod = 200;                 // Status 6
+  [[maybe_unused]] uint8_t commStatusPeriod = 50;            // Status 7
+  [[maybe_unused]] uint8_t pulseWidthPeriod = 200;           // Status 8
+  [[maybe_unused]] uint8_t motionProfBufferPeriod = 255;     // Status 9
+  [[maybe_unused]] uint8_t motionProfTargetPeriod = 255;     // Status 10
+  [[maybe_unused]] uint8_t gadgeteerPeriod = 255;            // Status 11
+  [[maybe_unused]] uint8_t feedback1Period = 255;            // Status 12
+  [[maybe_unused]] uint8_t primaryPIDFPeriod = 200;          // Status 13
+  [[maybe_unused]] uint8_t auxPIDFPeriod = 200;              // Status 14
+  [[maybe_unused]] uint8_t firmwareAPIStatusPeriod = 255;    // Status 15
+  [[maybe_unused]] uint8_t auxMotionProfTargetPeriod = 255;  // Status 17
+  [[maybe_unused]] uint8_t brushlessStatusPeriod = 255;      // Status ??
 
   switch (motorMode) {
     case argos_lib::status_frame_config::MotorPresetMode::BasicFX:
