@@ -183,17 +183,18 @@ We're using the following dependencies:
 
 ## Special Thanks
 
- * Our sponsors for the 2024 season.  Thank you for your continued support
+ * Our sponsors for the 2024 season.  Thank you for your continued support!
    * [Caterpillar](https://www.caterpillar.com/)
    * [Gene Haas Foundation](https://ghaasfoundation.org/)
    * [Boeing](https://www.boeing.com/)
    * [Limestone Community High School](https://www.limestone310.org/)
-   * [J. H. Benedict Co](https://www.jhbenedict.com/)
    * [LCHS Booster Club](https://www.facebook.com/LCHSBoosterClub/)
    * [Playing With Fusion](https://www.playingwithfusion.com/)
+   * [Sergison Machine](https://www.sergisonmachine.net/)
    * [Bean's Best LLC](https://beansbestllc.com/)
+   * [GRIDLIFE](https://www.grid.life/)
    * Caterpillar employees & [The Caterpillar Foundation](https://www.caterpillar.com/en/company/caterpillar-foundation.html)
- * [Doxygen Awesome](https://jothepro.github.io/doxygen-awesome-css/) - for making our [documentation](https://frc1756-argos.github.io/2022-Robot/) look great
+ * [Doxygen Awesome](https://jothepro.github.io/doxygen-awesome-css/) - for making our [documentation](https://frc1756-argos.github.io/2024-Robot/) look great
 
 ## License
 This software is licensed under the [BSD 3-clause license](https://opensource.org/licenses/BSD-3-Clause). If you would like to use this software under the terms of a different license agreement, please [contact us](mailto:1756argos1756@limestone310.org).
