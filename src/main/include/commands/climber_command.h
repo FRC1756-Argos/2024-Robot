@@ -39,6 +39,8 @@ class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand>
   ClimberSubsystem* m_pClimber;
   ShooterSubsystem* m_pShooter;
   ElevatorSubsystem* m_pElevator;
+  argos_lib::SwappableControllersSubsystem* m_pControllers;
+
   GoToTrapPositionCommand m_TrapCommand;
   ReadyForClimbCommand m_ReadyForClimbCommand;
   RaiseClimberCommand m_RaiseClimberCommand;
@@ -47,7 +49,6 @@ class ClimberCommand : public frc2::CommandHelper<frc2::Command, ClimberCommand>
   ShooterCommand m_ShootCommand;
   ReverseClimbCommand m_ReverseClimbCommand;
 
-  argos_lib::SwappableControllersSubsystem* m_pControllers;
   int button_count;
   bool end_command;
 };
