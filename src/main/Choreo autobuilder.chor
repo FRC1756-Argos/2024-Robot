@@ -7615,7 +7615,7 @@
             "eventMarkers": [],
             "isTrajectoryStale": true
         },
-        "Amp_Side_3_Mid": {
+        "Source_Side_3_Mid": {
             "waypoints": [
                 {
                     "x": 0.756075918674469,

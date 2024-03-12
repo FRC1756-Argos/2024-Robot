@@ -19,17 +19,17 @@
 #include "subsystems/swerve_drive_subsystem.h"
 #include "subsystems/vision_subsystem.h"
 
-class AutonomousAmpSideSubwoofer3PieceSteal
-    : public frc2::CommandHelper<frc2::Command, AutonomousAmpSideSubwoofer3PieceSteal>
+class AutonomousSourceSideSubwoofer3PieceSteal
+    : public frc2::CommandHelper<frc2::Command, AutonomousSourceSideSubwoofer3PieceSteal>
     , public AutonomousCommand {
  public:
-  AutonomousAmpSideSubwoofer3PieceSteal(IntakeSubsystem& intake,
-                                        ShooterSubsystem& shooter,
-                                        ElevatorSubsystem& elevator,
-                                        SwerveDriveSubsystem& swerve,
-                                        VisionSubsystem& vision,
-                                        argos_lib::SwappableControllersSubsystem& controllers,
-                                        SimpleLedSubsystem& leds);
+  AutonomousSourceSideSubwoofer3PieceSteal(IntakeSubsystem& intake,
+                                           ShooterSubsystem& shooter,
+                                           ElevatorSubsystem& elevator,
+                                           SwerveDriveSubsystem& swerve,
+                                           VisionSubsystem& vision,
+                                           argos_lib::SwappableControllersSubsystem& controllers,
+                                           SimpleLedSubsystem& leds);
 
   void Initialize() override;
 
