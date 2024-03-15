@@ -69,7 +69,7 @@ namespace measure_up {
       constexpr auto podiumLowHeight = intakeHeight;
       constexpr auto podiumHighHeight = 40_in;
       constexpr auto subwooferHeight = intakeHeight;
-      constexpr auto trapHeight = 36_in;
+      constexpr auto trapHeight = 35_in;
     }  // namespace lift
     namespace carriage {
       constexpr auto minAngle = -110_deg;
