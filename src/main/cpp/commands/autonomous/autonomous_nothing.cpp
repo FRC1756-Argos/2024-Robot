@@ -4,22 +4,29 @@
 
 #include "commands/autonomous/autonomous_nothing.h"
 
-AutonomousNothing::AutonomousNothing() {
+AutonomousNothing::AutonomousNothing(SwerveDriveSubsystem& swerve)
+    : m_swerve{swerve}, m_initializeOdometry{&m_swerve, frc::Pose2d{{0_m, 0_m}, 0_deg}} {
   // Use addRequirements() here to declare subsystem dependencies.
 }
 
 // Called when the command is initially scheduled.
-void AutonomousNothing::Initialize() {}
+void AutonomousNothing::Initialize() {
+  m_initializeOdometry.Initialize();
+}
 
 // Called repeatedly when this Command is scheduled to run
-void AutonomousNothing::Execute() {}
+void AutonomousNothing::Execute() {
+  m_initializeOdometry.Execute();
+}
 
 // Called once the command ends or is interrupted.
-void AutonomousNothing::End(bool interrupted) {}
+void AutonomousNothing::End(bool interrupted) {
+  m_initializeOdometry.End(interrupted);
+}
 
 // Returns true when the command should end.
 bool AutonomousNothing::IsFinished() {
-  return true;
+  return m_initializeOdometry.IsFinished();
 }
 
 std::string AutonomousNothing::GetName() const {

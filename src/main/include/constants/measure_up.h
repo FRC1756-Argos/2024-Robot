@@ -79,7 +79,7 @@ namespace measure_up {
       constexpr auto podiumHighAngle = 27_deg;
       constexpr auto podiumLowAngle = 36_deg;
       constexpr auto subwooferAngle = 135_deg;
-      constexpr auto trapAngle = -110_deg;
+      constexpr auto trapAngle = -100_deg;
       constexpr auto skipShotAngle = 5_deg;
     }  // namespace carriage
   }    // namespace elevator

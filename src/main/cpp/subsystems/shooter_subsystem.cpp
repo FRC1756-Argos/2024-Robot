@@ -47,7 +47,7 @@ void ShooterSubsystem::Shoot() {
   if (m_ampMode) {
     m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.9);
   } else if (m_trapMode) {
-    m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.3);
+    m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.25);
   } else {
     m_feedMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 1.0);
   }
