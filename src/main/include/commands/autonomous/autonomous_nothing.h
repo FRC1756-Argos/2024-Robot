@@ -10,12 +10,14 @@
 #include <string>
 
 #include "commands/autonomous/autonomous_command.h"
+#include "commands/initialize_odometry_command.h"
+#include "subsystems/swerve_drive_subsystem.h"
 
 class AutonomousNothing
     : public frc2::CommandHelper<frc2::Command, AutonomousNothing>
     , public AutonomousCommand {
  public:
-  AutonomousNothing();
+  explicit AutonomousNothing(SwerveDriveSubsystem& swerve);
 
   void Initialize() override;
 
@@ -33,4 +35,8 @@ class AutonomousNothing
    * @copydoc AutonomousCommand::GetCommand()
    */
   frc2::Command* GetCommand() final;
+
+ private:
+  SwerveDriveSubsystem& m_swerve;
+  InitializeOdometryCommand m_initializeOdometry;
 };

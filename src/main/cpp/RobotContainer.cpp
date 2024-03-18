@@ -67,7 +67,7 @@ RobotContainer::RobotContainer()
     , m_GoToSubwooferPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToTrapPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_ClimberCommand{&m_climberSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_controllers}
-    , m_autoNothing{}
+    , m_autoNothing{m_swerveDrive}
     , m_autoChoreoTest{m_elevatorSubsystem, m_intakeSubsystem, m_ShooterSubSystem, m_swerveDrive, m_visionSubSystem}
     , m_autoCenter2wing{m_intakeSubsystem,
                         m_ShooterSubSystem,
