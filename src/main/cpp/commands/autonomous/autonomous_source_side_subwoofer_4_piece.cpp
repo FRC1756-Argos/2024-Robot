@@ -4,6 +4,7 @@
 
 #include "commands/autonomous/autonomous_source_side_subwoofer_4_piece.h"
 
+#include <frc2/command/ConditionalCommand.h>
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
@@ -36,13 +37,21 @@ AutonomousSourceSideSubwoofer4Piece::AutonomousSourceSideSubwoofer4Piece(
           frc2::ParallelCommandGroup{
               DriveChoreo{m_Swerve, "Source_Side_Subwoofer.2", false},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 3.5_s}},
-          AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-          ShooterCommand{&m_Shooter, true},
+          frc2::ConditionalCommand{// Got note
+                                   frc2::SequentialCommandGroup{
+                                       AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                                       ShooterCommand{&m_Shooter, true}},
+                                   frc2::InstantCommand([]() {}, {}),  // No note
+                                   [this]() { return m_Shooter.IsNotePresent(); }},
           frc2::ParallelCommandGroup{
               DriveChoreo{m_Swerve, "Source_Side_Subwoofer.3", false},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 3.5_s}},
-          AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-          ShooterCommand{&m_Shooter, true}}} {}
+          frc2::ConditionalCommand{// Got note
+                                   frc2::SequentialCommandGroup{
+                                       AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                                       ShooterCommand{&m_Shooter, true}},
+                                   frc2::InstantCommand([]() {}, {}),  // No note
+                                   [this]() { return m_Shooter.IsNotePresent(); }}}} {}
 
 // Called when the command is initially scheduled.
 void AutonomousSourceSideSubwoofer4Piece::Initialize() {
