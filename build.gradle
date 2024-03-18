@@ -1,7 +1,7 @@
 plugins {
     id "cpp"
     id "google-test-test-suite"
-    id "edu.wpi.first.GradleRIO" version "2024.3.1"
+    id "edu.wpi.first.GradleRIO" version "2024.3.2"
 }
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -50,7 +50,10 @@ model {
     components {
         frcUserProgram(NativeExecutableSpec) {
             binaries.all {
-                cppCompiler.args << '-Wall'// <<  '-Wpedantic' << '-Wno-deprecated-declarations'
+                cppCompiler.args << '-Wall'
+                if (!(toolChain in VisualCpp)) {
+                    cppCompiler.args <<  '-Wpedantic' << '-Wno-deprecated-declarations'
+                }
             }
             targetPlatform wpi.platforms.roborio
             if (includeDesktopSupport) {
