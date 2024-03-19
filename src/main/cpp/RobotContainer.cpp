@@ -209,6 +209,20 @@ RobotContainer::RobotContainer()
           } else {
             rotateSpeed = deadbandRotSpeed;
           }
+
+          if (!speed || !rotationWithInertia || !shooterAngleWithInertia) {
+            m_ledSubSystem.TemporaryAnimate(
+                [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kReallyRed, false); },
+                200_ms);
+          } else if (m_elevatorSubsystem.IsCarriageAtSetPoint() && std::abs(rotationWithInertia.value()) <= 0.1) {
+            m_ledSubSystem.TemporaryAnimate(
+                [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kReallyGreen, false); },
+                200_ms);
+          } else {
+            m_ledSubSystem.TemporaryAnimate(
+                [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kCatYellow, false); },
+                200_ms);
+          }
         }
 
         if (frc::DriverStation::IsTeleop() &&
@@ -432,8 +446,6 @@ void RobotContainer::ConfigureBindings() {
   highPodiumPositionTrigger.OnTrue(&m_GoToHighPodiumPositionCommand);
   lowPodiumPositionTrigger.OnTrue(&m_GoToLowPodiumPositionCommand);
   subwooferPositionTrigger.OnTrue(&m_GoToSubwooferPositionCommand);
-
-  std::cout << "&swerve" << &m_swerveDrive << '\n';
 }
 
 void RobotContainer::Disable() {
