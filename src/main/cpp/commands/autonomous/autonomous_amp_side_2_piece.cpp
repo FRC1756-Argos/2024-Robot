@@ -97,7 +97,7 @@ bool AutonomousAmpSideSubwoofer2Piece::IsFinished() {
 }
 
 std::string AutonomousAmpSideSubwoofer2Piece::GetName() const {
-  return "01. Amp Side Subwoofer 2 Piece";
+  return "01. Amp Side Subwoofer OP";
 }
 
 frc2::Command* AutonomousAmpSideSubwoofer2Piece::GetCommand() {
