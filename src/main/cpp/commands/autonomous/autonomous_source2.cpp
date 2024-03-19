@@ -4,6 +4,7 @@
 
 #include "commands/autonomous/autonomous_source2.h"
 
+#include <frc2/command/ConditionalCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <units/length.h>
@@ -27,17 +28,26 @@ AutonomousSource2::AutonomousSource2(IntakeSubsystem& intake,
     , m_Shooter{shooter}
     , m_Elevator{elevator}
     , m_Swerve{swerve}
-    , m_Vision{vision}  //, m_ShooterCommand{ShooterCommand{*shooter}}
+    , m_Vision{vision}
     , m_SeqCommands{frc2::SequentialCommandGroup{
           AutonomousSource1{m_Intake, m_Shooter, m_Elevator, m_Swerve, m_Vision, controllers, leds},
           frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.2", false},
                                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 4_s}},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.3", false},
-                                     PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
-          AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-          ShooterCommand{&m_Shooter, true},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.4", false},
-                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 4_s}},
+          frc2::ConditionalCommand{
+              frc2::SequentialCommandGroup{
+                  // Got note!
+                  frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.3", false},
+                                             PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
+                  AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                  ShooterCommand{&m_Shooter, true},
+                  frc2::ParallelCommandGroup{
+                      DriveChoreo{m_Swerve, "Source1preload.4", false},
+                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 4_s}}},
+              frc2::ParallelCommandGroup{
+                  // Missed note
+                  DriveChoreo{m_Swerve, "Source1preloadShortcut.1", false},
+                  IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
+              [&shooter]() { return shooter.IsNotePresent(); }},
           frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.5", false},
                                      PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
