@@ -155,14 +155,13 @@ You'll now have the linter run before each commit!  For compatibility with Windo
     * Intake note partially
     * Reverse note out of intake
     * Intake note fully ensuring note does not enter shooter flywheels
-    * Operator shooter position reset
 3. Manual shooter position setpoints (ensure shot success)
     * Amp
     * Subwoofer
     * Low podium
     * High podium
 4. Vision
-    * Target Red(4) or Blue(7) speaker april tags with reverse camera
+    * Target Red(4) or Blue(7) speaker april tags with forward and reverse cameras
     * Ensure robot only targets tag for assigned alliance
 5. Climb sequence
     * Prepare to climb: shooter vertical, hooks up
