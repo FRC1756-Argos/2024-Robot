@@ -98,7 +98,7 @@ units::degree_t VisionSubsystem::getShooterAngle(const units::inch_t distance, c
       break;
     case InterpolationMode::Polynomial: {
       const auto d = distance.to<double>();
-      finalAngle = units::degree_t(88 - (0.78 * d) + (0.00335 * d * d) - (0.00000531 * d * d * d));
+      finalAngle = units::degree_t(87.8 - (0.78 * d) + (0.00335 * d * d) - (0.00000515 * d * d * d));
       break;
     }
     case InterpolationMode::Trig:
@@ -130,11 +130,11 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
 std::optional<units::degree_t> VisionSubsystem::getShooterAngleWithInertia(double medialSpeedPct) {
   auto angle = getShooterAngle();
   if (angle) {
-    units::degree_t finalAngle = angle.value() - units::degree_t(speeds::drive::medialInertialOffset * medialSpeedPct);
+    units::degree_t finalAngle = angle.value() - units::degree_t(speeds::drive::medialInertialWeight * medialSpeedPct);
 
     const auto camera = getWhichCamera();
     if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
-      finalAngle = angle.value() + units::degree_t(speeds::drive::medialInertialOffset * medialSpeedPct);
+      finalAngle = angle.value() + units::degree_t(speeds::drive::medialInertialWeight * medialSpeedPct);
     }
 
     return finalAngle;
@@ -150,7 +150,7 @@ std::optional<double> VisionSubsystem::getRotationSpeedWithInertia(double latera
   if (horzOffset && shooterOffset) {
     double offset = horzOffset.value().to<double>();
     offset -= shooterOffset.value().to<double>();
-    double finalOffset = offset - speeds::drive::lateralInertialOffset * lateralSpeedPct;
+    double finalOffset = offset - speeds::drive::lateralInertialWeight * lateralSpeedPct;
 
     return (-finalOffset * 0.016);
   }
@@ -187,7 +187,7 @@ std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
       if (camera && camera.value() == whichCamera::PRIMARY_CAMERA) {
         accountLongerSpin += 0.8_deg;
       } else if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
-        accountLongerSpin -= 0.8_deg;
+        accountLongerSpin -= 0.15_deg;
       }
     } else if (targetValues && targetValues.value().tagPose.Rotation().Z() < 0_deg) {
       accountLongerSpin = 0.0_deg;

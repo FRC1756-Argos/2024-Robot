@@ -76,7 +76,7 @@ namespace measure_up {
       constexpr auto maxAngle = 270_deg;
       constexpr auto intakeAngle = 40_deg;
       constexpr auto ampAngle = 135_deg;
-      constexpr auto podiumHighAngle = 27_deg;
+      constexpr auto podiumHighAngle = 23.5_deg;
       constexpr auto podiumLowAngle = 36_deg;
       constexpr auto subwooferAngle = 135_deg;
       constexpr auto trapAngle = -100_deg;
