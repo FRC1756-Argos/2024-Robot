@@ -47,9 +47,9 @@ AutonomousCenterSubwoofer6Piece::AutonomousCenterSubwoofer6Piece(IntakeSubsystem
                       DriveChoreo{m_Swerve, "Center_Subwoofer_4.6", false},
                       IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 3.5_s}}},
               frc2::ParallelCommandGroup{
-                  DriveChoreo{m_Swerve, "Center_Subwoofer_4_shortcut.1", false},  /// @todo Update with real path
+                  DriveChoreo{m_Swerve, "Center_Subwoofer_4_Shortcut.1", false},
                   IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
-              [this]() { return m_Shooter.IsNotePresent(); }},
+              [&shooter]() { return shooter.IsNotePresent(); }},
           frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Center_Subwoofer_4.7", false},
                                      PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},

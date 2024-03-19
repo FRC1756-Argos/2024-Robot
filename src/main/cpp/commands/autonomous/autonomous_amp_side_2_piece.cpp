@@ -4,6 +4,7 @@
 
 #include "commands/autonomous/autonomous_amp_side_2_piece.h"
 
+#include <frc2/command/ConditionalCommand.h>
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
@@ -31,7 +32,7 @@ AutonomousAmpSideSubwoofer2Piece::AutonomousAmpSideSubwoofer2Piece(
     , m_Swerve{swerve}
     , m_Vision{vision}
     , m_SeqCommands{frc2::SequentialCommandGroup{
-          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in, 2000_rpm},
+          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in, 2500_rpm},
           ShooterCommand{&m_Shooter, true},
           frc2::InstantCommand{[this]() {
                                  m_Shooter.ShooterGoToSpeed(m_Vision.getShooterSpeed(
@@ -39,10 +40,41 @@ AutonomousAmpSideSubwoofer2Piece::AutonomousAmpSideSubwoofer2Piece(
                                },
                                {&m_Shooter}},
           frc2::ParallelCommandGroup{
-              DriveChoreo{m_Swerve, "Amp_side_subwoofer.1", true},
+              DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP.1", true},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-          ShooterCommand{&m_Shooter, true}}} {}
+          ShooterCommand{&m_Shooter, true},
+          frc2::ParallelCommandGroup{
+              DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP.2", true},
+              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
+          frc2::ConditionalCommand{
+              frc2::SequentialCommandGroup{
+                  DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP.3"},
+                  AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                  ShooterCommand{&m_Shooter, true},
+                  frc2::ParallelCommandGroup{
+                      DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP.4", true},
+                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}}},
+              frc2::ParallelCommandGroup{
+                  DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP_Shortcut.1", true},
+                  IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
+              [&shooter]() { return shooter.IsNotePresent(); }},
+          frc2::ConditionalCommand{
+              frc2::SequentialCommandGroup{
+                  DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP.5"},
+                  AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                  ShooterCommand{&m_Shooter, true},
+                  frc2::ParallelCommandGroup{
+                      DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP.6", true},
+                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}}},
+              frc2::ParallelCommandGroup{
+                  DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP_Shortcut.2", true},
+                  IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
+              [&shooter]() { return shooter.IsNotePresent(); }},
+          DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP.7", true},
+          AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+          ShooterCommand{&m_Shooter, true},
+      }} {}
 
 // Called when the command is initially scheduled.
 void AutonomousAmpSideSubwoofer2Piece::Initialize() {

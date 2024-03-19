@@ -42,7 +42,7 @@ AutonomousSourceSideSubwoofer2Piece::AutonomousSourceSideSubwoofer2Piece(
                                        AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
                                        ShooterCommand{&m_Shooter, true}},
                                    frc2::InstantCommand([]() {}, {}),  // No note
-                                   [this]() { return m_Shooter.IsNotePresent(); }}}} {}
+                                   [&shooter]() { return shooter.IsNotePresent(); }}}} {}
 
 // Called when the command is initially scheduled.
 void AutonomousSourceSideSubwoofer2Piece::Initialize() {
