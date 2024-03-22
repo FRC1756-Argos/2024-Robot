@@ -98,7 +98,7 @@ units::degree_t VisionSubsystem::getShooterAngle(const units::inch_t distance, c
       break;
     case InterpolationMode::Polynomial: {
       const auto d = distance.to<double>();
-      finalAngle = units::degree_t(87.8 - (0.78 * d) + (0.00335 * d * d) - (0.00000515 * d * d * d));
+      finalAngle = units::degree_t(87.3 - (0.78 * d) + (0.00335 * d * d) - (0.000005125 * d * d * d));
       break;
     }
     case InterpolationMode::Trig:
