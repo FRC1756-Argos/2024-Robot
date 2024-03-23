@@ -48,7 +48,19 @@ AutonomousSource2::AutonomousSource2(IntakeSubsystem& intake,
                   DriveChoreo{m_Swerve, "Source1preloadShortcut.1", false},
                   IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
               [&shooter]() { return shooter.IsNotePresent(); }},
-          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.5", false},
+          frc2::ConditionalCommand{
+              frc2::SequentialCommandGroup{
+                  // Got note!
+                  frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.5", false},
+                                             PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
+                  AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                  ShooterCommand{&m_Shooter, true}},
+              frc2::ParallelCommandGroup{
+                  // Missed note
+                  DriveChoreo{m_Swerve, "Source1preloadShortcut.2", false},
+                  IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
+              [&shooter]() { return shooter.IsNotePresent(); }},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.3", false},
                                      PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true}}} {}
