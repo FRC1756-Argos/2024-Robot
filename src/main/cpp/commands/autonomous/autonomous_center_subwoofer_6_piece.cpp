@@ -35,7 +35,7 @@ AutonomousCenterSubwoofer6Piece::AutonomousCenterSubwoofer6Piece(IntakeSubsystem
           AutonomousCenterSubwoofer4Piece{m_Intake, m_Shooter, m_Elevator, m_Swerve, m_Vision, controllers, leds},
           frc2::ParallelCommandGroup{
               DriveChoreo{m_Swerve, "Center_Subwoofer_4.4", false},
-              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 3.5_s}},
+              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 3.0_s}},
 
           frc2::ConditionalCommand{
               frc2::SequentialCommandGroup{
@@ -45,7 +45,7 @@ AutonomousCenterSubwoofer6Piece::AutonomousCenterSubwoofer6Piece(IntakeSubsystem
                   ShooterCommand{&m_Shooter, true},
                   frc2::ParallelCommandGroup{
                       DriveChoreo{m_Swerve, "Center_Subwoofer_4.6", false},
-                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 3.5_s}}},
+                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.7_s}}},
               frc2::ParallelCommandGroup{
                   DriveChoreo{m_Swerve, "Center_Subwoofer_4_Shortcut.1", false},
                   IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
