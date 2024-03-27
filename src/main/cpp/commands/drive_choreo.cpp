@@ -26,7 +26,7 @@ void DriveChoreo::Initialize() {
   if (m_initializeOdometry) {  // Initial odometry changes base on alliance because choreo always uses odometry relative to blue alliance origin
     const auto alliance = frc::DriverStation::GetAlliance();
     if (alliance && alliance.value() == frc::DriverStation::Alliance::kRed) {
-      m_Drive.InitializeOdometry(m_trajectory.Flipped().GetInitialPose());
+      m_Drive.InitializeOdometry(m_trajectory.GetFlippedInitialPose());
     } else {
       m_Drive.InitializeOdometry(m_trajectory.GetInitialPose());
     }
