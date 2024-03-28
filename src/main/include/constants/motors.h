@@ -32,6 +32,7 @@ namespace motorConfig {
     namespace drive {
       struct genericDrive {
         constexpr static auto inverted = true;
+        constexpr static auto statorCurrentLimit = 100_A;
         constexpr static auto neutralDeadband = motorConfig::common::neutralDeadband;
         constexpr static auto neutralMode = ctre::phoenix6::signals::NeutralModeValue::Brake;
         constexpr static auto statusFrameMotorMode = argos_lib::status_frame_config::MotorPresetMode::LeaderFX;

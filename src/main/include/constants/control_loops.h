@@ -27,7 +27,7 @@ namespace controlLoop {
         constexpr static double kI = 0.0;
         constexpr static double kD = 0.0;
         constexpr static double kS = 0.0;
-        constexpr static double kV = 0.12;
+        constexpr static double kV = 0.1241;
         constexpr static double kA = 0.0;
         constexpr static double kG = 0.0;
         constexpr static int gravityType = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
