@@ -37,30 +37,45 @@ AutonomousCenterSubwoofer4Piece::AutonomousCenterSubwoofer4Piece(IntakeSubsystem
           frc2::ParallelCommandGroup{
               DriveChoreo{m_Swerve, "Center_Subwoofer_4.1", true},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
-          frc2::ConditionalCommand{// Got note
-                                   frc2::SequentialCommandGroup{
-                                       AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-                                       ShooterCommand{&m_Shooter, true}},
-                                   frc2::InstantCommand([]() {}, {}),  // No note
-                                   [&shooter]() { return shooter.IsNotePresent(); }},
+          frc2::ConditionalCommand{
+              // Got note
+              frc2::SequentialCommandGroup{
+                  frc2::ConditionalCommand{
+                      PrimeShooterCommand{
+                          m_Shooter, m_Elevator, m_Vision, DriveChoreo::EndpointShotDistance("Center_Subwoofer_4.1")},
+                      AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                      [&swerve]() { return DriveChoreo::IsAtEndPoint(swerve, "Center_Subwoofer_4.1"); }},
+                  ShooterCommand{&m_Shooter, true}},
+              frc2::InstantCommand([]() {}, {}),  // No note
+              [&shooter]() { return shooter.IsNotePresent(); }},
           frc2::ParallelCommandGroup{
               DriveChoreo{m_Swerve, "Center_Subwoofer_4.2", false},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
-          frc2::ConditionalCommand{// Got note
-                                   frc2::SequentialCommandGroup{
-                                       AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-                                       ShooterCommand{&m_Shooter, true}},
-                                   frc2::InstantCommand([]() {}, {}),  // No note
-                                   [&shooter]() { return shooter.IsNotePresent(); }},
+          frc2::ConditionalCommand{
+              // Got note
+              frc2::SequentialCommandGroup{
+                  frc2::ConditionalCommand{
+                      PrimeShooterCommand{
+                          m_Shooter, m_Elevator, m_Vision, DriveChoreo::EndpointShotDistance("Center_Subwoofer_4.2")},
+                      AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                      [&swerve]() { return DriveChoreo::IsAtEndPoint(swerve, "Center_Subwoofer_4.2"); }},
+                  ShooterCommand{&m_Shooter, true}},
+              frc2::InstantCommand([]() {}, {}),  // No note
+              [&shooter]() { return shooter.IsNotePresent(); }},
           frc2::ParallelCommandGroup{
               DriveChoreo{m_Swerve, "Center_Subwoofer_4.3", false},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
-          frc2::ConditionalCommand{// Got note
-                                   frc2::SequentialCommandGroup{
-                                       AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-                                       ShooterCommand{&m_Shooter, true}},
-                                   frc2::InstantCommand([]() {}, {}),  // No note
-                                   [&shooter]() { return shooter.IsNotePresent(); }}}} {}
+          frc2::ConditionalCommand{
+              // Got note
+              frc2::SequentialCommandGroup{
+                  frc2::ConditionalCommand{
+                      PrimeShooterCommand{
+                          m_Shooter, m_Elevator, m_Vision, DriveChoreo::EndpointShotDistance("Center_Subwoofer_4.3")},
+                      AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                      [&swerve]() { return DriveChoreo::IsAtEndPoint(swerve, "Center_Subwoofer_4.3"); }},
+                  ShooterCommand{&m_Shooter, true}},
+              frc2::InstantCommand([]() {}, {}),  // No note
+              [&shooter]() { return shooter.IsNotePresent(); }}}} {}
 
 // Called when the command is initially scheduled.
 void AutonomousCenterSubwoofer4Piece::Initialize() {

@@ -37,12 +37,19 @@ AutonomousSourceSideSubwoofer2Piece::AutonomousSourceSideSubwoofer2Piece(
           frc2::ParallelCommandGroup{
               DriveChoreo{m_Swerve, "Source_Side_Subwoofer.1", true},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
-          frc2::ConditionalCommand{// Got note
-                                   frc2::SequentialCommandGroup{
-                                       AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-                                       ShooterCommand{&m_Shooter, true}},
-                                   frc2::InstantCommand([]() {}, {}),  // No note
-                                   [&shooter]() { return shooter.IsNotePresent(); }}}} {}
+          frc2::ConditionalCommand{
+              // Got note
+              frc2::SequentialCommandGroup{
+                  frc2::ConditionalCommand{
+                      PrimeShooterCommand{m_Shooter,
+                                          m_Elevator,
+                                          m_Vision,
+                                          DriveChoreo::EndpointShotDistance("Source_Side_Subwoofer.1")},
+                      AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                      [&swerve]() { return DriveChoreo::IsAtEndPoint(swerve, "Source_Side_Subwoofer.1"); }},
+                  ShooterCommand{&m_Shooter, true}},
+              frc2::InstantCommand([]() {}, {}),  // No note
+              [&shooter]() { return shooter.IsNotePresent(); }}}} {}
 
 // Called when the command is initially scheduled.
 void AutonomousSourceSideSubwoofer2Piece::Initialize() {
