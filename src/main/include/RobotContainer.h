@@ -29,6 +29,7 @@
 #include "commands/autonomous/autonomous_zero_note.h"
 #include "commands/climber_command.h"
 #include "commands/climber_homing_command.h"
+#include "commands/crossfield_shot_command.h"
 #include "commands/go_to_amp_position_command.h"
 #include "commands/go_to_podium_position_command.h"
 #include "commands/go_to_subwoofer_position_command.h"
@@ -39,7 +40,6 @@
 #include "commands/ready_for_climb_command.h"
 #include "commands/reverse_climb_command.h"
 #include "commands/shooter_command.h"
-#include "commands/crossfield_shot_command.h"
 #include "subsystems/climber_subsystem.h"
 #include "subsystems/elevator_subsystem.h"
 #include "subsystems/intake_subsystem.h"
@@ -109,7 +109,6 @@ class RobotContainer {
   GoToTrapPositionCommand m_GoToTrapPositionCommand;
   ClimberCommand m_ClimberCommand;
   CrossfieldShotCommand m_CrossfieldShotCommand;
-
 
   // Autonomous
   AutonomousNothing m_autoNothing;
