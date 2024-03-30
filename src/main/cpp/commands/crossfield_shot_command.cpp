@@ -1,16 +1,15 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/// \copyright Copyright (c) Argos FRC Team 1756.
+///            Open Source Software; you can modify and/or share it under the terms of
+///            the license file in the root directory of this project.
 
 #include "commands/crossfield_shot_command.h"
-#include "constants/measure_up.h"
+
 #include <frc2/command/WaitCommand.h>
 
+#include "constants/measure_up.h"
+
 CrossfieldShotCommand::CrossfieldShotCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator)
-    : m_pShooter{shooter}
-    , m_pElevator{elevator}
-    , m_ShootCommand{ShooterCommand{shooter}}
- {}
+    : m_pShooter{shooter}, m_pElevator{elevator}, m_ShootCommand{ShooterCommand{shooter}} {}
 
 // Called when the command is initially scheduled.
 void CrossfieldShotCommand::Initialize() {
@@ -21,7 +20,7 @@ void CrossfieldShotCommand::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void CrossfieldShotCommand::Execute() {
-  if(m_pShooter->ShooterAtSpeed()){
+  if (m_pShooter->ShooterAtSpeed()) {
     m_ShootCommand.Schedule();
     frc2::WaitCommand(50_ms);
     Cancel();
