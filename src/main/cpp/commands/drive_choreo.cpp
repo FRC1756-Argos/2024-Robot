@@ -6,6 +6,9 @@
 
 #include <choreo/lib/Choreo.h>
 #include <frc/DriverStation.h>
+#include <units/math.h>
+
+#include "constants/field_points.h"
 
 DriveChoreo::DriveChoreo(SwerveDriveSubsystem& drive, const std::string& trajectoryName, const bool initializeOdometry)
     : m_Drive{drive}
@@ -53,4 +56,24 @@ void DriveChoreo::End(bool interrupted) {
 // Returns true when the command should end.
 bool DriveChoreo::IsFinished() {
   return m_ChoreoCommand.IsFinished();
+}
+
+bool DriveChoreo::IsAtEndPoint(SwerveDriveSubsystem& drive,
+                               const std::string& trajectoryName,
+                               const units::inch_t translationalTolerance,
+                               const units::degree_t rotationalTolerance) {
+  const auto position = drive.GetRawOdometry();
+  const auto alliance = frc::DriverStation::GetAlliance();
+  const auto needFlipped = alliance && alliance.value() == frc::DriverStation::Alliance::kRed;
+  const auto trajectory = choreolib::Choreo::GetTrajectory(trajectoryName);
+  const auto desiredPosition = needFlipped ? trajectory.GetFlippedFinalPose() : trajectory.GetFinalPose();
+  return units::math::abs((position.Rotation() - desiredPosition.Rotation()).Degrees()) <= rotationalTolerance &&
+         units::math::abs((position.Translation() - desiredPosition.Translation()).Norm()) <= translationalTolerance;
+}
+
+units::inch_t DriveChoreo::EndpointShotDistance(const std::string& trajectoryName) {
+  return units::math::abs((choreolib::Choreo::GetTrajectory(trajectoryName).GetFinalPose().Translation() -
+                           field_points::blue_alliance::april_tags::speakerCenter.pose.ToTranslation2d())
+                              .Norm()) +
+         10_in;  // 10 inches converts camera position to center of robot
 }

@@ -7,6 +7,8 @@
 #include <choreo/lib/ChoreoSwerveCommand.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
+#include <units/angle.h>
+#include <units/length.h>
 
 #include <string>
 
@@ -23,6 +25,13 @@ class DriveChoreo : public frc2::CommandHelper<frc2::Command, DriveChoreo> {
   void End(bool interrupted) override;
 
   bool IsFinished() override;
+
+  [[nodiscard]] static bool IsAtEndPoint(SwerveDriveSubsystem& drive,
+                                         const std::string& trajectoryName,
+                                         const units::inch_t translationalTolerance = 6_in,
+                                         const units::degree_t rotationalTolerance = 1.0_deg);
+
+  [[nodiscard]] static units::inch_t EndpointShotDistance(const std::string& trajectoryName);
 
  private:
   SwerveDriveSubsystem& m_Drive;

@@ -72,16 +72,15 @@ namespace field_points {
     // Reference game_piece_positions in Docs directory for conventions
     namespace game_pieces {}  // namespace game_pieces
 
-    /// @todo update tag translations and angles
     namespace april_tags {
-      constexpr AprilTag amp{6, {}, 0_deg};
-      constexpr AprilTag speakerCenter{7, {}, 0_deg};
-      constexpr AprilTag speakerInside{8, {}, 0_deg};
-      constexpr AprilTag sourceRight{9, {}, 0_deg};
-      constexpr AprilTag sourceLeft{10, {}, 0_deg};
-      constexpr AprilTag stageLeft{15, {}, 0_deg};
-      constexpr AprilTag stageRight{16, {}, 0_deg};
-      constexpr AprilTag stageCenter{14, {}, 0_deg};
+      constexpr AprilTag amp{6, {72.5_in, 323.0_in, 53.38_in}, 0_deg};
+      constexpr AprilTag speakerCenter{7, {-1.5_in, 218.42_in, 57.13_in}, 0_deg};
+      constexpr AprilTag speakerInside{8, {-1.5_in, 196.17_in, 57.13_in}, 0_deg};
+      constexpr AprilTag sourceRight{9, {14.02_in, 34.79_in, 53.38_in}, 60_deg};
+      constexpr AprilTag sourceLeft{10, {57.54_in, 9.68_in, 53.38_in}, 60_deg};
+      constexpr AprilTag stageLeft{15, {182.73_in, 177.10_in, 52_in}, 120_deg};
+      constexpr AprilTag stageRight{16, {182.73_in, 146.19_in, 52_in}, 240_deg};
+      constexpr AprilTag stageCenter{14, {209.48_in, 161.62_in, 52_in}, 0_deg};
     }  // namespace april_tags
 
   }  // namespace blue_alliance
@@ -89,6 +88,7 @@ namespace field_points {
   namespace red_alliance {
     namespace game_pieces {}  // namespace game_pieces
 
+    /// @todo update tag translations and angles
     namespace april_tags {
       constexpr AprilTag amp{5, {}, 0_deg};
       constexpr AprilTag speakerCenter{4, {}, 0_deg};

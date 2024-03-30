@@ -4,6 +4,8 @@
 
 #include "commands/autonomous/autonomous_source1.h"
 
+#include <frc2/command/ConditionalCommand.h>
+#include <frc2/command/InstantCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <units/length.h>
@@ -28,9 +30,13 @@ AutonomousSource1::AutonomousSource1(IntakeSubsystem& intake,
     , m_Swerve{swerve}
     , m_Vision{vision}
     , m_SeqCommands{frc2::SequentialCommandGroup{
-          frc2::ParallelCommandGroup{PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft},
-                                     DriveChoreo{m_Swerve, "Source1preload.1", true}},
-          AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+          frc2::ParallelCommandGroup{
+              PrimeShooterCommand{
+                  m_Shooter, m_Elevator, m_Vision, DriveChoreo::EndpointShotDistance("Source1preload.1")},
+              DriveChoreo{m_Swerve, "Source1preload.1", true}},
+          frc2::ConditionalCommand{frc2::InstantCommand([]() {}, {}),
+                                   AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                                   [&swerve]() { return DriveChoreo::IsAtEndPoint(swerve, "Source1preload.1"); }},
           ShooterCommand{&m_Shooter, true}}} {}
 
 // Called when the command is initially scheduled.
