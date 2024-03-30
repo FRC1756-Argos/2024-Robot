@@ -67,6 +67,7 @@ RobotContainer::RobotContainer()
     , m_GoToSubwooferPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_GoToTrapPositionCommand{&m_ShooterSubSystem, &m_elevatorSubsystem}
     , m_ClimberCommand{&m_climberSubsystem, &m_ShooterSubSystem, &m_elevatorSubsystem, &m_controllers}
+    , m_CrossfieldShotCommand(&m_ShooterSubSystem, &m_elevatorSubsystem)
     , m_autoNothing{m_swerveDrive}
     , m_autoChoreoTest{m_elevatorSubsystem, m_intakeSubsystem, m_ShooterSubSystem, m_swerveDrive, m_visionSubSystem}
     , m_autoCenter2wing{m_intakeSubsystem,
@@ -277,7 +278,7 @@ void RobotContainer::ConfigureBindings() {
   // INTAKE TRIGGERS
   auto intake = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
   auto outtakeManual = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperLeft);
-  auto elevatorReset = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
+  auto crossfieldShot = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
 
   // CLIMBER TRIGGERS
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
@@ -367,13 +368,7 @@ void RobotContainer::ConfigureBindings() {
                   {&m_climberSubsystem})
                   .ToPtr());
 
-  elevatorReset.OnTrue(frc2::InstantCommand(
-                           [this]() {
-                             m_elevatorSubsystem.SetCarriageAngle(measure_up::elevator::carriage::skipShotAngle);
-                             m_elevatorSubsystem.ElevatorMoveToHeight(measure_up::elevator::lift::intakeHeight);
-                           },
-                           {&m_elevatorSubsystem})
-                           .ToPtr());
+  crossfieldShot.OnTrue(&m_CrossfieldShotCommand);
 
   climberUp.OnTrue(frc2::InstantCommand(
                        [this]() {
