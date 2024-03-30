@@ -80,13 +80,13 @@ namespace measure_up {
       constexpr auto podiumLowAngle = 36_deg;
       constexpr auto subwooferAngle = 135_deg;
       constexpr auto trapAngle = -100_deg;
-      constexpr auto skipShotAngle = 45_deg;
+      constexpr auto crossfieldAngle = 40_deg;
     }  // namespace carriage
   }    // namespace elevator
 
   namespace shooter {
     constexpr auto minSpeed = 0_tps;
     constexpr auto maxSpeed = 100_tps;
-    constexpr auto crossfieldSpeed = 60_tps;
+    constexpr auto crossfieldSpeed = 2600_rpm;
   }  // namespace shooter
 }  // namespace measure_up
