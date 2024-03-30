@@ -74,5 +74,6 @@ bool DriveChoreo::IsAtEndPoint(SwerveDriveSubsystem& drive,
 units::inch_t DriveChoreo::EndpointShotDistance(const std::string& trajectoryName) {
   return units::math::abs((choreolib::Choreo::GetTrajectory(trajectoryName).GetFinalPose().Translation() -
                            field_points::blue_alliance::april_tags::speakerCenter.pose.ToTranslation2d())
-                              .Norm());
+                              .Norm()) +
+         10_in;  // 10 inches converts camera position to center of robot
 }

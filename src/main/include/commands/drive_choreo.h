@@ -29,7 +29,7 @@ class DriveChoreo : public frc2::CommandHelper<frc2::Command, DriveChoreo> {
   [[nodiscard]] static bool IsAtEndPoint(SwerveDriveSubsystem& drive,
                                          const std::string& trajectoryName,
                                          const units::inch_t translationalTolerance = 6_in,
-                                         const units::degree_t rotationalTolerance = 0.5_deg);
+                                         const units::degree_t rotationalTolerance = 1.0_deg);
 
   [[nodiscard]] static units::inch_t EndpointShotDistance(const std::string& trajectoryName);
 

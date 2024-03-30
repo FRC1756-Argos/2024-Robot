@@ -32,7 +32,7 @@ AutonomousSource2::AutonomousSource2(IntakeSubsystem& intake,
     , m_SeqCommands{frc2::SequentialCommandGroup{
           AutonomousSource1{m_Intake, m_Shooter, m_Elevator, m_Swerve, m_Vision, controllers, leds},
           frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.2", false},
-                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 4_s}},
+                                     IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 3_s}},
           frc2::ConditionalCommand{
               frc2::SequentialCommandGroup{
                   // Got note!
@@ -42,30 +42,32 @@ AutonomousSource2::AutonomousSource2(IntakeSubsystem& intake,
                   ShooterCommand{&m_Shooter, true},
                   frc2::ParallelCommandGroup{
                       DriveChoreo{m_Swerve, "Source1preload.4", false},
-                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 4_s}}},
+                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 3.0_s}}},
               frc2::ParallelCommandGroup{
                   // Missed note
                   DriveChoreo{m_Swerve, "Source1preloadShortcut.1", false},
                   IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
               [&shooter]() { return shooter.IsNotePresent(); }},
-          // frc2::ConditionalCommand{
-          //     frc2::SequentialCommandGroup{
-          //         // Got note!
-          //         frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.5", false},
-          //                                    PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
-          //         AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-          //         ShooterCommand{&m_Shooter, true}},
-          //     frc2::ParallelCommandGroup{
-          //         // Missed note
-          //         DriveChoreo{m_Swerve, "Source1preloadShortcut.2", false},
-          //         IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
-          //     [&shooter]() { return shooter.IsNotePresent(); }},
-          frc2::ParallelCommandGroup{
-              DriveChoreo{
-                  m_Swerve, "Source1preload.5", false},  // remove this command when we reincorporate the conditional.
-              PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
+          frc2::ConditionalCommand{
+              frc2::SequentialCommandGroup{
+                  // Got note!
+                  frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preload.5", false},
+                                             PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
+                  AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
+                  ShooterCommand{&m_Shooter, true},
+                  frc2::ParallelCommandGroup{
+                      DriveChoreo{m_Swerve, "Source1preload.6", false},
+                      IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}}},
+              frc2::SequentialCommandGroup{frc2::ParallelCommandGroup{
+                  // Missed note
+                  DriveChoreo{m_Swerve, "Source1preloadShortcut.2", false},
+                  IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}}},
+              [&shooter]() { return shooter.IsNotePresent(); }},
+          frc2::ParallelCommandGroup{DriveChoreo{m_Swerve, "Source1preloadShortcut.3", false},
+                                     PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 15_ft}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
-          ShooterCommand{&m_Shooter, true}}} {}
+          ShooterCommand{&m_Shooter, true},
+          DriveChoreo{m_Swerve, "Source1preloadShortcut.4", false}}} {}
 
 // Called when the command is initially scheduled.
 void AutonomousSource2::Initialize() {
