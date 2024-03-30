@@ -19,12 +19,10 @@ void CrossfieldShotCommand::Initialize() {
 }
 
 // Called repeatedly when this Command is scheduled to run
-void CrossfieldShotCommand::Execute() {
-}
+void CrossfieldShotCommand::Execute() {}
 
 // Called once the command ends or is interrupted.
-void CrossfieldShotCommand::End(bool interrupted) {
-}
+void CrossfieldShotCommand::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool CrossfieldShotCommand::IsFinished() {
