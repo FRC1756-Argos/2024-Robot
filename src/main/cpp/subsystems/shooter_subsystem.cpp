@@ -10,6 +10,7 @@
 #include <units/math.h>
 
 #include "constants/addresses.h"
+#include "constants/feature_flags.h"
 #include "constants/measure_up.h"
 #include "constants/motors.h"
 
@@ -93,8 +94,10 @@ void ShooterSubsystem::SetTrapMode(bool trapMode) {
 }
 
 [[nodiscard]] bool ShooterSubsystem::ShooterAtSpeed() {
-  frc::SmartDashboard::PutString("(AtSpeed) mode", m_primaryMotor.GetControlMode().GetValue().ToString());
-  frc::SmartDashboard::PutNumber("(AtSpeed) error", m_primaryMotor.GetClosedLoopError().GetValue());
+  if constexpr (feature_flags::nt_debugging) {
+    frc::SmartDashboard::PutString("(AtSpeed) mode", m_primaryMotor.GetControlMode().GetValue().ToString());
+    frc::SmartDashboard::PutNumber("(AtSpeed) error", m_primaryMotor.GetClosedLoopError().GetValue());
+  }
   if (m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::VelocityVoltage &&
       m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::VelocityVoltageFOC) {
     return false;

@@ -27,6 +27,7 @@
 #include "argos_lib/general/nt_motor_pid_tuner.h"
 #include "argos_lib/general/nt_subscriber.h"
 #include "argos_lib/homing/fs_homing.h"
+#include "constants/feature_flags.h"
 #include "frc/StateSpaceUtil.h"
 #include "frc/estimator/SwerveDrivePoseEstimator.h"
 #include "utils/swerve_trapezoidal_profile.h"
@@ -306,15 +307,15 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   frc::PIDController m_linearPID;  ///< Correction parameters for x/y error when following drive profile
   frc::HolonomicDriveController m_followerController;  ///< Controller to follow drive profile
 
-  argos_lib::NTMotorPIDTuner m_driveMotorPIDTuner;  ///< Utility to tune drive motors
-  argos_lib::NTSubscriber m_linearFollowerTuner_P;
-  argos_lib::NTSubscriber m_linearFollowerTuner_I;
-  argos_lib::NTSubscriber m_linearFollowerTuner_D;
-  argos_lib::NTSubscriber m_rotationalFollowerTuner_P;
-  argos_lib::NTSubscriber m_rotationalFollowerTuner_I;
-  argos_lib::NTSubscriber m_rotationalFollowerTuner_D;
-  argos_lib::NTSubscriber m_rotationalFollowerConstraintTuner_vel;
-  argos_lib::NTSubscriber m_rotationalFollowerConstraintTuner_accel;
+  std::unique_ptr<argos_lib::NTMotorPIDTuner> m_driveMotorPIDTuner;  ///< Utility to tune drive motors
+  std::unique_ptr<argos_lib::NTSubscriber> m_linearFollowerTuner_P;
+  std::unique_ptr<argos_lib::NTSubscriber> m_linearFollowerTuner_I;
+  std::unique_ptr<argos_lib::NTSubscriber> m_linearFollowerTuner_D;
+  std::unique_ptr<argos_lib::NTSubscriber> m_rotationalFollowerTuner_P;
+  std::unique_ptr<argos_lib::NTSubscriber> m_rotationalFollowerTuner_I;
+  std::unique_ptr<argos_lib::NTSubscriber> m_rotationalFollowerTuner_D;
+  std::unique_ptr<argos_lib::NTSubscriber> m_rotationalFollowerConstraintTuner_vel;
+  std::unique_ptr<argos_lib::NTSubscriber> m_rotationalFollowerConstraintTuner_accel;
 
   wpi::array<frc::SwerveModuleState, 4> GetRawModuleStates(frc::ChassisSpeeds velocities);
   /**

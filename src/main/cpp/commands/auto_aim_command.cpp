@@ -6,6 +6,7 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "constants/feature_flags.h"
 #include "constants/measure_up.h"
 
 AutoAimCommand::AutoAimCommand(SwerveDriveSubsystem* swerveDrive,
@@ -40,13 +41,17 @@ void AutoAimCommand::Execute() {
   auto angle = m_pVision->getShooterAngle();
   auto speed = m_pVision->getShooterSpeed();
   if (angle != std::nullopt) {
-    frc::SmartDashboard::PutNumber("(AIM) angle", angle.value().to<double>());
+    if constexpr (feature_flags::nt_debugging) {
+      frc::SmartDashboard::PutNumber("(AIM) angle", angle.value().to<double>());
+    }
     m_pElevator->SetCarriageAngle(angle.value());
   }
 
   if (speed != std::nullopt) {
-    frc::SmartDashboard::PutNumber("(AIM) speed",
-                                   units::angular_velocity::revolutions_per_minute_t{speed.value()}.to<double>());
+    if constexpr (feature_flags::nt_debugging) {
+      frc::SmartDashboard::PutNumber("(AIM) speed",
+                                     units::angular_velocity::revolutions_per_minute_t{speed.value()}.to<double>());
+    }
     m_pShooter->ShooterGoToSpeed(speed.value());
   }
 
@@ -56,13 +61,17 @@ void AutoAimCommand::Execute() {
   bool aimed = false;
 
   if (horzOffset != std::nullopt && cameraOffset != std::nullopt) {
-    frc::SmartDashboard::PutNumber("(AIM) offset", horzOffset.value().to<double>());
+    if constexpr (feature_flags::nt_debugging) {
+      frc::SmartDashboard::PutNumber("(AIM) offset", horzOffset.value().to<double>());
+    }
     double offset = horzOffset.value().to<double>();
     offset -= cameraOffset.value().to<double>();
 
     m_pSwerveDrive->SwerveDrive(0, 0, -offset * 0.016);
-    if (m_pVision->IsStaticRotationEnabled()) {
-      frc::SmartDashboard::PutNumber("(AIM) offset2", offset);
+    if constexpr (feature_flags::nt_debugging) {
+      if (m_pVision->IsStaticRotationEnabled()) {
+        frc::SmartDashboard::PutNumber("(AIM) offset2", offset);
+      }
     }
 
     aimed = std::abs(offset) < 5 && m_pShooter->ShooterAtSpeed();

@@ -25,7 +25,7 @@
 #include <units/length.h>
 
 // Include GamePiece enum
-#include <constants/field_points.h>
+#include <constants/feature_flags.h>
 #include <Constants.h>
 
 #include <cmath>
@@ -184,7 +184,9 @@ RobotContainer::RobotContainer()
 
         auto rotateSpeed = deadbandRotSpeed;
 
-        frc::SmartDashboard::PutBoolean("(DRIVER) IsAimingActive", m_visionSubSystem.IsAimWhileMoveActive());
+        if constexpr (feature_flags::nt_debugging) {
+          frc::SmartDashboard::PutBoolean("(DRIVER) IsAimingActive", m_visionSubSystem.IsAimWhileMoveActive());
+        }
 
         if (m_visionSubSystem.IsAimWhileMoveActive()) {
           auto speed = m_visionSubSystem.getShooterSpeed();
@@ -236,16 +238,18 @@ RobotContainer::RobotContainer()
               rotateSpeed);  // X axis is positive right (CW), but swerve coordinates are positive left (CCW)
         }
         // DEBUG STUFF
-        frc::SmartDashboard::PutBoolean("(DRIVER) Static Enable", m_visionSubSystem.IsStaticRotationEnabled());
-        frc::SmartDashboard::PutNumber(
-            "(DRIVER) Joystick Left Y",
-            m_controllers.DriverController().GetY(argos_lib::XboxController::JoystickHand::kLeftHand));
-        frc::SmartDashboard::PutNumber(
-            "(DRIVER) Joystick Left X",
-            m_controllers.DriverController().GetX(argos_lib::XboxController::JoystickHand::kLeftHand));
-        frc::SmartDashboard::PutNumber(
-            "(DRIVER) Joystick Right X",
-            m_controllers.DriverController().GetX(argos_lib::XboxController::JoystickHand::kRightHand));
+        if constexpr (feature_flags::nt_debugging) {
+          frc::SmartDashboard::PutBoolean("(DRIVER) Static Enable", m_visionSubSystem.IsStaticRotationEnabled());
+          frc::SmartDashboard::PutNumber(
+              "(DRIVER) Joystick Left Y",
+              m_controllers.DriverController().GetY(argos_lib::XboxController::JoystickHand::kLeftHand));
+          frc::SmartDashboard::PutNumber(
+              "(DRIVER) Joystick Left X",
+              m_controllers.DriverController().GetX(argos_lib::XboxController::JoystickHand::kLeftHand));
+          frc::SmartDashboard::PutNumber(
+              "(DRIVER) Joystick Right X",
+              m_controllers.DriverController().GetX(argos_lib::XboxController::JoystickHand::kRightHand));
+        }
       },
       {&m_swerveDrive}));
 
