@@ -28,45 +28,83 @@ AutoAimCommand::AutoAimCommand(SwerveDriveSubsystem* swerveDrive,
 
 // Called when the command is initially scheduled.
 void AutoAimCommand::Initialize() {
-  m_pShooter->ShooterGoToSpeed(5000_rpm);
   m_pShooter->SetAmpMode(false);
   m_pShooter->SetTrapMode(false);
   m_pSwerveDrive->StopDrive();
-  m_aimedDebouncer.Reset(false);
+  // Start aiming early so we can finish early if possible
+  const auto aimParams = GetAimParams();
+  if (aimParams) {
+    m_aimedDebouncer.Reset(Aim(aimParams));  // might already be aimed
+    SetOperatorFeedback(aimParams);
+  } else {
+    m_pShooter->ShooterGoToSpeed(5000_rpm);
+    m_aimedDebouncer.Reset(false);
+  }
 }
 
 // Called repeatedly when this Command is scheduled to run
 void AutoAimCommand::Execute() {
+  const auto aimParams = GetAimParams();
+
+  SetOperatorFeedback(aimParams);
+  (void)m_aimedDebouncer(Aim(aimParams));
+}
+
+// Called once the command ends or is interrupted.
+void AutoAimCommand::End(bool interrupted) {
+  if (m_pControllers) {
+    m_pControllers->DriverController().SetVibration(argos_lib::VibrationOff());
+  }
+  m_pSwerveDrive->StopDrive();
+}
+
+// Returns true when the command should end.
+bool AutoAimCommand::IsFinished() {
+  return m_endWhenAimed && m_aimedDebouncer.GetDebouncedStatus();
+}
+std::optional<AutoAimCommand::AimParams> AutoAimCommand::GetAimParams() {
   auto angle = m_pVision->getShooterAngle();
   auto speed = m_pVision->getShooterSpeed();
-  if (angle != std::nullopt) {
-    frc::SmartDashboard::PutNumber("(AIM) angle", angle.value().to<double>());
-    m_pElevator->SetCarriageAngle(angle.value());
-  }
-
-  if (speed != std::nullopt) {
-    frc::SmartDashboard::PutNumber("(AIM) speed",
-                                   units::angular_velocity::revolutions_per_minute_t{speed.value()}.to<double>());
-    m_pShooter->ShooterGoToSpeed(speed.value());
-  }
-
   auto horzOffset = m_pVision->GetHorizontalOffsetToTarget();
   auto cameraOffset = m_pVision->getShooterOffset();
 
-  bool aimed = false;
+  if (angle && speed && horzOffset && cameraOffset) {
+    return AimParams{angle.value(), speed.value(), horzOffset.value(), cameraOffset.value()};
+  }
+  return std::nullopt;
+}
 
-  if (horzOffset != std::nullopt && cameraOffset != std::nullopt) {
-    frc::SmartDashboard::PutNumber("(AIM) offset", horzOffset.value().to<double>());
-    double offset = horzOffset.value().to<double>();
-    offset -= cameraOffset.value().to<double>();
+std::optional<units::degree_t> AutoAimCommand::GetAdjustmentOffset(const std::optional<AimParams>& params) {
+  if (!params) {
+    return std::nullopt;
+  }
+  return params.value().targetAngleOffset - params.value().cameraAngleOffset;
+}
 
-    m_pSwerveDrive->SwerveDrive(0, 0, -offset * 0.016);
-    if (m_pVision->IsStaticRotationEnabled()) {
-      frc::SmartDashboard::PutNumber("(AIM) offset2", offset);
-    }
+bool AutoAimCommand::Aimed(const std::optional<AimParams>& params) {
+  const auto offset = GetAdjustmentOffset(params);
+  if (!offset) {
+    return false;
+  }
 
-    aimed = std::abs(offset) < 5 && m_pShooter->ShooterAtSpeed();
+  return std::abs(offset.value().to<double>()) < 5.0 && m_pShooter->ShooterAtSpeed() &&
+         m_pElevator->IsElevatorAtSetPoint();
+}
 
+bool AutoAimCommand::Aim(const std::optional<AimParams>& params) {
+  if (params) {
+    const auto offset = GetAdjustmentOffset(params);
+    m_pSwerveDrive->SwerveDrive(0, 0, -offset.value().to<double>() * 0.016);
+    m_pElevator->SetCarriageAngle(params.value().carriageAngle);
+    m_pShooter->ShooterGoToSpeed(params.value().shooterSpeed);
+  }
+
+  return Aimed(params);
+}
+
+void AutoAimCommand::SetOperatorFeedback(const std::optional<AimParams>& params) {
+  if (params) {
+    const auto aimed = Aimed(params);
     if (m_pLeds) {
       if (aimed) {
         m_pLeds->TemporaryAnimate(
@@ -89,17 +127,4 @@ void AutoAimCommand::Execute() {
     m_pLeds->TemporaryAnimate(
         [this]() { m_pLeds->SetAllGroupsColor(argos_lib::gamma_corrected_colors::kReallyRed, false); }, 200_ms);
   }
-  (void)m_aimedDebouncer(aimed);
-}
-
-// Called once the command ends or is interrupted.
-void AutoAimCommand::End(bool interrupted) {
-  if (m_pControllers) {
-    m_pControllers->DriverController().SetVibration(argos_lib::VibrationOff());
-  }
-}
-
-// Returns true when the command should end.
-bool AutoAimCommand::IsFinished() {
-  return m_endWhenAimed && m_aimedDebouncer.GetDebouncedStatus();
 }
