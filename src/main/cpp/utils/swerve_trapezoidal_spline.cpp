@@ -4,7 +4,6 @@
 
 #include "utils/swerve_trapezoidal_spline.h"
 
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
 
 #include "utils/pose_continuity_fix.h"

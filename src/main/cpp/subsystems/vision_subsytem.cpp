@@ -2,6 +2,7 @@
 ///            Open Source Software; you can modify and/or share it under the terms of
 ///            the license file in the root directory of this project.
 
+#include <constants/feature_flags.h>
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/math.h>
@@ -32,25 +33,33 @@ void VisionSubsystem::Periodic() {
   const auto targetValues = GetSeeingCamera();  // Note that this will update the targets object
 
   if (targetValues && targetValues.value().hasTargets) {
-    frc::SmartDashboard::PutBoolean("(Vision - Periodic) Is Target Present?", targetValues.value().hasTargets);
-    frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Pitch", targetValues.value().m_pitch.to<double>());
-    frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Yaw", targetValues.value().m_yaw.to<double>());
-    frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag ID", targetValues.value().tagID);
+    if constexpr (feature_flags::nt_debugging) {
+      frc::SmartDashboard::PutBoolean("(Vision - Periodic) Is Target Present?", targetValues.value().hasTargets);
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Pitch", targetValues.value().m_pitch.to<double>());
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Yaw", targetValues.value().m_yaw.to<double>());
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag ID", targetValues.value().tagID);
+    }
 
     auto dist = GetDistanceToSpeaker();
     if (dist != std::nullopt) {
-      frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera", dist.value().to<double>());
+      if constexpr (feature_flags::nt_debugging) {
+        frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera", dist.value().to<double>());
+      }
     }
 
     auto calcDist = GetCalculatedDistanceToSpeaker();
     if (calcDist = std::nullopt) {
-      frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
-                                     calcDist.value().to<double>());
+      if constexpr (feature_flags::nt_debugging) {
+        frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
+                                       calcDist.value().to<double>());
+      }
     }
 
     auto angle = getShooterAngle();
     if (angle != std::nullopt) {
-      frc::SmartDashboard::PutNumber("(Vision - Periodic) Shooter Angle", angle.value().to<double>());
+      if constexpr (feature_flags::nt_debugging) {
+        frc::SmartDashboard::PutNumber("(Vision - Periodic) Shooter Angle", angle.value().to<double>());
+      }
     }
   }
 }
@@ -350,7 +359,9 @@ void VisionSubsystem::SetPipeline(uint16_t tag) {
   //   default:
   //     break;
   // }
-  frc::SmartDashboard::PutNumber("(Vision) Setting Pipeline", tag);
+  if constexpr (feature_flags::nt_debugging) {
+    frc::SmartDashboard::PutNumber("(Vision) Setting Pipeline", tag);
+  }
 
   table->PutNumber("pipeline", tag);
 }
@@ -431,10 +442,10 @@ LimelightTarget::tValues LimelightTarget::GetTarget(bool filter, std::string cam
   m_yaw = units::make_unit<units::degree_t>(table->GetNumber("tx", 0.0));
   m_pitch = units::make_unit<units::degree_t>(table->GetNumber("ty", 0.0));
 
-  // * debugging
-  frc::SmartDashboard::PutNumber("VisionSubsystem/RawPitch (deg)", m_pitch.to<double>());
-  frc::SmartDashboard::PutNumber("VisionSubsystem/RawYaw (deg)", m_yaw.to<double>());
-  // * end debugging
+  if constexpr (feature_flags::nt_debugging) {
+    frc::SmartDashboard::PutNumber("VisionSubsystem/RawPitch (deg)", m_pitch.to<double>());
+    frc::SmartDashboard::PutNumber("VisionSubsystem/RawYaw (deg)", m_yaw.to<double>());
+  }
 
   // If filter needs to reset, reset filter
   if (m_hasTargets && m_resetFilterFlag) {
@@ -447,10 +458,10 @@ LimelightTarget::tValues LimelightTarget::GetTarget(bool filter, std::string cam
     m_pitch = m_tyFilter.Calculate(m_pitch);
     m_targetPose.Z() = m_zFilter.Calculate(m_targetPose.Z());
 
-    // * debugging
-    frc::SmartDashboard::PutNumber("VisionSubsystem/FilteredPitch (deg)", m_pitch.to<double>());
-    frc::SmartDashboard::PutNumber("VisionSubsystem/FilteredYaw (deg)", m_yaw.to<double>());
-    // * end debugging
+    if constexpr (feature_flags::nt_debugging) {
+      frc::SmartDashboard::PutNumber("VisionSubsystem/FilteredPitch (deg)", m_pitch.to<double>());
+      frc::SmartDashboard::PutNumber("VisionSubsystem/FilteredYaw (deg)", m_yaw.to<double>());
+    }
   }
 
   m_area = (table->GetNumber("ta", 0.0));

@@ -12,6 +12,7 @@
 
 #include "argos_lib/config/falcon_config.h"
 #include "constants/addresses.h"
+#include "constants/feature_flags.h"
 #include "constants/measure_up.h"
 #include "constants/motors.h"
 #include "utils/sensor_conversions.h"
@@ -116,12 +117,14 @@ void ClimberSubsystem::DisableClimberSoftLimits() {
 }
 
 bool ClimberSubsystem::IsClimberAtSetPoint() {
-  // frc::SmartDashboard::PutString("ElevatorLiftMode", m_primaryMotor.GetControlMode().GetValue().ToString());
-  // frc::SmartDashboard::PutNumber("ElevatorLiftError", m_primaryMotor.GetClosedLoopError().GetValue());
-  // frc::SmartDashboard::PutNumber(
-  //     "ElevatorHeightError",
-  //    sensor_conversions::elevator::lift::ToHeight(units::turn_t{m_primaryMotor.GetClosedLoopError().GetValue()})
-  //        .to<double>());
+  // if constexpr (feature_flags::nt_debugging) {
+  //   frc::SmartDashboard::PutString("ElevatorLiftMode", m_primaryMotor.GetControlMode().GetValue().ToString());
+  //   frc::SmartDashboard::PutNumber("ElevatorLiftError", m_primaryMotor.GetClosedLoopError().GetValue());
+  //   frc::SmartDashboard::PutNumber(
+  //       "ElevatorHeightError",
+  //       sensor_conversions::elevator::lift::ToHeight(units::turn_t{m_primaryMotor.GetClosedLoopError().GetValue()})
+  //           .to<double>());
+  // }
   if (m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltage &&
       m_primaryMotor.GetControlMode().GetValue() != ctre::phoenix6::signals::ControlModeValue::PositionVoltageFOC) {
     return false;

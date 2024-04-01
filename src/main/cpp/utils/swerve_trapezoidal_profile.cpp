@@ -6,6 +6,7 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "constants/feature_flags.h"
 #include "utils/pose_continuity_fix.h"
 
 SwerveTrapezoidalProfileSegment::SwerveTrapezoidalProfileSegment()
@@ -33,8 +34,12 @@ SwerveTrapezoidalProfileSegment::SwerveTrapezoidalProfileSegment(
   m_odometryOffsetAngle =
       GetContinuousOffset(m_initialAngle, m_initialPosition, m_initialAngle + m_relativeRotation, finalPose);
 
-  frc::SmartDashboard::PutNumber("(SwerveFollower) Relative X", units::inch_t{m_relativeTranslation.X()}.to<double>());
-  frc::SmartDashboard::PutNumber("(SwerveFollower) Relative Y", units::inch_t{m_relativeTranslation.Y()}.to<double>());
+  if constexpr (feature_flags::nt_debugging) {
+    frc::SmartDashboard::PutNumber("(SwerveFollower) Relative X",
+                                   units::inch_t{m_relativeTranslation.X()}.to<double>());
+    frc::SmartDashboard::PutNumber("(SwerveFollower) Relative Y",
+                                   units::inch_t{m_relativeTranslation.Y()}.to<double>());
+  }
 }
 
 SwerveTrapezoidalProfileSegment::SwerveTrapezoidalProfileSegment(
@@ -52,33 +57,37 @@ SwerveTrapezoidalProfileSegment::SwerveTrapezoidalProfileSegment(
                                       linearConstraints,
                                       initialVelocity,
                                       finalVelocity) {
-  frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Initial Position X",
-                                 units::inch_t{initialPosition.X()}.to<double>());
-  frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Initial Position Y",
-                                 units::inch_t{initialPosition.Y()}.to<double>());
-  frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Initial Position Angle",
-                                 initialPosition.Rotation().Degrees().to<double>());
-  frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Final Position X",
-                                 units::inch_t{finalPosition.X()}.to<double>());
-  frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Final Position Y",
-                                 units::inch_t{finalPosition.Y()}.to<double>());
-  frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Final Position Angle",
-                                 finalPosition.Rotation().Degrees().to<double>());
   auto translation = finalPosition.Translation() - initialPosition.Translation();
-  frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Translation X", units::inch_t{translation.X()}.to<double>());
-  frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Translation Y", units::inch_t{translation.Y()}.to<double>());
+  if constexpr (feature_flags::nt_debugging) {
+    frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Initial Position X",
+                                   units::inch_t{initialPosition.X()}.to<double>());
+    frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Initial Position Y",
+                                   units::inch_t{initialPosition.Y()}.to<double>());
+    frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Initial Position Angle",
+                                   initialPosition.Rotation().Degrees().to<double>());
+    frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Final Position X",
+                                   units::inch_t{finalPosition.X()}.to<double>());
+    frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Final Position Y",
+                                   units::inch_t{finalPosition.Y()}.to<double>());
+    frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Final Position Angle",
+                                   finalPosition.Rotation().Degrees().to<double>());
+    frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Translation X", units::inch_t{translation.X()}.to<double>());
+    frc::SmartDashboard::PutNumber("(TrapezoidalProfile) Translation Y", units::inch_t{translation.Y()}.to<double>());
+  }
 }
 
 frc::Trajectory::State SwerveTrapezoidalProfileSegment::Calculate(units::second_t time) const {
   const auto linearState = m_linearProfile.Calculate(time);
   const auto newTranslation =
       m_relativeTranslation * (linearState.position / m_relativeTranslation.Norm()).to<double>();
-  frc::SmartDashboard::PutNumber("(SwerveFollower) Linear Position", linearState.position.to<double>());
-  frc::SmartDashboard::PutNumber("(SwerveFollower) Linear Length",
-                                 units::inch_t{m_relativeTranslation.Norm()}.to<double>());
-  frc::SmartDashboard::PutNumber("(SwerveFollower) Completion %",
-                                 (linearState.position / m_relativeTranslation.Norm()).to<double>());
-  // const auto newRotation = m_relativeRotation * (rotationalState.position / m_relativeRotation.Degrees()).to<double>();
+  if constexpr (feature_flags::nt_debugging) {
+    frc::SmartDashboard::PutNumber("(SwerveFollower) Linear Position", linearState.position.to<double>());
+    frc::SmartDashboard::PutNumber("(SwerveFollower) Linear Length",
+                                   units::inch_t{m_relativeTranslation.Norm()}.to<double>());
+    frc::SmartDashboard::PutNumber("(SwerveFollower) Completion %",
+                                   (linearState.position / m_relativeTranslation.Norm()).to<double>());
+  }
+
   return frc::Trajectory::State{time,
                                 linearState.velocity,
                                 0_mps_sq,

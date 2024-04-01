@@ -4,8 +4,6 @@
 
 #include "commands/climber_homing_command.h"
 
-#include <frc/smartdashboard/SmartDashboard.h>
-
 #include <chrono>
 
 #include "constants/measure_up.h"
