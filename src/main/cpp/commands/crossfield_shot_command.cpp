@@ -9,7 +9,7 @@
 #include "constants/measure_up.h"
 
 CrossfieldShotCommand::CrossfieldShotCommand(ShooterSubsystem* shooter, ElevatorSubsystem* elevator)
-    : m_pShooter{shooter}, m_pElevator{elevator}, m_ShootCommand{ShooterCommand{shooter}} {}
+    : m_pShooter{shooter}, m_pElevator{elevator} {}
 
 // Called when the command is initially scheduled.
 void CrossfieldShotCommand::Initialize() {
