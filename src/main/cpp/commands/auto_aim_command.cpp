@@ -4,8 +4,6 @@
 
 #include "commands/auto_aim_command.h"
 
-#include <frc/smartdashboard/SmartDashboard.h>
-
 #include "constants/measure_up.h"
 
 AutoAimCommand::AutoAimCommand(SwerveDriveSubsystem* swerveDrive,
