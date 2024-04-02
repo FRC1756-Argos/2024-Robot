@@ -44,11 +44,11 @@ AutonomousAmpSideSubwooferCenterRush::AutonomousAmpSideSubwooferCenterRush(
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
           frc2::ConditionalCommand{
               frc2::SequentialCommandGroup{
-                  DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.3"},
+                  DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.2"},
                   AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
                   ShooterCommand{&m_Shooter, true},
                   frc2::ParallelCommandGroup{
-                      DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.4", true},
+                      DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.3", true},
                       IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}}},
               frc2::ParallelCommandGroup{
                   DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP_Shortcut.1", true},
@@ -56,26 +56,26 @@ AutonomousAmpSideSubwooferCenterRush::AutonomousAmpSideSubwooferCenterRush(
               [&shooter]() { return shooter.IsNotePresent(); }},
           frc2::ConditionalCommand{
               frc2::SequentialCommandGroup{
-                  DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.5"},
+                  DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.4"},
                   AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
                   ShooterCommand{&m_Shooter, true},
                   frc2::ParallelCommandGroup{
-                      DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.6", true},
+                      DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.5", true},
                       IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}}},
               frc2::ParallelCommandGroup{
                   DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP_Shortcut.2", true},
                   IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
               [&shooter]() { return shooter.IsNotePresent(); }},
-          DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.7", true},
+          DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.6", true},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true},
           frc2::ParallelCommandGroup{
               DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP_Shortcut.2", true},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
           frc2::ParallelCommandGroup{
-              DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.8", true},
+              DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.7", true},
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
-          DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.9", true},
+          DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_Center_Rush.8", true},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true},
       }} {}
