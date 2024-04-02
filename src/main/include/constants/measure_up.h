@@ -33,14 +33,15 @@ namespace measure_up {
     constexpr auto speakerOpeningHeightFromShooter = 54.5_in;
     constexpr auto trapOpeningHeight = 36.25_in;
     constexpr auto cameraOffsetFromShooter = 21.0_in;
-    constexpr auto offsetDistanceThreshold = 140_in;
+    constexpr auto frontCameraOffsetFromShooter = 3.0_in;
+    constexpr auto offsetDistanceThreshold = 165_in;
     constexpr auto offsetDistThresholdSecondaryCam = 210_in;
     constexpr auto offsetRotationThreshold = 50_deg;
     constexpr auto speakerOpeningHeightFromGround = 80.5_in;
     constexpr auto cameraHeightToAprilTag = 28.63_in;
-    constexpr auto secondaryCameraToShooter = 18_in;
-    constexpr double frontSideSpinFactor = 10.0;
-    constexpr double longShotSpinFactor = 1.7;
+    constexpr auto secondaryCameraToShooter = 27_in;
+    constexpr double frontSideSpinFactor = 0.0;
+    constexpr double longShotSpinFactor = 0.0;
   }  // namespace shooter_targets
   namespace camera_front {
     constexpr auto cameraX = 0_in;  /// @todo real mounting offsets

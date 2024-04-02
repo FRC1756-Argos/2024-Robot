@@ -172,7 +172,12 @@ std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
   const auto camera = getWhichCamera();
   units::degree_t finalAngleOffset = 0.0_deg;
   if (distance) {
-    finalAngleOffset = units::math::atan2(measure_up::shooter_targets::cameraOffsetFromShooter, distance.value());
+    if (camera && camera.value() == whichCamera::PRIMARY_CAMERA) {
+      finalAngleOffset = units::math::atan2(measure_up::shooter_targets::cameraOffsetFromShooter, distance.value());
+    } else if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
+      finalAngleOffset =
+          -units::math::atan2(measure_up::shooter_targets::frontCameraOffsetFromShooter, distance.value());
+    }
   }
 
   units::inch_t offSetDistanceThreshold = measure_up::shooter_targets::offsetDistanceThreshold;
@@ -194,9 +199,9 @@ std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
     if (targetValues &&
         targetValues.value().tagPose.Rotation().Z() > measure_up::shooter_targets::offsetRotationThreshold) {
       if (camera && camera.value() == whichCamera::PRIMARY_CAMERA) {
-        accountLongerSpin += 0.8_deg;
+        // accountLongerSpin += 5.0_deg;
       } else if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
-        accountLongerSpin -= 0.15_deg;
+        // accountLongerSpin -= 0.15_deg;
       }
     } else if (targetValues && targetValues.value().tagPose.Rotation().Z() < 0_deg) {
       accountLongerSpin = 0.0_deg;
