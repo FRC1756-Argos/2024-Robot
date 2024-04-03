@@ -141,16 +141,16 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngleWithInertia(doubl
   auto highSpeedOffset = 0_deg;
   if (angle) {
     if (std::abs(medialSpeedPct) > 0.75) {
-      highSpeedOffset = units::degree_t(medialSpeedPct * 2.5);
+      highSpeedOffset = units::degree_t(medialSpeedPct * 1.5);
     }
 
     units::degree_t finalAngle = angle.value() - units::degree_t(speeds::drive::medialInertialWeight * medialSpeedPct);
-    finalAngle -= highSpeedOffset;
+    finalAngle += highSpeedOffset;
 
     const auto camera = getWhichCamera();
     if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
       finalAngle = angle.value() + units::degree_t(speeds::drive::medialInertialWeight * medialSpeedPct);
-      finalAngle += highSpeedOffset;
+      finalAngle -= highSpeedOffset;
     }
 
     return finalAngle;
