@@ -33,9 +33,9 @@ namespace measure_up {
     constexpr auto speakerOpeningHeightFromShooter = 54.5_in;
     constexpr auto trapOpeningHeight = 36.25_in;
     constexpr auto cameraOffsetFromShooter = 21.0_in;
-    constexpr auto frontCameraOffsetFromShooter = 3.0_in;
+    constexpr auto frontCamLateralOffsetFromShooter = 2.5_in;
     constexpr auto offsetDistanceThreshold = 165_in;
-    constexpr auto offsetDistThresholdSecondaryCam = 210_in;
+    constexpr auto offsetDistThresholdSecondaryCam = 240_in;
     constexpr auto offsetRotationThreshold = 50_deg;
     constexpr auto speakerOpeningHeightFromGround = 80.5_in;
     constexpr auto cameraHeightToAprilTag = 28.63_in;
