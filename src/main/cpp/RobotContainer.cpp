@@ -188,7 +188,7 @@ RobotContainer::RobotContainer()
           frc::SmartDashboard::PutBoolean("(DRIVER) IsAimingActive", m_visionSubSystem.IsAimWhileMoveActive());
         }
 
-        if (m_visionSubSystem.IsAimWhileMoveActive()) {
+        if (m_visionSubSystem.IsAimWhileMoveActive() || m_visionSubSystem.IsOdometryAimingActive()) {
           auto speed = m_visionSubSystem.getShooterSpeed();
           auto rotationWithInertia =
               m_visionSubSystem.getRotationSpeedWithInertia(deadbandTranslationSpeeds.leftSpeedPct);
@@ -297,6 +297,8 @@ void RobotContainer::ConfigureBindings() {
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
   auto aim = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
   auto aimWhileMove = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kA);
+  auto odometryAim = m_controllers.DriverController().TriggerRaw(
+      argos_lib::XboxController::Button::kB);  // for debugging only, will be removed
 
   auto ampPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kA);
   auto highPodiumPositionTrigger = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kX);
@@ -360,6 +362,12 @@ void RobotContainer::ConfigureBindings() {
       .OnTrue(frc2::InstantCommand([this]() { m_visionSubSystem.SetAimWhileMove(true); }, {&m_visionSubSystem}).ToPtr())
       .OnFalse(
           frc2::InstantCommand([this]() { m_visionSubSystem.SetAimWhileMove(false); }, {&m_visionSubSystem}).ToPtr());
+
+  odometryAim
+      .OnTrue(
+          frc2::InstantCommand([this]() { m_visionSubSystem.SetOdometryAiming(true); }, {&m_visionSubSystem}).ToPtr())
+      .OnFalse(
+          frc2::InstantCommand([this]() { m_visionSubSystem.SetOdometryAiming(false); }, {&m_visionSubSystem}).ToPtr());
   // CLIMBER TRIGGER ACTIVATION
   startupClimberHomeTrigger.OnTrue(&m_ClimberHomeCommand);
   (!ClimberHomeRequiredTrigger && robotEnableTrigger)

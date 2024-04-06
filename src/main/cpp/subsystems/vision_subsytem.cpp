@@ -119,6 +119,14 @@ bool VisionSubsystem::IsAimWhileMoveActive() {
   return m_isAimWhileMoveActive;
 }
 
+bool VisionSubsystem::IsOdometryAimingActive() {
+  return m_isOdometryAimingActive;
+}
+
+void VisionSubsystem::SetOdometryAiming(bool val) {
+  m_isOdometryAimingActive = val;
+}
+
 void VisionSubsystem::SetAimWhileMove(bool val) {
   m_isAimWhileMoveActive = val;
 }
@@ -133,22 +141,32 @@ void VisionSubsystem::SetEnableStaticRotation(bool val) {
 
 units::degree_t VisionSubsystem::getShooterAngle(const units::inch_t distance, const InterpolationMode mode) {
   units::degree_t finalAngle = measure_up::elevator::carriage::intakeAngle;
-  const auto camera = getWhichCamera();
-  switch (mode) {
-    case InterpolationMode::LinearInterpolation:
-      finalAngle = m_shooterAngleMap.Map(distance);
-      break;
-    case InterpolationMode::Polynomial: {
-      const auto d = distance.to<double>();
-      finalAngle = units::degree_t(87.3 - (0.78 * d) + (0.00335 * d * d) - (0.000005125 * d * d * d));
-      break;
+  if (!IsOdometryAimingActive()) {
+    const auto camera = getWhichCamera();
+    switch (mode) {
+      case InterpolationMode::LinearInterpolation:
+        finalAngle = m_shooterAngleMap.Map(distance);
+        break;
+      case InterpolationMode::Polynomial: {
+        const auto d = distance.to<double>();
+        finalAngle = units::degree_t(87.3 - (0.78 * d) + (0.00335 * d * d) - (0.000005125 * d * d * d));
+        break;
+      }
+      case InterpolationMode::Trig:
+        finalAngle = units::math::atan2(measure_up::shooter_targets::speakerOpeningHeightFromGround, distance);
+        break;
     }
-    case InterpolationMode::Trig:
-      finalAngle = units::math::atan2(measure_up::shooter_targets::speakerOpeningHeightFromGround, distance);
-      break;
-  }
-  if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
-    finalAngle = 180.0_deg - finalAngle;
+    if (camera && camera.value() == whichCamera::SECONDARY_CAMERA) {
+      finalAngle = 180.0_deg - finalAngle;
+    }
+  } else {
+    const auto targetPose = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                                field_points::blue_alliance::april_tags::speakerCenter.pose :
+                                field_points::red_alliance::april_tags::speakerCenter.pose;
+    const auto d =
+        argos_lib::odometry_aim::GetDistanceToTarget(m_pDriveSubsystem->GetPoseEstimate().Translation(), targetPose)
+            .to<double>();
+    finalAngle = units::degree_t(87.3 - (0.78 * d) + (0.00335 * d * d) - (0.000005125 * d * d * d));
   }
   return finalAngle;
 }

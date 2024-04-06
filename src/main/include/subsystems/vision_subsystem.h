@@ -19,6 +19,7 @@
 #include "argos_lib/config/config_types.h"
 #include "argos_lib/general/interpolation.h"
 #include "argos_lib/general/nt_subscriber.h"
+#include "argos_lib/general/odometry_aim.h"
 #include "constants/interpolation_maps.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableEntry.h"
@@ -169,6 +170,9 @@ class VisionSubsystem : public frc2::SubsystemBase {
   void SetAimWhileMove(bool val);
   [[nodiscard]] bool IsAimWhileMoveActive();
 
+  void SetOdometryAiming(bool val);
+  [[nodiscard]] bool IsOdometryAimingActive();
+
   void SetEnableStaticRotation(bool val);
   [[nodiscard]] bool IsStaticRotationEnabled();
 
@@ -219,7 +223,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
   bool m_useTrigonometry;                      ///< specifies whether to use the trigonometry to obtain shooter angle
   bool m_isAimWhileMoveActive;                 ///< true if aiming trigger is pressed and locked
   bool m_enableStaticRotation;                 ///< true if you want to rotate in the absence of translation input
-
+  bool m_isOdometryAimingActive;
   argos_lib::InterpolationMap<decltype(shooterRange::shooterAngle.front().inVal),
                               shooterRange::shooterAngle.size(),
                               decltype(shooterRange::shooterAngle.front().outVal)>
