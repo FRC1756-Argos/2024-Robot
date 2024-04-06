@@ -35,7 +35,7 @@ void AutoAimCommand::Initialize() {
     m_aimedDebouncer.Reset(Aim(aimParams));  // might already be aimed
     SetOperatorFeedback(aimParams);
   } else {
-    m_pShooter->ShooterGoToSpeed(5000_rpm);
+    m_pShooter->ShooterGoToSpeed(5300_rpm);
     m_aimedDebouncer.Reset(false);
   }
 }
