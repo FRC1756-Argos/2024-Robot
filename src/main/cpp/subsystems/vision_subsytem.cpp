@@ -142,8 +142,8 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngleWithInertia(doubl
   if (angle) {
     if (medialSpeedPct > 0.75) {
       highSpeedOffset = units::degree_t(medialSpeedPct * 0.5);
-    } else if (medialSpeedPct < 0.75) {
-      highSpeedOffset = units::degree_t(medialSpeedPct * 1.0);
+    } else if (medialSpeedPct <= 0.75) {
+      highSpeedOffset = units::degree_t(medialSpeedPct * 1.8);
     }
 
     units::degree_t finalAngle = angle.value() - units::degree_t(speeds::drive::medialInertialWeight * medialSpeedPct);
