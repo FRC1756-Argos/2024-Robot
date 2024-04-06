@@ -4,29 +4,35 @@
 
 #include "commands/autonomous/autonomous_nothing.h"
 
+#include <frc/DriverStation.h>
+
 AutonomousNothing::AutonomousNothing(SwerveDriveSubsystem& swerve)
-    : m_swerve{swerve}, m_initializeOdometry{&m_swerve, frc::Pose2d{{0_m, 0_m}, 0_deg}} {
+    : m_swerve{swerve}
+    , m_initializeOdometryRed{&m_swerve, frc::Pose2d{{0_m, 0_m}, 180_deg}}
+    , m_initializeOdometryBlue{&m_swerve, frc::Pose2d{{0_m, 0_m}, 0_deg}} {
   // Use addRequirements() here to declare subsystem dependencies.
 }
 
 // Called when the command is initially scheduled.
 void AutonomousNothing::Initialize() {
-  m_initializeOdometry.Initialize();
+  const auto alliance = frc::DriverStation::GetAlliance();
+  if (alliance && alliance.value() == frc::DriverStation::Alliance::kRed) {
+    m_initializeOdometryRed.Initialize();
+    m_swerve.FieldHome(0_deg, false);
+  } else {
+    m_initializeOdometryBlue.Initialize();
+  }
 }
 
 // Called repeatedly when this Command is scheduled to run
-void AutonomousNothing::Execute() {
-  m_initializeOdometry.Execute();
-}
+void AutonomousNothing::Execute() {}
 
 // Called once the command ends or is interrupted.
-void AutonomousNothing::End(bool interrupted) {
-  m_initializeOdometry.End(interrupted);
-}
+void AutonomousNothing::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool AutonomousNothing::IsFinished() {
-  return m_initializeOdometry.IsFinished();
+  return true;
 }
 
 std::string AutonomousNothing::GetName() const {

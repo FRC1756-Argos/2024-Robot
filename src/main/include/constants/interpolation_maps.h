@@ -34,12 +34,12 @@ namespace controllerMap {
 namespace shooterRange {
   using argos_lib::InterpMapPoint;
 
-  [[maybe_unused]] constexpr std::array shooterSpeed{InterpMapPoint{36.0_in, 5000_rpm},
-                                                     InterpMapPoint{60.0_in, 5000_rpm},
-                                                     InterpMapPoint{84.0_in, 5000_rpm},
-                                                     InterpMapPoint{120.0_in, 5000_rpm},
-                                                     InterpMapPoint{180.0_in, 5000_rpm},
-                                                     InterpMapPoint{228_in, 5000_rpm}};
+  [[maybe_unused]] constexpr std::array shooterSpeed{InterpMapPoint{36.0_in, 5300_rpm},
+                                                     InterpMapPoint{60.0_in, 5300_rpm},
+                                                     InterpMapPoint{84.0_in, 5300_rpm},
+                                                     InterpMapPoint{120.0_in, 5300_rpm},
+                                                     InterpMapPoint{180.0_in, 5300_rpm},
+                                                     InterpMapPoint{228_in, 5300_rpm}};
 
   [[maybe_unused]] constexpr std::array shooterAngle{InterpMapPoint{36.0_in, 60.0_deg},
                                                      InterpMapPoint{69.0_in, 48.0_deg},

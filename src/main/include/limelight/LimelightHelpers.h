@@ -2,8 +2,7 @@
 ///            Open Source Software; you can modify and/or share it under the terms of
 ///            the license file in the root directory of this project.
 
-#ifndef 2024_ROBOT_SRC_MAIN_INCLUDE_LIMELIGHT_LIMELIGHTHELPERS_H_
-#define 2024_ROBOT_SRC_MAIN_INCLUDE_LIMELIGHT_LIMELIGHTHELPERS_H_
+#pragma once
 
 ///
 /// https://github.com/LimelightVision/limelightlib-wpicpp
@@ -716,4 +715,3 @@ namespace LimelightHelpers {
     }
   }
 }  // namespace LimelightHelpers
-#endif  // 2024_ROBOT_SRC_MAIN_INCLUDE_LIMELIGHT_LIMELIGHTHELPERS_H_
