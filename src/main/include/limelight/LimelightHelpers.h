@@ -8,7 +8,14 @@
 /// https://github.com/LimelightVision/limelightlib-wpicpp
 ///
 
+#ifndef _WIN32
 #include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
+#endif
+
 // #include <curl/curl.h>
 #include <fcntl.h>
 #include <frc/geometry/Pose2d.h>
@@ -17,15 +24,13 @@
 #include <frc/geometry/Rotation3d.h>
 #include <frc/geometry/Translation2d.h>
 #include <frc/geometry/Translation3d.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <unistd.h>
 #include <wpinet/PortForwarder.h>
 
 #include <chrono>
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <numbers>
 #include <string>
 #include <vector>
 
@@ -50,9 +55,9 @@ namespace LimelightHelpers {
     return frc::Pose3d(
         frc::Translation3d(
             units::length::meter_t(inData[0]), units::length::meter_t(inData[1]), units::length::meter_t(inData[2])),
-        frc::Rotation3d(units::angle::radian_t(inData[3] * (M_PI / 180.0)),
-                        units::angle::radian_t(inData[4] * (M_PI / 180.0)),
-                        units::angle::radian_t(inData[5] * (M_PI / 180.0))));
+        frc::Rotation3d(units::angle::radian_t(inData[3] * (std::numbers::pi / 180.0)),
+                        units::angle::radian_t(inData[4] * (std::numbers::pi / 180.0)),
+                        units::angle::radian_t(inData[5] * (std::numbers::pi / 180.0))));
   }
 
   inline frc::Pose2d toPose2D(const std::vector<double>& inData) {
@@ -60,7 +65,7 @@ namespace LimelightHelpers {
       return frc::Pose2d();
     }
     return frc::Pose2d(frc::Translation2d(units::length::meter_t(inData[0]), units::length::meter_t(inData[1])),
-                       frc::Rotation2d(units::angle::radian_t(inData[5] * (M_PI / 180.0))));
+                       frc::Rotation2d(units::angle::radian_t(inData[5] * (std::numbers::pi / 180.0))));
   }
 
   inline std::shared_ptr<nt::NetworkTable> getLimelightNTTable(const std::string& tableName) {
@@ -510,6 +515,7 @@ namespace LimelightHelpers {
     inline const std::string _key_colorHSV{"cHSV"};
   }  // namespace internal
 
+#ifndef _WIN32
   inline void PhoneHome() {
     static int sockfd = -1;
     static struct sockaddr_in servaddr, cliaddr;
@@ -561,6 +567,7 @@ namespace LimelightHelpers {
       sockfd = -1;
     }
   }
+#endif
 
   inline void SetupPortForwarding(const std::string& limelightName) {
     auto& portForwarder = wpi::PortForwarder::GetInstance();
