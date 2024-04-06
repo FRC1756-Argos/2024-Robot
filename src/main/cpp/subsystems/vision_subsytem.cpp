@@ -38,7 +38,8 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
       [this](double) {
         LimelightHelpers::PoseEstimate mt2 =
             LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(primaryCameraTableName);
-        if (units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
+        if (mt2.tagCount > 0 &&
+            units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
           m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, mt2.timestampSeconds, {.2, .2, 9999999});
         }
       },
@@ -48,7 +49,8 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
       [this](double) {
         LimelightHelpers::PoseEstimate mt2 =
             LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(secondaryCameraTableName);
-        if (units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
+        if (mt2.tagCount > 0 &&
+            units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
           m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, mt2.timestampSeconds, {.2, .2, 9999999});
         }
       },

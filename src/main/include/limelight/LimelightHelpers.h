@@ -1,33 +1,40 @@
-#ifndef LIMELIGHTHELPERS_H
-#define LIMELIGHTHELPERS_H
+/// \copyright Copyright (c) Argos FRC Team 1756.
+///            Open Source Software; you can modify and/or share it under the terms of
+///            the license file in the root directory of this project.
+
+#ifndef 2024_ROBOT_SRC_MAIN_INCLUDE_LIMELIGHT_LIMELIGHTHELPERS_H_
+#define 2024_ROBOT_SRC_MAIN_INCLUDE_LIMELIGHT_LIMELIGHTHELPERS_H_
 
 ///
-//https://github.com/LimelightVision/limelightlib-wpicpp
+/// https://github.com/LimelightVision/limelightlib-wpicpp
 ///
 
-#include "networktables/NetworkTable.h"
-#include "networktables/NetworkTableInstance.h"
-#include "networktables/NetworkTableEntry.h"
-#include "networktables/NetworkTableValue.h"
-#include <wpinet/PortForwarder.h>
-#include "wpi/json.h"
-#include <string>
-#include <unistd.h>
-//#include <curl/curl.h>
-#include <vector>
-#include <chrono>
-#include <iostream>
-#include <frc/geometry/Translation2d.h>
-#include <frc/geometry/Translation3d.h>
+#include <arpa/inet.h>
+// #include <curl/curl.h>
+#include <fcntl.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Pose3d.h>
 #include <frc/geometry/Rotation2d.h>
 #include <frc/geometry/Rotation3d.h>
-#include <sys/socket.h>
+#include <frc/geometry/Translation2d.h>
+#include <frc/geometry/Translation3d.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <wpinet/PortForwarder.h>
+
+#include <chrono>
 #include <cstring>
-#include <fcntl.h>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "networktables/NetworkTable.h"
+#include "networktables/NetworkTableEntry.h"
+#include "networktables/NetworkTableInstance.h"
+#include "networktables/NetworkTableValue.h"
+#include "wpi/json.h"
 
 namespace LimelightHelpers {
   inline std::string sanitizeName(const std::string& name) {
@@ -159,9 +166,6 @@ namespace LimelightHelpers {
     return getLimelightNTString(limelightName, "tclass");
   }
 
-  /////
-  /////
-
   inline void setPipelineIndex(const std::string& limelightName, int index) {
     setLimelightNTDouble(limelightName, "pipeline", index);
   }
@@ -227,9 +231,6 @@ namespace LimelightHelpers {
     setLimelightNTDoubleArray(limelightName, "fiducial_id_filters_set", validIDsDouble);
   }
 
-  /////
-  /////
-
   /**
      * Sets the camera pose in robotspace. The UI camera pose must be set to zeros
      */
@@ -248,13 +249,7 @@ namespace LimelightHelpers {
     return getLimelightNTDoubleArray(limelightName, "llpython");
   }
 
-  /////
-  /////
-
   // Take async snapshot
-
-  /////
-  /////
 
   inline double extractBotPoseEntry(const std::vector<double>& inData, int position) {
     if (inData.size() < static_cast<size_t>(position + 1)) {
@@ -331,7 +326,7 @@ namespace LimelightHelpers {
 
     std::vector<RawFiducial> rawFiducials;
     int valsPerFiducial = 7;
-    std::size_t expectedTotalVals = 11 + valsPerFiducial * tagCount;
+    size_t expectedTotalVals = 11 + valsPerFiducial * tagCount;
 
     if (poseArray.size() == expectedTotalVals) {
       for (int i = 0; i < tagCount; i++) {
@@ -369,8 +364,8 @@ namespace LimelightHelpers {
   inline const double INVALID_TARGET = 0.0;
   class SingleTargetingResultClass {
    public:
-    SingleTargetingResultClass(){};
-    ~SingleTargetingResultClass(){};
+    SingleTargetingResultClass() = default;
+    ~SingleTargetingResultClass() = default;
     double m_TargetXPixels{INVALID_TARGET};
     double m_TargetYPixels{INVALID_TARGET};
 
@@ -527,7 +522,7 @@ namespace LimelightHelpers {
         return;
       }
 
-      memset(&servaddr, 0, sizeof(servaddr));
+      std::memset(&servaddr, 0, sizeof(servaddr));
       servaddr.sin_family = AF_INET;
       servaddr.sin_addr.s_addr = inet_addr("255.255.255.255");
       servaddr.sin_port = htons(5809);
@@ -550,13 +545,13 @@ namespace LimelightHelpers {
       }
 
       const char* msg = "LLPhoneHome";
-      sendto(sockfd, msg, strlen(msg), 0, (const struct sockaddr*)&servaddr, sizeof(servaddr));
+      sendto(sockfd, msg, std::strlen(msg), 0, (const struct sockaddr*)&servaddr, sizeof(servaddr));
     }
 
     char receiveData[1024];
     socklen_t len = sizeof(cliaddr);
 
-    ssize_t n = recvfrom(sockfd, (char*)receiveData, 1024, 0, (struct sockaddr*)&cliaddr, &len);
+    ssize_t n = recvfrom(sockfd, reinterpret_cast<char*>(receiveData), 1024, 0, (struct sockaddr*)&cliaddr, &len);
     if (n > 0) {
       receiveData[n] = '\0';  // Null-terminate the received string
       std::string received(receiveData, n);
@@ -721,4 +716,4 @@ namespace LimelightHelpers {
     }
   }
 }  // namespace LimelightHelpers
-#endif  // LIMELIGHTHELPERS_H
+#endif  // 2024_ROBOT_SRC_MAIN_INCLUDE_LIMELIGHT_LIMELIGHTHELPERS_H_
