@@ -785,6 +785,12 @@ frc::Pose2d SwerveDriveSubsystem::GetPoseEstimate(const frc::Pose2d& robotPose, 
   return frc::Pose2d{m_poseEstimator.GetEstimatedPosition().Translation(), GetContinuousOdometryAngle()};
 }
 
+void SwerveDriveSubsystem::UpdateVisionMeasurement(const frc::Pose2d& poseEstimate,
+                                                   units::second_t timestamp,
+                                                   const wpi::array<double, 3>& visionMeasurementStdDevs) {
+  m_poseEstimator.AddVisionMeasurement(poseEstimate, timestamp, visionMeasurementStdDevs);
+}
+
 void SwerveDriveSubsystem::SetControlMode(SwerveDriveSubsystem::DriveControlMode controlMode) {
   m_controlMode = controlMode;
 }
@@ -912,6 +918,10 @@ bool SwerveDriveSubsystem::IsFollowingProfile() const {
 
 units::degree_t SwerveDriveSubsystem::GetIMUYaw() {
   return -m_pigeonIMU.GetYaw().GetValue();
+}
+
+units::degrees_per_second_t SwerveDriveSubsystem::GetIMUYawRate() {
+  return -units::degrees_per_second_t{m_pigeonIMU.GetRate()};
 }
 
 void SwerveDriveSubsystem::ResetIMUYaw() {

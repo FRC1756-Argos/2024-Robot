@@ -17,7 +17,7 @@ GoToPodiumPositionCommand::GoToPodiumPositionCommand(ShooterSubsystem* shooter,
 void GoToPodiumPositionCommand::Initialize() {
   m_pShooter->SetTrapMode(false);
   m_pShooter->SetAmpMode(false);
-  m_pShooter->ShooterGoToSpeed(5000_rpm);
+  m_pShooter->ShooterGoToSpeed(5300_rpm);
   if (m_highPodiumShot) {
     m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::podiumHighHeight);
     m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::podiumHighAngle);

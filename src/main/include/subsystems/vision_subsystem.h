@@ -12,10 +12,13 @@
 #include <units/angular_velocity.h>
 #include <units/length.h>
 
+#include <stop_token>
 #include <string>
+#include <thread>
 
 #include "argos_lib/config/config_types.h"
 #include "argos_lib/general/interpolation.h"
+#include "argos_lib/general/nt_subscriber.h"
 #include "constants/interpolation_maps.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableEntry.h"
@@ -201,6 +204,9 @@ class VisionSubsystem : public frc2::SubsystemBase {
   [[nodiscard]] std::optional<LimelightTarget::tValues> GetSeeingCamera();
 
  private:
+  constexpr static char primaryCameraTableName[11]{"limelight"};
+  constexpr static char secondaryCameraTableName[17]{"limelight-front"};
+
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
   CameraInterface m_cameraInterface;  ///< Interface to limelight camera
@@ -222,4 +228,11 @@ class VisionSubsystem : public frc2::SubsystemBase {
                               shooterRange::shooterSpeed.size(),
                               decltype(shooterRange::shooterSpeed.front().outVal)>
       m_shooterSpeedMap;  ///< Maps a distance to a shooter speed
+  argos_lib::NTSubscriber
+      m_primaryCameraFrameUpdateSubscriber;  ///< Subscriber to manage all updates from primary camera
+  argos_lib::NTSubscriber
+      m_secondaryCameraFrameUpdateSubscriber;  ///< Subscriber to manage all updates from secondary camera
+  std::jthread m_yawUpdateThread;
+
+  void UpdateYaw(std::stop_token stopToken);
 };

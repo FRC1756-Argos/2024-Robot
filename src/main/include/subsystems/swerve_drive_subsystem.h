@@ -161,6 +161,10 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
    */
   frc::Pose2d GetPoseEstimate(const frc::Pose2d& robotPose, const units::millisecond_t& latency);
 
+  void UpdateVisionMeasurement(const frc::Pose2d& poseEstimate,
+                               units::second_t timestamp,
+                               const wpi::array<double, 3>& visionMeasurementStdDevs);
+
   void SetControlMode(SwerveDriveSubsystem::DriveControlMode controlMode);
 
   /**
@@ -259,6 +263,9 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
    */
   units::degrees_per_second_t GetRobotPitchRate();
 
+  units::degree_t GetIMUYaw();
+  units::degrees_per_second_t GetIMUYawRate();
+
  private:
   argos_lib::RobotInstance m_instance;
 
@@ -354,7 +361,6 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
    */
   void InitializeMotorsFromFS();
 
-  units::degree_t GetIMUYaw();
   void ResetIMUYaw();
 
   wpi::array<frc::SwerveModuleState, 4> OptimizeAllModules(wpi::array<frc::SwerveModuleState, 4> rawStates);

@@ -7,9 +7,15 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/math.h>
 
+#include <algorithm>
+#include <array>
+#include <chrono>
+#include <vector>
+
 #include <Constants.h>
 
 #include "constants/field_points.h"
+#include "limelight/LimelightHelpers.h"
 #include "subsystems/vision_subsystem.h"
 
 CameraInterface::CameraInterface() = default;
@@ -26,7 +32,34 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
     , m_isAimWhileMoveActive(false)
     , m_enableStaticRotation(false)
     , m_shooterAngleMap{shooterRange::shooterAngle}
-    , m_shooterSpeedMap{shooterRange::shooterSpeed} {}
+    , m_shooterSpeedMap{shooterRange::shooterSpeed}
+    , m_primaryCameraFrameUpdateSubscriber{primaryCameraTableName}
+    , m_secondaryCameraFrameUpdateSubscriber{secondaryCameraTableName}
+    , m_yawUpdateThread{} {
+  m_primaryCameraFrameUpdateSubscriber.AddMonitor(
+      "hb",
+      [this](double) {
+        LimelightHelpers::PoseEstimate mt2 =
+            LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(primaryCameraTableName);
+        if (mt2.tagCount > 0 &&
+            units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
+          m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, mt2.timestampSeconds, {.1, .1, 9999999.0});
+        }
+      },
+      -1);
+  m_secondaryCameraFrameUpdateSubscriber.AddMonitor(
+      "hb",
+      [this](double) {
+        LimelightHelpers::PoseEstimate mt2 =
+            LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(secondaryCameraTableName);
+        if (mt2.tagCount > 0 &&
+            units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
+          m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, mt2.timestampSeconds, {.1, .1, 9999999.0});
+        }
+      },
+      -1);
+  m_yawUpdateThread = std::jthread(std::bind_front(&VisionSubsystem::UpdateYaw, this));
+}
 
 // This method will be called once per scheduler run
 void VisionSubsystem::Periodic() {
@@ -356,7 +389,7 @@ std::optional<units::degree_t> VisionSubsystem::GetOrientationToTrap() {
 }
 
 void VisionSubsystem::SetPipeline(uint16_t tag) {
-  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+  std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable(primaryCameraTableName);
 
   // uint16_t pipeline = 0;
   // switch (tag) {
@@ -387,11 +420,11 @@ void VisionSubsystem::RequestFilterReset() {
 }
 
 LimelightTarget::tValues VisionSubsystem::GetPrimaryCameraTargetValues() {
-  return m_cameraInterface.m_target.GetTarget(true, "limelight");
+  return m_cameraInterface.m_target.GetTarget(true, primaryCameraTableName);
 }
 
 LimelightTarget::tValues VisionSubsystem::GetSecondaryCameraTargetValues() {
-  return m_cameraInterface.m_target.GetTarget(true, "limelight-front");
+  return m_cameraInterface.m_target.GetTarget(true, secondaryCameraTableName);
 }
 
 std::optional<whichCamera> VisionSubsystem::getWhichCamera() {
@@ -422,6 +455,17 @@ void VisionSubsystem::Disable() {
   SetPipeline(0);
 }
 
+void VisionSubsystem::UpdateYaw(std::stop_token stopToken) {
+  while (!stopToken.stop_requested()) {
+    const auto latestPose = m_pDriveSubsystem->GetRawOdometry();
+    LimelightHelpers::SetRobotOrientation(
+        primaryCameraTableName, latestPose.Rotation().Degrees().to<double>(), 0, 0, 0, 0, 0);
+    LimelightHelpers::SetRobotOrientation(
+        secondaryCameraTableName, latestPose.Rotation().Degrees().to<double>(), 0, 0, 0, 0, 0);
+    std::this_thread::sleep_for(std::chrono::milliseconds{20});
+  }
+}
+
 // LIMELIGHT TARGET MEMBER FUNCTIONS ===============================================================
 
 LimelightTarget::tValues LimelightTarget::GetTarget(bool filter, std::string cameraName) {
@@ -435,7 +479,8 @@ LimelightTarget::tValues LimelightTarget::GetTarget(bool filter, std::string cam
                                             units::make_unit<units::radian_t>(rawRobotPose.at(4)),
                                             units::make_unit<units::radian_t>(rawRobotPose.at(5))));
   auto rawRobotPoseWPI = table->GetNumberArray(
-      frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ? "botpose_wpiblue" : "botpose_wpired",
+      frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ? "botpose_orb_wpiblue" :
+                                                                                 "botpose_orb_wpired",
       std::span<const double>({0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}));
   m_robotPoseWPI = frc::Pose3d(frc::Translation3d(units::make_unit<units::meter_t>(rawRobotPoseWPI.at(0)),
                                                   units::make_unit<units::meter_t>(rawRobotPoseWPI.at(1)),
@@ -452,7 +497,21 @@ LimelightTarget::tValues LimelightTarget::GetTarget(bool filter, std::string cam
                                              units::make_unit<units::radian_t>(tagPoseCamSpace.at(4)),
                                              units::make_unit<units::radian_t>(tagPoseCamSpace.at(5))));
 
+  auto rawFiducials = table->GetNumberArray("rawfiducials", std::span<const double>());
+  std::vector<double> tagIds(std::floor(rawFiducials.size() / 7));
+  for (size_t i = 0; i < rawFiducials.size(); i += 7) {
+    tagIds.push_back(rawFiducials.at(i));
+  }
   auto tagId = table->GetNumber("tid", 0.0);
+  constexpr std::array<double, 2> tagsOfInterest{field_points::blue_alliance::april_tags::speakerCenter.id,
+                                                 field_points::red_alliance::april_tags::speakerCenter.id};
+
+  const auto speakerTagItr =
+      std::find_first_of(tagIds.begin(), tagIds.end(), tagsOfInterest.begin(), tagsOfInterest.end());
+  if (tagIds.end() != speakerTagItr) {
+    tagId = *speakerTagItr;
+  }
+
   m_tid = tagId;
   m_hasTargets = (table->GetNumber("tv", 0) == 1);
   m_yaw = units::make_unit<units::degree_t>(table->GetNumber("tx", 0.0));

@@ -50,7 +50,7 @@ AutonomousCenterSubwoofer4Piece::AutonomousCenterSubwoofer4Piece(IntakeSubsystem
               [&shooter]() { return shooter.IsNotePresent(); }},
           frc2::ParallelCommandGroup{
               DriveChoreo{m_Swerve, "Center_Subwoofer_4.2", false},
-              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.5_s}},
+              IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 2.2_s}},
           frc2::ConditionalCommand{
               // Got note
               frc2::SequentialCommandGroup{

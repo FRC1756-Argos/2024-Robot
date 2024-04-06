@@ -38,5 +38,6 @@ class AutonomousNothing
 
  private:
   SwerveDriveSubsystem& m_swerve;
-  InitializeOdometryCommand m_initializeOdometry;
+  InitializeOdometryCommand m_initializeOdometryRed;
+  InitializeOdometryCommand m_initializeOdometryBlue;
 };
