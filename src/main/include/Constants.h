@@ -25,8 +25,8 @@ namespace speeds {
   namespace drive {
     constexpr double aimBotMaxBias = 0.6;
     constexpr double aimBotThresh = 0.1;
-    constexpr double lateralInertialWeight = 6.0;
-    constexpr double medialInertialWeight = 7.5;
+    constexpr double lateralInertialWeight = 15.0;
+    constexpr double medialInertialWeight = 5.0;
     constexpr double aimSpeedReductionPct = 0.4;
     constexpr units::velocity::feet_per_second_t maxAngular = 12_fps;
   }  // namespace drive
