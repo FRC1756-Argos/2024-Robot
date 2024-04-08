@@ -160,7 +160,7 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
    *
    * @return Latest pose
    */
-  frc::Pose3d GetPoseEstimate();
+  frc::Pose2d GetPoseEstimate();
 
   void UpdateVisionMeasurement(const frc::Pose2d& poseEstimate,
                                units::second_t timestamp,

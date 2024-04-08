@@ -115,6 +115,20 @@ std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
   return std::nullopt;
 }
 
+std::optional<units::degree_t> VisionSubsystem::getFeederOffset() {
+  const auto targetValues = GetSeeingCamera();
+  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                          field_points::blue_alliance::april_tags::stageCenter.id :
+                          field_points::red_alliance::april_tags::stageCenter.id;
+  if (targetValues && tagOfInterest == targetValues.value().tagID) {
+    if (targetValues.value().hasTargets) {
+      return targetValues.value().m_yaw;
+    }
+  }
+
+  return std::nullopt;
+}
+
 bool VisionSubsystem::IsAimWhileMoveActive() {
   return m_isAimWhileMoveActive;
 }
@@ -187,6 +201,18 @@ std::optional<units::degree_t> VisionSubsystem::getShooterAngle() {
   return std::nullopt;
 }
 
+units::degree_t VisionSubsystem::getFeederAngle() {
+  units::degree_t finalAngle = measure_up::elevator::carriage::crossFieldAngle;
+  auto distance = GetDistanceToStageCenter();
+
+  if (distance) {
+    const auto d = (distance.value()).to<double>();
+    finalAngle = units::degree_t(87.3 - (0.78 * d) + (0.00335 * d * d) - (0.000005125 * d * d * d));
+  }
+
+  return finalAngle;
+}
+
 std::optional<units::degree_t> VisionSubsystem::getShooterAngleWithInertia(double medialSpeedPct) {
   auto angle = getShooterAngle();
   auto highSpeedOffset = 0_deg;
@@ -222,6 +248,30 @@ std::optional<double> VisionSubsystem::getRotationSpeedWithInertia(double latera
     double finalOffset = offset - speeds::drive::lateralInertialWeight * lateralSpeedPct;
 
     return (-finalOffset * 0.016);
+  }
+
+  return std::nullopt;
+}
+
+std::optional<double> VisionSubsystem::getFeedOffsetWithInertia(double lateralSpeedPct) {
+  auto horzOffset = getFeederOffset();
+
+  if (horzOffset) {
+    double offset = horzOffset.value().to<double>();
+    offset -= 5.0;
+    double finalOffset = offset - speeds::drive::lateralInertialWeight * lateralSpeedPct;
+
+    return (-finalOffset * 0.016);
+  }
+
+  return std::nullopt;
+}
+
+std::optional<units::degree_t> VisionSubsystem::getFeederAngleWithInertia(double medialSpeedPct) {
+  auto angle = getFeederAngle();
+  if (angle) {
+    units::degree_t finalAngle = angle - units::degree_t(speeds::drive::medialInertialWeight * medialSpeedPct);
+    return finalAngle;
   }
 
   return std::nullopt;
@@ -316,6 +366,19 @@ std::optional<units::inch_t> VisionSubsystem::GetDistanceToSpeaker() {
               measure_up::shooter_targets::secondaryCameraToShooter);
     else
       return static_cast<units::inch_t>(targetValues.value().tagPose.Z());
+  } else {
+    return std::nullopt;
+  }
+}
+
+std::optional<units::inch_t> VisionSubsystem::GetDistanceToStageCenter() {
+  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                          field_points::blue_alliance::april_tags::stageCenter.id :
+                          field_points::red_alliance::april_tags::stageCenter.id;
+
+  const auto targetValues = GetSeeingCamera();
+  if (targetValues && tagOfInterest == targetValues.value().tagID) {
+    return static_cast<units::inch_t>(targetValues.value().tagPose.Z());
   } else {
     return std::nullopt;
   }

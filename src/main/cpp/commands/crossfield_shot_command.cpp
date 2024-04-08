@@ -13,9 +13,10 @@ CrossfieldShotCommand::CrossfieldShotCommand(ShooterSubsystem* shooter, Elevator
 
 // Called when the command is initially scheduled.
 void CrossfieldShotCommand::Initialize() {
-  m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::crossfieldAngle);
+  m_pElevator->SetCarriageAngle(measure_up::elevator::carriage::crossFieldAngle);
   m_pElevator->ElevatorMoveToHeight(measure_up::elevator::lift::intakeHeight);
-  m_pShooter->ShooterGoToSpeed(measure_up::shooter::crossfieldSpeed);
+  m_pShooter->ShooterGoToSpeed(measure_up::shooter::crossFieldSpeed);
+  m_pShooter->SetFeedingShotActive(true);
 }
 
 // Called repeatedly when this Command is scheduled to run

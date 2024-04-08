@@ -189,15 +189,25 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] std::optional<units::degree_t> getShooterOffset();
 
+  [[nodiscard]] units::degree_t getFeederAngle();
+
+  [[nodiscard]] std::optional<units::degree_t> getFeederOffset();
+
   [[nodiscard]] std::optional<units::degree_t> getShooterAngleWithInertia(double medialSpeedPct);
 
   [[nodiscard]] std::optional<double> getRotationSpeedWithInertia(double lateralSpeedPct);
+
+  [[nodiscard]] std::optional<units::degree_t> getFeederAngleWithInertia(double medialSpeedPct);
+
+  [[nodiscard]] std::optional<double> getFeedOffsetWithInertia(double lateralSpeedPct);
 
   [[nodiscard]] units::angular_velocity::revolutions_per_minute_t getShooterSpeed(const units::inch_t distance,
                                                                                   const InterpolationMode mode) const;
   [[nodiscard]] std::optional<units::angular_velocity::revolutions_per_minute_t> getShooterSpeed();
 
   [[nodiscard]] std::optional<units::inch_t> GetDistanceToTrap();
+
+  [[nodiscard]] std::optional<units::inch_t> GetDistanceToStageCenter();
 
   [[nodiscard]] std::optional<units::degree_t> GetHorizontalOffsetToTrap();
 
@@ -223,7 +233,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
   bool m_useTrigonometry;                      ///< specifies whether to use the trigonometry to obtain shooter angle
   bool m_isAimWhileMoveActive;                 ///< true if aiming trigger is pressed and locked
   bool m_enableStaticRotation;                 ///< true if you want to rotate in the absence of translation input
-  bool m_isOdometryAimingActive;
+  bool m_isOdometryAimingActive;               ///< true if we want to aim without vision
   argos_lib::InterpolationMap<decltype(shooterRange::shooterAngle.front().inVal),
                               shooterRange::shooterAngle.size(),
                               decltype(shooterRange::shooterAngle.front().outVal)>

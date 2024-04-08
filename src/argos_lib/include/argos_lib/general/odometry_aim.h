@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <frc/geometry/Translation2d.h>
 #include <frc/geometry/Translation3d.h>
 
 #include "units/angle.h"
@@ -19,7 +20,7 @@ namespace argos_lib {
      * @param targetPoseOnField Defines desired alias range
      * @return Angle(Yaw) of robot in degrees
      */
-    units::degree_t GetAngleToTarget(const frc::Translation3d& currentEstimatedRobotPose,
+    units::degree_t GetAngleToTarget(const frc::Translation2d& currentEstimatedRobotPose,
                                      const frc::Translation3d& targetPoseOnField);
 
     /**
@@ -29,7 +30,7 @@ namespace argos_lib {
      * @param targetPoseOnField Defines desired alias range
      * @return Distance in inches of robot from the target of interest
      */
-    units::meter_t GetDistanceToTarget(const frc::Translation3d& currentEstimatedRobotPose,
+    units::meter_t GetDistanceToTarget(const frc::Translation2d& currentEstimatedRobotPose,
                                        const frc::Translation3d& targetPoseOnField);
   }  // namespace odometry_aim
 }  // namespace argos_lib

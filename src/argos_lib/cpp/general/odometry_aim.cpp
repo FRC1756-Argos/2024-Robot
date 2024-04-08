@@ -8,7 +8,7 @@
 
 #include "units/math.h"
 
-units::degree_t argos_lib::odometry_aim::GetAngleToTarget(const frc::Translation3d& currentEstimatedRobotPose,
+units::degree_t argos_lib::odometry_aim::GetAngleToTarget(const frc::Translation2d& currentEstimatedRobotPose,
                                                           const frc::Translation3d& targetPoseOnField) {
   double yawToTarget = std::atan2((targetPoseOnField.Y() - currentEstimatedRobotPose.Y()).to<double>(),
                                   (targetPoseOnField.X() - currentEstimatedRobotPose.X()).to<double>());
@@ -16,7 +16,7 @@ units::degree_t argos_lib::odometry_aim::GetAngleToTarget(const frc::Translation
   return units::degree_t(yawToTarget * 180.0 / 3.14159265358);
 }
 
-units::meter_t argos_lib::odometry_aim::GetDistanceToTarget(const frc::Translation3d& currentEstimatedRobotPose,
+units::meter_t argos_lib::odometry_aim::GetDistanceToTarget(const frc::Translation2d& currentEstimatedRobotPose,
                                                             const frc::Translation3d& targetPoseOnField) {
   double Ydiff = (targetPoseOnField.Y() - currentEstimatedRobotPose.Y()).to<double>();
   double Xdiff = (targetPoseOnField.X() - currentEstimatedRobotPose.X()).to<double>();

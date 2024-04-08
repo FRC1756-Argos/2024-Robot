@@ -765,7 +765,7 @@ units::degree_t SwerveDriveSubsystem::GetFieldCentricAngle() {
   return -GetIMUYaw() - m_fieldHomeOffset;
 }
 
-frc::Pose3d SwerveDriveSubsystem::GetPoseEstimate() {
+frc::Pose2d SwerveDriveSubsystem::GetPoseEstimate() {
   if constexpr (feature_flags::nt_debugging) {
     frc::SmartDashboard::PutNumber("(Est Pose After Vision) X",
                                    units::inch_t{m_poseEstimator.GetEstimatedPosition().X()}.to<double>());
@@ -777,7 +777,7 @@ frc::Pose3d SwerveDriveSubsystem::GetPoseEstimate() {
                                    GetContinuousOdometryAngle().Degrees().to<double>());
   }
 
-  return frc::Pose3d{m_poseEstimator.GetEstimatedPosition().Translation(), GetContinuousOdometryAngle()};
+  return frc::Pose2d{m_poseEstimator.GetEstimatedPosition().Translation(), GetContinuousOdometryAngle()};
 }
 
 void SwerveDriveSubsystem::UpdateVisionMeasurement(const frc::Pose2d& poseEstimate,

@@ -40,6 +40,9 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] bool ShooterAtSpeed();
 
+  void SetFeedingShotActive(bool val) { m_isFeederShotActive = val; }
+  [[nodiscard]] bool IsFeedingShotActive() { return m_isFeederShotActive; }
+
  private:
   ctre::phoenix6::hardware::TalonFX m_primaryMotor;
   ctre::phoenix6::hardware::TalonFX m_secondaryMotor;
@@ -48,6 +51,7 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   ctre::phoenix6::controls::VelocityVoltage m_velocityControl;
   bool m_trapMode;
   bool m_ampMode;
+  bool m_isFeederShotActive;  ///< true if we currently want to do a feeding shot
 };
 // Components (e.g. motor controllers and sensors) should generally be
 // declared private and exposed only through public methods.

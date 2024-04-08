@@ -48,6 +48,7 @@ namespace argos_lib {
     constexpr static ArgosColor kHotPink = ArgosColor{255, 105, 180};
     constexpr static ArgosColor kCatYellow = ArgosColor{255, 163, 0};  // Pantone 137C
     constexpr static ArgosColor kPurple = ArgosColor{75, 0, 130};
+    constexpr static ArgosColor kNoteOrange = ArgosColor{255, 100, 0};
   }  // namespace colors
 
   constexpr ArgosColor GammaCorrect(ArgosColor original) {
@@ -64,6 +65,7 @@ namespace argos_lib {
     constexpr static ArgosColor kHotPink = GammaCorrect(argos_lib::colors::kHotPink);
     constexpr static ArgosColor kCatYellow = GammaCorrect(argos_lib::colors::kCatYellow);
     constexpr static ArgosColor kPurple = GammaCorrect(argos_lib::colors::kPurple);
+    constexpr static ArgosColor kNoteOrange = GammaCorrect(argos_lib::colors::kNoteOrange);
   }  // namespace gamma_corrected_colors
 
 }  // namespace argos_lib

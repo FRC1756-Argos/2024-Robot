@@ -226,6 +226,27 @@ RobotContainer::RobotContainer()
                 [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kCatYellow, false); },
                 200_ms);
           }
+        } else if (m_ShooterSubSystem.IsFeedingShotActive()) {
+          auto rotationWithInertia = m_visionSubSystem.getFeedOffsetWithInertia(deadbandTranslationSpeeds.leftSpeedPct);
+          auto feederAngleWithInertia =
+              m_visionSubSystem.getFeederAngleWithInertia(deadbandTranslationSpeeds.forwardSpeedPct);
+
+          if (rotationWithInertia && feederAngleWithInertia) {
+            m_elevatorSubsystem.SetCarriageAngle(feederAngleWithInertia.value());
+            rotateSpeed = rotationWithInertia.value();
+          } else {
+            rotateSpeed = deadbandRotSpeed;
+          }
+
+          if (!rotationWithInertia || !feederAngleWithInertia) {
+            m_ledSubSystem.TemporaryAnimate(
+                [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kReallyRed, false); },
+                200_ms);
+          } else if (m_elevatorSubsystem.IsCarriageAtSetPoint() && std::abs(rotationWithInertia.value()) <= 0.1) {
+            m_ledSubSystem.TemporaryAnimate(
+                [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kNoteOrange, false); },
+                200_ms);
+          }
         }
 
         if (frc::DriverStation::IsTeleop() &&
@@ -380,7 +401,9 @@ void RobotContainer::ConfigureBindings() {
                   {&m_climberSubsystem})
                   .ToPtr());
 
-  crossfieldShot.OnTrue(&m_CrossfieldShotCommand);
+  crossfieldShot.OnTrue(&m_CrossfieldShotCommand)
+      .OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.SetFeedingShotActive(false); }, {&m_ShooterSubSystem})
+                   .ToPtr());
 
   climberUp.OnTrue(frc2::InstantCommand(
                        [this]() {
