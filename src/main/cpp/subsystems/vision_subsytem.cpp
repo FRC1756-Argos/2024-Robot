@@ -33,6 +33,7 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
     , m_enableStaticRotation(false)
     , m_shooterAngleMap{shooterRange::shooterAngle}
     , m_shooterSpeedMap{shooterRange::shooterSpeed}
+    , m_feederAngleMap{shooterRange::feederAngle}
     , m_primaryCameraFrameUpdateSubscriber{primaryCameraTableName}
     , m_secondaryCameraFrameUpdateSubscriber{secondaryCameraTableName}
     , m_yawUpdateThread{} {
@@ -116,13 +117,14 @@ std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
 }
 
 std::optional<units::degree_t> VisionSubsystem::getFeederOffset() {
-  const auto targetValues = GetSeeingCamera();
+  const auto targetValues = GetSeeingCamera(true);
   int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
                           field_points::blue_alliance::april_tags::stageCenter.id :
                           field_points::red_alliance::april_tags::stageCenter.id;
   if (targetValues && tagOfInterest == targetValues.value().tagID) {
     if (targetValues.value().hasTargets) {
-      return targetValues.value().m_yaw;
+      frc::SmartDashboard::PutBoolean("(DRIVER)Feed Yaw?", targetValues.value().m_yaw.to<double>());
+      return targetValues.value().m_yaw - 8.0_deg;
     }
   }
 
@@ -206,8 +208,8 @@ units::degree_t VisionSubsystem::getFeederAngle() {
   auto distance = GetDistanceToStageCenter();
 
   if (distance) {
-    const auto d = (distance.value()).to<double>();
-    finalAngle = units::degree_t(87.3 - (0.78 * d) + (0.00335 * d * d) - (0.000005125 * d * d * d));
+    finalAngle = m_feederAngleMap.Map(distance.value());
+    frc::SmartDashboard::PutNumber("(DRIVER)Feed Final ANgle?", finalAngle.to<double>());
   }
 
   return finalAngle;
@@ -258,7 +260,7 @@ std::optional<double> VisionSubsystem::getFeedOffsetWithInertia(double lateralSp
 
   if (horzOffset) {
     double offset = horzOffset.value().to<double>();
-    offset -= 5.0;
+    offset -= 0.0;
     double finalOffset = offset - speeds::drive::lateralInertialWeight * lateralSpeedPct;
 
     return (-finalOffset * 0.016);
@@ -268,9 +270,10 @@ std::optional<double> VisionSubsystem::getFeedOffsetWithInertia(double lateralSp
 }
 
 std::optional<units::degree_t> VisionSubsystem::getFeederAngleWithInertia(double medialSpeedPct) {
-  auto angle = getFeederAngle();
-  if (angle) {
-    units::degree_t finalAngle = angle - units::degree_t(speeds::drive::medialInertialWeight * medialSpeedPct);
+  auto angle = -0.01_deg;
+  angle = getFeederAngle();
+  if (angle != -0.01_deg) {
+    units::degree_t finalAngle = angle - units::degree_t(12.0 * medialSpeedPct);
     return finalAngle;
   }
 
@@ -376,8 +379,12 @@ std::optional<units::inch_t> VisionSubsystem::GetDistanceToStageCenter() {
                           field_points::blue_alliance::april_tags::stageCenter.id :
                           field_points::red_alliance::april_tags::stageCenter.id;
 
-  const auto targetValues = GetSeeingCamera();
+  frc::SmartDashboard::PutNumber("(DRIVER)GetDistanceToStageCenter Tag?", tagOfInterest);
+
+  const auto targetValues = GetSeeingCamera(true);
   if (targetValues && tagOfInterest == targetValues.value().tagID) {
+    frc::SmartDashboard::PutNumber("(DRIVER)GetDistanceToStageCenter Distance?",
+                                   (static_cast<units::inch_t>(targetValues.value().tagPose.Z()).to<double>()));
     return static_cast<units::inch_t>(targetValues.value().tagPose.Z());
   } else {
     return std::nullopt;
@@ -508,10 +515,17 @@ LimelightTarget::tValues VisionSubsystem::GetSecondaryCameraTargetValues() {
   return m_cameraInterface.m_target.GetTarget(true, secondaryCameraTableName);
 }
 
-std::optional<whichCamera> VisionSubsystem::getWhichCamera() {
+std::optional<whichCamera> VisionSubsystem::getWhichCamera(bool forFeeder) {
   int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
                           field_points::blue_alliance::april_tags::speakerCenter.id :
                           field_points::red_alliance::april_tags::speakerCenter.id;
+
+  if (forFeeder) {
+    tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                        field_points::blue_alliance::april_tags::stageCenter.id :
+                        field_points::red_alliance::april_tags::stageCenter.id;
+  }
+
   if (tagOfInterest == GetPrimaryCameraTargetValues().tagID) {
     return whichCamera::PRIMARY_CAMERA;
   } else if (tagOfInterest == GetSecondaryCameraTargetValues().tagID) {
@@ -521,8 +535,8 @@ std::optional<whichCamera> VisionSubsystem::getWhichCamera() {
   }
 }
 
-std::optional<LimelightTarget::tValues> VisionSubsystem::GetSeeingCamera() {
-  const auto camera = getWhichCamera();
+std::optional<LimelightTarget::tValues> VisionSubsystem::GetSeeingCamera(bool forFeeder) {
+  const auto camera = getWhichCamera(forFeeder);
   if (camera && camera == whichCamera::PRIMARY_CAMERA) {
     return GetPrimaryCameraTargetValues();
   } else if (camera && camera == whichCamera::SECONDARY_CAMERA) {

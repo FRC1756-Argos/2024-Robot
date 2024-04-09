@@ -188,7 +188,7 @@ RobotContainer::RobotContainer()
           frc::SmartDashboard::PutBoolean("(DRIVER) IsAimingActive", m_visionSubSystem.IsAimWhileMoveActive());
         }
 
-        if (m_visionSubSystem.IsAimWhileMoveActive() || m_visionSubSystem.IsOdometryAimingActive()) {
+        if (m_visionSubSystem.IsAimWhileMoveActive()) {
           auto speed = m_visionSubSystem.getShooterSpeed();
           auto rotationWithInertia =
               m_visionSubSystem.getRotationSpeedWithInertia(deadbandTranslationSpeeds.leftSpeedPct);
@@ -234,6 +234,10 @@ RobotContainer::RobotContainer()
           if (rotationWithInertia && feederAngleWithInertia) {
             m_elevatorSubsystem.SetCarriageAngle(feederAngleWithInertia.value());
             rotateSpeed = rotationWithInertia.value();
+
+            // simmer down the translation speeds
+            deadbandTranslationSpeeds.forwardSpeedPct *= 0.6;
+            deadbandTranslationSpeeds.leftSpeedPct *= 0.6;
           } else {
             rotateSpeed = deadbandRotSpeed;
           }
@@ -248,6 +252,8 @@ RobotContainer::RobotContainer()
                 200_ms);
           }
         }
+
+        frc::SmartDashboard::PutBoolean("(DRIVER) IsFeeding shot active?", m_ShooterSubSystem.IsFeedingShotActive());
 
         if (frc::DriverStation::IsTeleop() &&
             (m_swerveDrive.GetManualOverride() || deadbandTranslationSpeeds.forwardSpeedPct != 0 ||
@@ -303,7 +309,7 @@ void RobotContainer::ConfigureBindings() {
   // INTAKE TRIGGERS
   auto intake = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperRight);
   auto outtakeManual = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kBumperLeft);
-  auto crossfieldShot = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
+  auto aim = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
 
   // CLIMBER TRIGGERS
   auto climberUp = m_controllers.OperatorController().TriggerRaw(argos_lib::XboxController::Button::kUp);
@@ -316,7 +322,7 @@ void RobotContainer::ConfigureBindings() {
   auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
   auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
-  auto aim = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
+  auto crossfieldShot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
   auto aimWhileMove = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kA);
   auto odometryAim = m_controllers.DriverController().TriggerRaw(
       argos_lib::XboxController::Button::kB);  // for debugging only, will be removed

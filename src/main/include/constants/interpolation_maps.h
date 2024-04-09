@@ -48,4 +48,13 @@ namespace shooterRange {
                                                      InterpMapPoint{150.0_in, 29.4_deg},
                                                      InterpMapPoint{174.0_in, 26.2_deg},
                                                      InterpMapPoint{228_in, 25.0_deg}};
+
+  [[maybe_unused]] constexpr std::array feederAngle{InterpMapPoint{10.0_in, 80.0_deg},
+                                                    InterpMapPoint{50.0_in, 75.0_deg},
+                                                    InterpMapPoint{100.0_in, 65.0_deg},
+                                                    InterpMapPoint{150.0_in, 60.0_deg},
+                                                    InterpMapPoint{200.0_in, 55.0_deg},
+                                                    InterpMapPoint{250.0_in, 47.5_deg},
+                                                    InterpMapPoint{300.0_in, 40.0_deg},
+                                                    InterpMapPoint{350.0_in, 37.5_deg}};
 }  // namespace shooterRange

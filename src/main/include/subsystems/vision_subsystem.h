@@ -213,9 +213,9 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] std::optional<units::degree_t> GetOrientationToTrap();
 
-  [[nodiscard]] std::optional<whichCamera> getWhichCamera();
+  [[nodiscard]] std::optional<whichCamera> getWhichCamera(bool forFeeder = false);
 
-  [[nodiscard]] std::optional<LimelightTarget::tValues> GetSeeingCamera();
+  [[nodiscard]] std::optional<LimelightTarget::tValues> GetSeeingCamera(bool forFeeder = false);
 
  private:
   constexpr static char primaryCameraTableName[11]{"limelight"};
@@ -242,6 +242,10 @@ class VisionSubsystem : public frc2::SubsystemBase {
                               shooterRange::shooterSpeed.size(),
                               decltype(shooterRange::shooterSpeed.front().outVal)>
       m_shooterSpeedMap;  ///< Maps a distance to a shooter speed
+  argos_lib::InterpolationMap<decltype(shooterRange::feederAngle.front().inVal),
+                              shooterRange::feederAngle.size(),
+                              decltype(shooterRange::feederAngle.front().outVal)>
+      m_feederAngleMap;  ///< Maps a distance to a feeder pitch angle
   argos_lib::NTSubscriber
       m_primaryCameraFrameUpdateSubscriber;  ///< Subscriber to manage all updates from primary camera
   argos_lib::NTSubscriber
