@@ -18,12 +18,14 @@ Robot code for 2024 FRC season
 | Cat Yellow | Solid | All | Robot disabled; no connection to FMS or driver station since startup | Robot startup |
 | Red/Blue | Uniform fade in/out | All | Teleop enabled; indicates alliance received from DS | Robot enabled in teleop mode |
 | Red/Blue | Fade sweeping from front to back | All | Autonomous enabled; indicates alliance received from DS | Robot enabled in autonomous mode |
-| Green | Flash | All | Game piece intake | Intake active |
+| Orange | Flash | All | Game piece intake | Intake active |
 | Cat Yellow  | Flash | All | Game piece not fully intaked | Intake request ended |
 | White | Flash | All | Game piece not acquired | Intake request ended |
 | Cat Yellow | Solid | All | Aim in progress | Aim active |
 | Red | Solid | All | No target found | Aim active |
 | Green | Solid | All | Target locked | Aim active |
+| Orange | Solid | All | Crossfield aiming in progress| Crossfield aiming active |
+| Plum | Solid | All | Crossfield shot ready | Crossfield aiming active  |
 | :fire: | :fire: | All | :fire: :fire: :fire: | Operator command |
 
 ### Controller Vibration Feedback
@@ -109,12 +111,12 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | DPad Down       | Shooter Feed Backwards |
 | DPad Left       | Unused |
 | A               | Aim While Moving |
-| B               | Unused |
+| B               | Odometry Aim (temporary) |
 | X               | Unused |
 | Y               | Field Home (hold) |
 | LB              | Manual Reverse Intake |
 | RB              | Intake |
-| LT              | Aim |
+| LT              | Crossfield Position |
 | RT              | Shoot |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | Swap (hold with <kbd>Back</kbd>) |
@@ -139,7 +141,7 @@ You'll now have the linter run before each commit!  For compatibility with Windo
 | LB              | Continue Climb Sequence |
 | RB              | Start Climb Sequence |
 | LT              | Reverse Trap |
-| RT              | Crossfield Position |
+| RT              | Aim |
 | Back            | Swap (hold with <kbd>Start</kbd>) |
 | Start           | :fire: :fire: :fire: or Swap (hold with <kbd>Back</kbd>) |
 | Left JS Button  | Unused |

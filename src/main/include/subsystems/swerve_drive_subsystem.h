@@ -30,6 +30,7 @@
 #include "constants/feature_flags.h"
 #include "frc/StateSpaceUtil.h"
 #include "frc/estimator/SwerveDrivePoseEstimator.h"
+#include "frc/geometry/Transform3d.h"
 #include "utils/swerve_trapezoidal_profile.h"
 #include "utils/swerve_trapezoidal_spline.h"
 

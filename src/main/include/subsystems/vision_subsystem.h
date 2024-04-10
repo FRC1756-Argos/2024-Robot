@@ -19,6 +19,7 @@
 #include "argos_lib/config/config_types.h"
 #include "argos_lib/general/interpolation.h"
 #include "argos_lib/general/nt_subscriber.h"
+#include "argos_lib/general/odometry_aim.h"
 #include "constants/interpolation_maps.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableEntry.h"
@@ -169,6 +170,9 @@ class VisionSubsystem : public frc2::SubsystemBase {
   void SetAimWhileMove(bool val);
   [[nodiscard]] bool IsAimWhileMoveActive();
 
+  void SetOdometryAiming(bool val);
+  [[nodiscard]] bool IsOdometryAimingActive();
+
   void SetEnableStaticRotation(bool val);
   [[nodiscard]] bool IsStaticRotationEnabled();
 
@@ -180,14 +184,22 @@ class VisionSubsystem : public frc2::SubsystemBase {
   /// @brief it disables (duh)
   void Disable();
 
-  [[nodiscard]] units::degree_t getShooterAngle(const units::inch_t distance, const InterpolationMode mode);
+  [[nodiscard]] units::degree_t getShooterAngle(units::inch_t distance, const InterpolationMode mode);
   [[nodiscard]] std::optional<units::degree_t> getShooterAngle();
 
   [[nodiscard]] std::optional<units::degree_t> getShooterOffset();
 
+  [[nodiscard]] units::degree_t getFeederAngle();
+
+  [[nodiscard]] std::optional<units::degree_t> getFeederOffset();
+
   [[nodiscard]] std::optional<units::degree_t> getShooterAngleWithInertia(double medialSpeedPct);
 
   [[nodiscard]] std::optional<double> getRotationSpeedWithInertia(double lateralSpeedPct);
+
+  [[nodiscard]] std::optional<units::degree_t> getFeederAngleWithInertia(double medialSpeedPct);
+
+  [[nodiscard]] std::optional<double> getFeedOffsetWithInertia(double lateralSpeedPct);
 
   [[nodiscard]] units::angular_velocity::revolutions_per_minute_t getShooterSpeed(const units::inch_t distance,
                                                                                   const InterpolationMode mode) const;
@@ -195,13 +207,15 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   [[nodiscard]] std::optional<units::inch_t> GetDistanceToTrap();
 
+  [[nodiscard]] std::optional<units::inch_t> GetDistanceToStageCenter();
+
   [[nodiscard]] std::optional<units::degree_t> GetHorizontalOffsetToTrap();
 
   [[nodiscard]] std::optional<units::degree_t> GetOrientationToTrap();
 
-  [[nodiscard]] std::optional<whichCamera> getWhichCamera();
+  [[nodiscard]] std::optional<whichCamera> getWhichCamera(bool forFeeder = false);
 
-  [[nodiscard]] std::optional<LimelightTarget::tValues> GetSeeingCamera();
+  [[nodiscard]] std::optional<LimelightTarget::tValues> GetSeeingCamera(bool forFeeder = false);
 
  private:
   constexpr static char primaryCameraTableName[11]{"limelight"};
@@ -219,7 +233,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
   bool m_useTrigonometry;                      ///< specifies whether to use the trigonometry to obtain shooter angle
   bool m_isAimWhileMoveActive;                 ///< true if aiming trigger is pressed and locked
   bool m_enableStaticRotation;                 ///< true if you want to rotate in the absence of translation input
-
+  bool m_isOdometryAimingActive;               ///< true if we want to aim without vision
   argos_lib::InterpolationMap<decltype(shooterRange::shooterAngle.front().inVal),
                               shooterRange::shooterAngle.size(),
                               decltype(shooterRange::shooterAngle.front().outVal)>
@@ -228,6 +242,10 @@ class VisionSubsystem : public frc2::SubsystemBase {
                               shooterRange::shooterSpeed.size(),
                               decltype(shooterRange::shooterSpeed.front().outVal)>
       m_shooterSpeedMap;  ///< Maps a distance to a shooter speed
+  argos_lib::InterpolationMap<decltype(shooterRange::feederAngle.front().inVal),
+                              shooterRange::feederAngle.size(),
+                              decltype(shooterRange::feederAngle.front().outVal)>
+      m_feederAngleMap;  ///< Maps a distance to a feeder pitch angle
   argos_lib::NTSubscriber
       m_primaryCameraFrameUpdateSubscriber;  ///< Subscriber to manage all updates from primary camera
   argos_lib::NTSubscriber
