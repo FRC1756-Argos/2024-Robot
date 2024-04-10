@@ -184,7 +184,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
   /// @brief it disables (duh)
   void Disable();
 
-  [[nodiscard]] units::degree_t getShooterAngle(const units::inch_t distance, const InterpolationMode mode);
+  [[nodiscard]] units::degree_t getShooterAngle(units::inch_t distance, const InterpolationMode mode);
   [[nodiscard]] std::optional<units::degree_t> getShooterAngle();
 
   [[nodiscard]] std::optional<units::degree_t> getShooterOffset();

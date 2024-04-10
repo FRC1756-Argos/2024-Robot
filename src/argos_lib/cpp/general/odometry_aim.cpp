@@ -4,23 +4,21 @@
 
 #include "argos_lib/general/odometry_aim.h"
 
-#include <cmath>
+#include <units/math.h>
 
-#include "units/math.h"
+#include <cmath>
 
 units::degree_t argos_lib::odometry_aim::GetAngleToTarget(const frc::Translation2d& currentEstimatedRobotPose,
                                                           const frc::Translation3d& targetPoseOnField) {
-  double yawToTarget = std::atan2((targetPoseOnField.Y() - currentEstimatedRobotPose.Y()).to<double>(),
-                                  (targetPoseOnField.X() - currentEstimatedRobotPose.X()).to<double>());
+  auto yawToTarget = units::math::atan2(targetPoseOnField.Y() - currentEstimatedRobotPose.Y(),
+                                        targetPoseOnField.X() - currentEstimatedRobotPose.X());
 
-  return 90.0_deg - units::degree_t(yawToTarget * 180.0 / 3.14159265358);
+  return 90.0_deg - yawToTarget;
 }
 
 units::meter_t argos_lib::odometry_aim::GetDistanceToTarget(const frc::Translation2d& currentEstimatedRobotPose,
                                                             const frc::Translation3d& targetPoseOnField) {
-  double Ydiff = (targetPoseOnField.Y() - currentEstimatedRobotPose.Y()).to<double>();
-  double Xdiff = (targetPoseOnField.X() - currentEstimatedRobotPose.X()).to<double>();
-  double distToTarget = std::sqrt((Ydiff * Ydiff) + (Xdiff * Xdiff));
-
-  return units::meter_t(distToTarget);
+  auto Ydiff = targetPoseOnField.Y() - currentEstimatedRobotPose.Y();
+  auto Xdiff = targetPoseOnField.X() - currentEstimatedRobotPose.X();
+  return units::math::hypot(Ydiff, Xdiff);
 }
