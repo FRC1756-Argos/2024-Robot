@@ -3,6 +3,7 @@
 ///            the license file in the root directory of this project.
 
 #include <constants/feature_flags.h>
+#include <frc/DataLogManager.h>
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/math.h>
@@ -35,7 +36,9 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
     , m_shooterSpeedMap{shooterRange::shooterSpeed}
     , m_primaryCameraFrameUpdateSubscriber{primaryCameraTableName}
     , m_secondaryCameraFrameUpdateSubscriber{secondaryCameraTableName}
-    , m_yawUpdateThread{} {
+    , m_yawUpdateThread{}
+    , m_frontCameraMegaTag2PoseLogger{frc::DataLogManager::GetLog(), "frontCameraMegaTag2Pose"}
+    , m_rearCameraMegaTag2PoseLogger{frc::DataLogManager::GetLog(), "rearCameraMegaTag2Pose"} {
   m_primaryCameraFrameUpdateSubscriber.AddMonitor(
       "hb",
       [this](double) {
@@ -44,6 +47,7 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
         if (mt2.tagCount > 0 &&
             units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
           m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, mt2.timestampSeconds, {.1, .1, 9999999.0});
+          m_rearCameraMegaTag2PoseLogger.Append(mt2.pose, units::microsecond_t{mt2.timestampSeconds}.to<int64_t>());
         }
       },
       -1);
@@ -55,10 +59,12 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
         if (mt2.tagCount > 0 &&
             units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
           m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, mt2.timestampSeconds, {.1, .1, 9999999.0});
+          m_frontCameraMegaTag2PoseLogger.Append(mt2.pose, units::microsecond_t{mt2.timestampSeconds}.to<int64_t>());
         }
       },
       -1);
   m_yawUpdateThread = std::jthread(std::bind_front(&VisionSubsystem::UpdateYaw, this));
+  frc::DataLogManager::GetLog().AddStructSchema<frc::Pose2d>();
 }
 
 // This method will be called once per scheduler run

@@ -4,10 +4,17 @@
 
 #include "Robot.h"
 
+#include <frc/DataLogManager.h>
 #include <frc/DriverStation.h>
 #include <frc2/command/CommandScheduler.h>
 
-Robot::Robot() : TimedRobot{}, m_connectedToFieldDebouncer{{0_ms, 30_s}} {}
+Robot::Robot() : TimedRobot{}, m_connectedToFieldDebouncer{{0_ms, 30_s}} {
+  // Start recording to data log
+  frc::DataLogManager::Start();
+
+  // Record DS control and joystick data.
+  frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog(), true);
+}
 
 void Robot::RobotInit() {
   m_lastAlliance = frc::DriverStation::GetAlliance();

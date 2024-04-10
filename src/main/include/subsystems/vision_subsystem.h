@@ -11,6 +11,7 @@
 #include <units/angle.h>
 #include <units/angular_velocity.h>
 #include <units/length.h>
+#include <wpi/DataLog.h>
 
 #include <stop_token>
 #include <string>
@@ -233,6 +234,9 @@ class VisionSubsystem : public frc2::SubsystemBase {
   argos_lib::NTSubscriber
       m_secondaryCameraFrameUpdateSubscriber;  ///< Subscriber to manage all updates from secondary camera
   std::jthread m_yawUpdateThread;
+
+  wpi::log::StructLogEntry<frc::Pose2d> m_frontCameraMegaTag2PoseLogger;
+  wpi::log::StructLogEntry<frc::Pose2d> m_rearCameraMegaTag2PoseLogger;
 
   void UpdateYaw(std::stop_token stopToken);
 };

@@ -5,11 +5,13 @@
 #pragma once
 
 #include <choreo/lib/ChoreoSwerveCommand.h>
+#include <frc/smartdashboard/Field2d.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 #include <units/angle.h>
 #include <units/length.h>
 
+#include <chrono>
 #include <string>
 
 #include "subsystems/swerve_drive_subsystem.h"
@@ -36,6 +38,9 @@ class DriveChoreo : public frc2::CommandHelper<frc2::Command, DriveChoreo> {
  private:
   SwerveDriveSubsystem& m_Drive;
   const choreolib::ChoreoTrajectory m_trajectory;
+  choreolib::ChoreoTrajectory m_orientedTrajectory;
   choreolib::ChoreoSwerveCommand m_ChoreoCommand;
   const bool m_initializeOdometry;
+  std::chrono::time_point<std::chrono::steady_clock> m_startTime;
+  frc::Field2d m_field;
 };
