@@ -42,7 +42,7 @@ void IntakeCommand::Execute() {
     m_pIntake->Intake(0);
     if (m_pLeds) {
       m_pLeds->TemporaryAnimate(
-          [this]() { m_pLeds->SetAllGroupsFlash(argos_lib::gamma_corrected_colors::kReallyGreen, false); }, 200_ms);
+          [this]() { m_pLeds->SetAllGroupsFlash(argos_lib::gamma_corrected_colors::kNoteOrange, false); }, 200_ms);
     }
     if (m_pControllers) {
       m_pControllers->DriverController().SetVibration(

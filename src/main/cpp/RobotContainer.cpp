@@ -184,10 +184,6 @@ RobotContainer::RobotContainer()
 
         auto rotateSpeed = deadbandRotSpeed;
 
-        if constexpr (feature_flags::nt_debugging) {
-          frc::SmartDashboard::PutBoolean("(DRIVER) IsAimingActive", m_visionSubSystem.IsAimWhileMoveActive());
-        }
-
         if (m_visionSubSystem.IsAimWhileMoveActive()) {
           auto speed = m_visionSubSystem.getShooterSpeed();
           auto rotationWithInertia =
@@ -236,24 +232,22 @@ RobotContainer::RobotContainer()
             rotateSpeed = rotationWithInertia.value();
 
             // simmer down the translation speeds
-            deadbandTranslationSpeeds.forwardSpeedPct *= 0.6;
-            deadbandTranslationSpeeds.leftSpeedPct *= 0.6;
+            deadbandTranslationSpeeds.forwardSpeedPct *= speeds::drive::passSpeedReductionPct;
+            deadbandTranslationSpeeds.leftSpeedPct *= speeds::drive::passSpeedReductionPct;
           } else {
             rotateSpeed = deadbandRotSpeed;
           }
 
           if (!rotationWithInertia || !feederAngleWithInertia) {
             m_ledSubSystem.TemporaryAnimate(
-                [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kReallyRed, false); },
+                [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kNoteOrange, false); },
                 200_ms);
           } else if (m_elevatorSubsystem.IsCarriageAtSetPoint() && std::abs(rotationWithInertia.value()) <= 0.1) {
             m_ledSubSystem.TemporaryAnimate(
-                [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kNoteOrange, false); },
+                [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kPlum, false); },
                 200_ms);
           }
         }
-
-        frc::SmartDashboard::PutBoolean("(DRIVER) IsFeeding shot active?", m_ShooterSubSystem.IsFeedingShotActive());
 
         if (frc::DriverStation::IsTeleop() &&
             (m_swerveDrive.GetManualOverride() || deadbandTranslationSpeeds.forwardSpeedPct != 0 ||
@@ -322,7 +316,7 @@ void RobotContainer::ConfigureBindings() {
   auto shoot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kRightTrigger);
   auto feedForward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kUp);
   auto feedBackward = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kDown);
-  auto crossfieldShot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
+  auto crossFieldShot = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kLeftTrigger);
   auto aimWhileMove = m_controllers.DriverController().TriggerRaw(argos_lib::XboxController::Button::kA);
   auto odometryAim = m_controllers.DriverController().TriggerRaw(
       argos_lib::XboxController::Button::kB);  // for debugging only, will be removed
@@ -407,7 +401,7 @@ void RobotContainer::ConfigureBindings() {
                   {&m_climberSubsystem})
                   .ToPtr());
 
-  crossfieldShot.OnTrue(&m_CrossfieldShotCommand)
+  crossFieldShot.OnTrue(&m_CrossfieldShotCommand)
       .OnFalse(frc2::InstantCommand([this]() { m_ShooterSubSystem.SetFeedingShotActive(false); }, {&m_ShooterSubSystem})
                    .ToPtr());
 

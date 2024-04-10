@@ -13,7 +13,7 @@ units::degree_t argos_lib::odometry_aim::GetAngleToTarget(const frc::Translation
   double yawToTarget = std::atan2((targetPoseOnField.Y() - currentEstimatedRobotPose.Y()).to<double>(),
                                   (targetPoseOnField.X() - currentEstimatedRobotPose.X()).to<double>());
 
-  return units::degree_t(yawToTarget * 180.0 / 3.14159265358);
+  return 90.0_deg - units::degree_t(yawToTarget * 180.0 / 3.14159265358);
 }
 
 units::meter_t argos_lib::odometry_aim::GetDistanceToTarget(const frc::Translation2d& currentEstimatedRobotPose,

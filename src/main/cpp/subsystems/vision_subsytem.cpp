@@ -99,18 +99,27 @@ void VisionSubsystem::Periodic() {
 }
 
 std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
-  // Updates and retrieves new target values
-  const auto targetValues = GetSeeingCamera();
-  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
-                          field_points::blue_alliance::april_tags::speakerCenter.id :
-                          field_points::red_alliance::april_tags::speakerCenter.id;
-  if (targetValues && tagOfInterest == targetValues.value().tagID) {
-    // add more target validation after testing e.g. area, margin, skew etc
-    // for now has target is enough as we will be fairly close to target
-    // and will tune the pipeline not to combine detections and choose the highest area
-    if (targetValues.value().hasTargets) {
-      return targetValues.value().m_yaw;
+  if (!IsOdometryAimingActive()) {
+    // Updates and retrieves new target values
+    const auto targetValues = GetSeeingCamera();
+    int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                            field_points::blue_alliance::april_tags::speakerCenter.id :
+                            field_points::red_alliance::april_tags::speakerCenter.id;
+    if (targetValues && tagOfInterest == targetValues.value().tagID) {
+      // add more target validation after testing e.g. area, margin, skew etc
+      // for now has target is enough as we will be fairly close to target
+      // and will tune the pipeline not to combine detections and choose the highest area
+      if (targetValues.value().hasTargets) {
+        return targetValues.value().m_yaw;
+      }
     }
+  } else {
+    auto currentRobotAngle = m_pDriveSubsystem->GetFieldCentricAngle();
+    const auto targetPose = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                                field_points::blue_alliance::april_tags::speakerCenter.pose :
+                                field_points::red_alliance::april_tags::speakerCenter.pose;
+    return -(currentRobotAngle -
+             argos_lib::odometry_aim::GetAngleToTarget(m_pDriveSubsystem->GetPoseEstimate().Translation(), targetPose));
   }
 
   return std::nullopt;
@@ -123,8 +132,7 @@ std::optional<units::degree_t> VisionSubsystem::getFeederOffset() {
                           field_points::red_alliance::april_tags::stageCenter.id;
   if (targetValues && tagOfInterest == targetValues.value().tagID) {
     if (targetValues.value().hasTargets) {
-      frc::SmartDashboard::PutBoolean("(DRIVER)Feed Yaw?", targetValues.value().m_yaw.to<double>());
-      return targetValues.value().m_yaw - 8.0_deg;
+      return targetValues.value().m_yaw - measure_up::shooter_targets::passingShotRotationOffset;
     }
   }
 
@@ -209,7 +217,6 @@ units::degree_t VisionSubsystem::getFeederAngle() {
 
   if (distance) {
     finalAngle = m_feederAngleMap.Map(distance.value());
-    frc::SmartDashboard::PutNumber("(DRIVER)Feed Final ANgle?", finalAngle.to<double>());
   }
 
   return finalAngle;
@@ -273,7 +280,8 @@ std::optional<units::degree_t> VisionSubsystem::getFeederAngleWithInertia(double
   auto angle = -0.01_deg;
   angle = getFeederAngle();
   if (angle != -0.01_deg) {
-    units::degree_t finalAngle = angle - units::degree_t(12.0 * medialSpeedPct);
+    units::degree_t finalAngle =
+        angle - units::degree_t(measure_up::shooter_targets::passingShotInertialFactor * medialSpeedPct);
     return finalAngle;
   }
 
@@ -281,6 +289,9 @@ std::optional<units::degree_t> VisionSubsystem::getFeederAngleWithInertia(double
 }
 
 std::optional<units::degree_t> VisionSubsystem::getShooterOffset() {
+  if (IsOdometryAimingActive()) {
+    return 0.0_deg;
+  }
   auto distance = GetDistanceToSpeaker();
   const auto camera = getWhichCamera();
   units::degree_t finalAngleOffset = 0.0_deg;
@@ -379,12 +390,8 @@ std::optional<units::inch_t> VisionSubsystem::GetDistanceToStageCenter() {
                           field_points::blue_alliance::april_tags::stageCenter.id :
                           field_points::red_alliance::april_tags::stageCenter.id;
 
-  frc::SmartDashboard::PutNumber("(DRIVER)GetDistanceToStageCenter Tag?", tagOfInterest);
-
   const auto targetValues = GetSeeingCamera(true);
   if (targetValues && tagOfInterest == targetValues.value().tagID) {
-    frc::SmartDashboard::PutNumber("(DRIVER)GetDistanceToStageCenter Distance?",
-                                   (static_cast<units::inch_t>(targetValues.value().tagPose.Z()).to<double>()));
     return static_cast<units::inch_t>(targetValues.value().tagPose.Z());
   } else {
     return std::nullopt;

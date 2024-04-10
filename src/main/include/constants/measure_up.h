@@ -40,6 +40,8 @@ namespace measure_up {
     constexpr auto speakerOpeningHeightFromGround = 80.5_in;
     constexpr auto cameraHeightToAprilTag = 28.63_in;
     constexpr auto secondaryCameraToShooter = 27_in;
+    constexpr auto passingShotRotationOffset = 9.0_deg;
+    constexpr double passingShotInertialFactor = 12.0;
     constexpr double frontSideSpinFactor = 0.0;
     constexpr double longShotSpinFactor = 0.0;
   }  // namespace shooter_targets

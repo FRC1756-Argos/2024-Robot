@@ -28,6 +28,7 @@ namespace speeds {
     constexpr double lateralInertialWeight = 15.0;
     constexpr double medialInertialWeight = 5.0;
     constexpr double aimSpeedReductionPct = 0.4;
+    constexpr double passSpeedReductionPct = 0.6;
     constexpr units::velocity::feet_per_second_t maxAngular = 12_fps;
   }  // namespace drive
 }  // namespace speeds

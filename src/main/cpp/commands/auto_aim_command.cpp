@@ -92,7 +92,11 @@ bool AutoAimCommand::Aimed(const std::optional<AimParams>& params) {
 bool AutoAimCommand::Aim(const std::optional<AimParams>& params) {
   if (params) {
     const auto offset = GetAdjustmentOffset(params);
-    m_pSwerveDrive->SwerveDrive(0, 0, -offset.value().to<double>() * 0.016);
+    if (m_pVision->IsOdometryAimingActive()) {
+      m_pSwerveDrive->SwerveDrive(offset.value(), 0.0, 0.2);
+    } else {
+      m_pSwerveDrive->SwerveDrive(0, 0, -offset.value().to<double>() * 0.016);
+    }
     m_pElevator->SetCarriageAngle(params.value().carriageAngle);
     m_pShooter->ShooterGoToSpeed(params.value().shooterSpeed);
   }
