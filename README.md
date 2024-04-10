@@ -24,8 +24,8 @@ Robot code for 2024 FRC season
 | Cat Yellow | Solid | All | Aim in progress | Aim active |
 | Red | Solid | All | No target found | Aim active |
 | Green | Solid | All | Target locked | Aim active |
-| Orange | Solid | All | Odometry aiming in progress| Aim active|
-| Plum | Solid | All | Odometry aim target locked | Aim active |
+| Orange | Solid | All | Crossfield aiming in progress| Crossfield aiming active |
+| Plum | Solid | All | Crossfield shot ready | Crossfield aiming active  |
 | :fire: | :fire: | All | :fire: :fire: :fire: | Operator command |
 
 ### Controller Vibration Feedback

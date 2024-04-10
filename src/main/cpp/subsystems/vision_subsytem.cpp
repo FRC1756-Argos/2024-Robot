@@ -118,8 +118,8 @@ std::optional<units::degree_t> VisionSubsystem::GetHorizontalOffsetToTarget() {
     const auto targetPose = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
                                 field_points::blue_alliance::april_tags::speakerCenter.pose :
                                 field_points::red_alliance::april_tags::speakerCenter.pose;
-    return -(currentRobotAngle -
-             argos_lib::odometry_aim::GetAngleToTarget(m_pDriveSubsystem->GetPoseEstimate().Translation(), targetPose));
+    return -(currentRobotAngle - argos_lib::odometry_aim::GetAngleToTarget(
+                                     m_pDriveSubsystem->GetContinuousOdometry().Translation(), targetPose));
   }
 
   return std::nullopt;
@@ -169,8 +169,8 @@ units::degree_t VisionSubsystem::getShooterAngle(units::inch_t distance, const I
     const auto targetPose = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
                                 field_points::blue_alliance::april_tags::speakerCenter.pose :
                                 field_points::red_alliance::april_tags::speakerCenter.pose;
-    distance =
-        argos_lib::odometry_aim::GetDistanceToTarget(m_pDriveSubsystem->GetPoseEstimate().Translation(), targetPose);
+    distance = argos_lib::odometry_aim::GetDistanceToTarget(m_pDriveSubsystem->GetContinuousOdometry().Translation(),
+                                                            targetPose);
   }
 
   const auto camera = getWhichCamera();

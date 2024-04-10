@@ -765,7 +765,12 @@ units::degree_t SwerveDriveSubsystem::GetFieldCentricAngle() {
   return -GetIMUYaw() - m_fieldHomeOffset;
 }
 
-frc::Pose2d SwerveDriveSubsystem::GetPoseEstimate() {
+frc::Pose2d SwerveDriveSubsystem::GetPoseEstimate(const frc::Pose2d& robotPose, const units::millisecond_t& latency) {
+  // Account for Vision Measurement here
+  frc::Timer timer;
+  const auto timeStamp = timer.GetFPGATimestamp() - latency;
+  m_poseEstimator.AddVisionMeasurement(robotPose, timeStamp);
+
   if constexpr (feature_flags::nt_debugging) {
     frc::SmartDashboard::PutNumber("(Est Pose After Vision) X",
                                    units::inch_t{m_poseEstimator.GetEstimatedPosition().X()}.to<double>());
