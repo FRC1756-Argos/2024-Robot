@@ -231,6 +231,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
   argos_lib::RobotInstance
       m_instance;  ///< Contains either the competition bot or practice bot. Differentiates between the two
   SwerveDriveSubsystem* m_pDriveSubsystem;     ///< Pointer to drivetrain for reading some odometry
+  ShooterSubsystem* m_pShooterSubsystem;       ///< Pointer to shooter subsystem for reading aiming mode
   LimelightTarget::tValues m_oldTargetValues;  ///< The old robot poses and latencies
   bool m_usePolynomial;                        ///< specifies whether to use the polynomial to obtain shooter angle
   bool m_useTrigonometry;                      ///< specifies whether to use the trigonometry to obtain shooter angle
@@ -254,7 +255,6 @@ class VisionSubsystem : public frc2::SubsystemBase {
   argos_lib::NTSubscriber
       m_secondaryCameraFrameUpdateSubscriber;  ///< Subscriber to manage all updates from secondary camera
   std::jthread m_yawUpdateThread;
-  ShooterSubsystem* m_pShooterSubsystem;  ///< Pointer to shooter subsystem
 
   void UpdateYaw(std::stop_token stopToken);
 };

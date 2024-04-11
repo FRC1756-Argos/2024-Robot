@@ -29,6 +29,7 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
                                  ShooterSubsystem* pShooterSubsytem)
     : m_instance(instance)
     , m_pDriveSubsystem(pDriveSubsystem)
+    , m_pShooterSubsystem(pShooterSubsytem)
     , m_usePolynomial(true)
     , m_useTrigonometry(false)
     , m_isAimWhileMoveActive(false)
@@ -38,8 +39,7 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
     , m_feederAngleMap{shooterRange::feederAngle}
     , m_primaryCameraFrameUpdateSubscriber{primaryCameraTableName}
     , m_secondaryCameraFrameUpdateSubscriber{secondaryCameraTableName}
-    , m_yawUpdateThread{}
-    , m_pShooterSubsystem(pShooterSubsytem) {
+    , m_yawUpdateThread{} {
   m_primaryCameraFrameUpdateSubscriber.AddMonitor(
       "hb",
       [this](double) {
