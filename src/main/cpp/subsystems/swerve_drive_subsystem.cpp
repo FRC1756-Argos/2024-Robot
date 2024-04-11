@@ -80,6 +80,7 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
     , m_continuousOdometryOffset{0_deg}
     , m_poseEstimator{m_swerveDriveKinematics, frc::Rotation2d(GetIMUYaw()), GetCurrentModulePositions(), frc::Pose2d{}}
     , m_odometryThread{}
+    , m_odometryResetTime{}
     , m_stillRunning{true}
     , m_fsStorage(paths::swerveHomesPath)
     , m_followingProfile(false)
@@ -632,6 +633,7 @@ void SwerveDriveSubsystem::FieldHome(units::degree_t homeAngle, bool updateOdome
 }
 
 void SwerveDriveSubsystem::InitializeOdometry(const frc::Pose2d& currentPose) {
+  m_odometryResetTime = std::chrono::steady_clock::now();
   m_poseEstimator.ResetPosition(-GetIMUYaw(), GetCurrentModulePositions(), currentPose);
   m_prevOdometryAngle = m_poseEstimator.GetEstimatedPosition().Rotation().Degrees();
   m_continuousOdometryOffset = 0_deg;
@@ -775,9 +777,8 @@ void SwerveDriveSubsystem::UpdateEstimatedPose() {
       m_poseEstimateLogger.Append(m_poseEstimator.UpdateWithTime(
           updateTime, frc::Rotation2d(yaw), {frontLeftModule, frontRightModule, backRightModule, backLeftModule}));
 
-      const auto states =
-          std::array<const frc::SwerveModuleState, 4>{frontLeftState, frontRightState, backRightState, backLeftState};
-      m_stateLogger.Append(std::span<const frc::SwerveModuleState>(states));
+      m_stateLogger.Append(std::span<const frc::SwerveModuleState>(
+          std::array<const frc::SwerveModuleState, 4>{frontLeftState, frontRightState, backRightState, backLeftState}));
     }
   }
 }
@@ -809,7 +810,11 @@ frc::Pose2d SwerveDriveSubsystem::GetPoseEstimate(const frc::Pose2d& robotPose, 
 void SwerveDriveSubsystem::UpdateVisionMeasurement(const frc::Pose2d& poseEstimate,
                                                    units::second_t timestamp,
                                                    const wpi::array<double, 3>& visionMeasurementStdDevs) {
-  m_poseEstimator.AddVisionMeasurement(poseEstimate, timestamp, visionMeasurementStdDevs);
+  // Block vision odometry updates right after a position reset since this can cause undesired jumps in robot
+  // position estimate while megatag2 position readjusts
+  if (std::chrono::steady_clock::now() - m_odometryResetTime > std::chrono::milliseconds{250}) {
+    m_poseEstimator.AddVisionMeasurement(poseEstimate, timestamp, visionMeasurementStdDevs);
+  }
 }
 
 void SwerveDriveSubsystem::SetControlMode(SwerveDriveSubsystem::DriveControlMode controlMode) {
@@ -1011,10 +1016,9 @@ void SwerveDriveSubsystem::ClosedLoopDrive(wpi::array<frc::SwerveModuleState, 4>
   m_backLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
       moduleStates.at(indexes::swerveModules::backLeftIndex).angle.Degrees())));
 
-  const auto setpoints =
+  m_setpointLogger.Append(std::span<const frc::SwerveModuleState>(
       std::array<const frc::SwerveModuleState, 4>{moduleStates.at(indexes::swerveModules::frontLeftIndex),
                                                   moduleStates.at(indexes::swerveModules::frontRightIndex),
                                                   moduleStates.at(indexes::swerveModules::backRightIndex),
-                                                  moduleStates.at(indexes::swerveModules::backLeftIndex)};
-  m_setpointLogger.Append(std::span<const frc::SwerveModuleState>(setpoints));
+                                                  moduleStates.at(indexes::swerveModules::backLeftIndex)}));
 }

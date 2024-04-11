@@ -301,7 +301,9 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;  ///< accounts vision-based measurements for odometry
   std::thread m_odometryThread;                      ///< Updates robot odometry at very high rate
-  bool m_stillRunning;                               ///< false indicates subsystem is being destroyed
+  std::chrono::time_point<std::chrono::steady_clock>
+      m_odometryResetTime;  ///< Time when odometry was last reset to known position
+  bool m_stillRunning;      ///< false indicates subsystem is being destroyed
 
   // std::FILE SYSTEM HOMING STORAGE
   argos_lib::SwerveFSHomingStorage m_fsStorage;  ///< Roborio filesystem access for homes
