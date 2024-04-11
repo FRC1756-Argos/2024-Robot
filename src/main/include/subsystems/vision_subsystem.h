@@ -205,8 +205,8 @@ class VisionSubsystem : public frc2::SubsystemBase {
   [[nodiscard]] std::optional<LimelightTarget::tValues> GetSeeingCamera();
 
  private:
-  constexpr static char primaryCameraTableName[11]{"limelight"};
-  constexpr static char secondaryCameraTableName[17]{"limelight-front"};
+  constexpr static char primaryCameraTableName[12]{"/limelight"};
+  constexpr static char secondaryCameraTableName[18]{"/limelight-front"};
 
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

@@ -16,6 +16,7 @@
 #include <Constants.h>
 
 #include "constants/field_points.h"
+#include "ctre/phoenix6/Utils.hpp"
 #include "limelight/LimelightHelpers.h"
 #include "subsystems/vision_subsystem.h"
 
@@ -34,8 +35,8 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
     , m_enableStaticRotation(false)
     , m_shooterAngleMap{shooterRange::shooterAngle}
     , m_shooterSpeedMap{shooterRange::shooterSpeed}
-    , m_primaryCameraFrameUpdateSubscriber{primaryCameraTableName}
-    , m_secondaryCameraFrameUpdateSubscriber{secondaryCameraTableName}
+    , m_primaryCameraFrameUpdateSubscriber{std::string(primaryCameraTableName)}
+    , m_secondaryCameraFrameUpdateSubscriber{std::string(secondaryCameraTableName)}
     , m_yawUpdateThread{}
     , m_frontCameraMegaTag2PoseLogger{frc::DataLogManager::GetLog(), "frontCameraMegaTag2Pose"}
     , m_rearCameraMegaTag2PoseLogger{frc::DataLogManager::GetLog(), "rearCameraMegaTag2Pose"} {
@@ -46,7 +47,21 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
             LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(primaryCameraTableName);
         if (mt2.tagCount > 0 &&
             units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
-          m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, mt2.timestampSeconds, {.1, .1, 9999999.0});
+          // std::cout << "Rear: count=" << mt2.tagCount << ", yawRate="
+          //           << units::degrees_per_second_t{units::math::abs(m_pDriveSubsystem->GetIMUYawRate())}.to<double>()
+          //           << "\n";
+          units::meter_t avgDist{mt2.avgTagDist};
+          const auto time =
+              units::second_t{ctre::phoenix6::GetCurrentTimeSeconds()} - units::millisecond_t{mt2.latency};
+          if (mt2.tagCount > 2 && avgDist < 15_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.2, .2, 9999999.0});
+          } else if (mt2.tagCount > 2 && avgDist < 25_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.4, .4, 9999999.0});
+          } else if (mt2.tagCount > 2 || avgDist < 15_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.7, .7, 9999999.0});
+          } else {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {10, 10, 9999999.0});
+          }
           m_rearCameraMegaTag2PoseLogger.Append(mt2.pose, units::microsecond_t{mt2.timestampSeconds}.to<int64_t>());
         }
       },
@@ -58,7 +73,21 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
             LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(secondaryCameraTableName);
         if (mt2.tagCount > 0 &&
             units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
-          m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, mt2.timestampSeconds, {.1, .1, 9999999.0});
+          // std::cout << "Front: count=" << mt2.tagCount << ", yawRate="
+          //           << units::degrees_per_second_t{units::math::abs(m_pDriveSubsystem->GetIMUYawRate())}.to<double>()
+          //           << "\n";
+          units::meter_t avgDist{mt2.avgTagDist};
+          const auto time =
+              units::second_t{ctre::phoenix6::GetCurrentTimeSeconds()} - units::millisecond_t{mt2.latency};
+          if (mt2.tagCount > 2 && avgDist < 15_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.2, .2, 9999999.0});
+          } else if (mt2.tagCount > 2 && avgDist < 25_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.4, .4, 9999999.0});
+          } else if (mt2.tagCount > 2 || avgDist < 15_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.7, .7, 9999999.0});
+          } else {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {10, 10, 9999999.0});
+          }
           m_frontCameraMegaTag2PoseLogger.Append(mt2.pose, units::microsecond_t{mt2.timestampSeconds}.to<int64_t>());
         }
       },

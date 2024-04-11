@@ -26,7 +26,7 @@ DriveChoreo::DriveChoreo(SwerveDriveSubsystem& drive, const std::string& traject
                       },
                       {&m_Drive}}
     , m_initializeOdometry{initializeOdometry} {
-  wpi::SendableRegistry::AddChild(this, &m_field);
+  // wpi::SendableRegistry::AddChild(this, &m_field);
 }
 
 // Called when the command is initially scheduled.
@@ -47,19 +47,20 @@ void DriveChoreo::Initialize() {
       m_Drive.FieldHome(m_trajectory.GetInitialPose().Rotation().Degrees(), false);
     }
   }
-  std::vector<frc::Trajectory::State> wpilibTrajectory;
-  wpilibTrajectory.reserve(m_orientedTrajectory.GetSamples().size());
+  // std::vector<frc::Trajectory::State> wpilibTrajectory;
+  // wpilibTrajectory.reserve(m_orientedTrajectory.GetSamples().size());
 
-  for (const auto& sample : m_orientedTrajectory.GetSamples()) {
-    wpilibTrajectory.emplace_back(sample.timestamp,
-                                  units::math::hypot(sample.velocityX, sample.velocityY),
-                                  0_mps_sq,
-                                  sample.GetPose(),
-                                  units::curvature_t{0.0});
-  }
-
-  m_field.GetRobotObject()->SetTrajectory(frc::Trajectory{wpilibTrajectory});
-  m_field.SetRobotPose(wpilibTrajectory.front().pose);
+  // for (const auto& sample : m_orientedTrajectory.GetSamples()) {
+  //   wpilibTrajectory.emplace_back(sample.timestamp,
+  //                                 units::math::hypot(sample.velocityX, sample.velocityY),
+  //                                 0_mps_sq,
+  //                                 sample.GetPose(),
+  //                                 units::curvature_t{0.0});
+  // }
+  // if (!wpilibTrajectory.empty()) {
+  //   m_field.GetRobotObject()->SetTrajectory(frc::Trajectory{wpilibTrajectory});
+  // }
+  // m_field.SetRobotPose(wpilibTrajectory.front().pose);
   m_startTime = std::chrono::steady_clock::now();
   m_ChoreoCommand.Initialize();
 }
@@ -67,7 +68,7 @@ void DriveChoreo::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void DriveChoreo::Execute() {
   m_ChoreoCommand.Execute();
-  m_field.SetRobotPose(m_orientedTrajectory.Sample(std::chrono::steady_clock::now() - m_startTime).GetPose());
+  // m_field.SetRobotPose(m_orientedTrajectory.Sample(std::chrono::steady_clock::now() - m_startTime).GetPose());
 }
 
 // Called once the command ends or is interrupted.

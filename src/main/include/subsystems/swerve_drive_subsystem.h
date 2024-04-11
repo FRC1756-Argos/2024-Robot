@@ -17,6 +17,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <wpi/DataLog.h>
 
+#include <array>
 #include <memory>
 #include <thread>
 
@@ -369,12 +370,6 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   void ClosedLoopDrive(wpi::array<frc::SwerveModuleState, 4> moduleStates);
 
   wpi::log::StructLogEntry<frc::Pose2d> m_poseEstimateLogger;
-  wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontLeftModuleSetpointLogger;
-  wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontRightModuleSetpointLogger;
-  wpi::log::StructLogEntry<frc::SwerveModuleState> m_backRightModuleSetpointLogger;
-  wpi::log::StructLogEntry<frc::SwerveModuleState> m_backLeftModuleSetpointLogger;
-  wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontLeftModuleStateLogger;
-  wpi::log::StructLogEntry<frc::SwerveModuleState> m_frontRightModuleStateLogger;
-  wpi::log::StructLogEntry<frc::SwerveModuleState> m_backRightModuleStateLogger;
-  wpi::log::StructLogEntry<frc::SwerveModuleState> m_backLeftModuleStateLogger;
+  wpi::log::StructArrayLogEntry<frc::SwerveModuleState> m_setpointLogger;
+  wpi::log::StructArrayLogEntry<frc::SwerveModuleState> m_stateLogger;
 };

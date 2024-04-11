@@ -42,5 +42,5 @@ class DriveChoreo : public frc2::CommandHelper<frc2::Command, DriveChoreo> {
   choreolib::ChoreoSwerveCommand m_ChoreoCommand;
   const bool m_initializeOdometry;
   std::chrono::time_point<std::chrono::steady_clock> m_startTime;
-  frc::Field2d m_field;
+  // frc::Field2d m_field;
 };
