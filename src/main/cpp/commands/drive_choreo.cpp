@@ -5,11 +5,10 @@
 #include "commands/drive_choreo.h"
 
 #include <choreo/lib/Choreo.h>
+#include <frc/DataLogManager.h>
 #include <frc/DriverStation.h>
-#include <frc/geometry/Pose2d.h>
-#include <frc/trajectory/Trajectory.h>
+#include <networktables/StructTopic.h>
 #include <units/math.h>
-#include <wpi/DataLog.h>
 
 #include "constants/field_points.h"
 
@@ -25,8 +24,10 @@ DriveChoreo::DriveChoreo(SwerveDriveSubsystem& drive, const std::string& traject
                         return alliance && alliance.value() == frc::DriverStation::Alliance::kRed;
                       },
                       {&m_Drive}}
-    , m_initializeOdometry{initializeOdometry} {
-  // wpi::SendableRegistry::AddChild(this, &m_field);
+    , m_initializeOdometry{initializeOdometry}
+    , m_desiredAutoPositionLogger{frc::DataLogManager::GetLog(), "desiredAutoPosition"}
+    , m_autoTrajectoryLogger{frc::DataLogManager::GetLog(), "autoTrajectory"} {
+  frc::DataLogManager::GetLog().AddStructSchema<frc::Pose2d>();
 }
 
 // Called when the command is initially scheduled.
@@ -47,20 +48,14 @@ void DriveChoreo::Initialize() {
       m_Drive.FieldHome(m_trajectory.GetInitialPose().Rotation().Degrees(), false);
     }
   }
-  // std::vector<frc::Trajectory::State> wpilibTrajectory;
-  // wpilibTrajectory.reserve(m_orientedTrajectory.GetSamples().size());
+  std::vector<frc::Pose2d> trajectory;
+  trajectory.reserve(m_orientedTrajectory.GetSamples().size());
 
-  // for (const auto& sample : m_orientedTrajectory.GetSamples()) {
-  //   wpilibTrajectory.emplace_back(sample.timestamp,
-  //                                 units::math::hypot(sample.velocityX, sample.velocityY),
-  //                                 0_mps_sq,
-  //                                 sample.GetPose(),
-  //                                 units::curvature_t{0.0});
-  // }
-  // if (!wpilibTrajectory.empty()) {
-  //   m_field.GetRobotObject()->SetTrajectory(frc::Trajectory{wpilibTrajectory});
-  // }
-  // m_field.SetRobotPose(wpilibTrajectory.front().pose);
+  for (const auto& sample : m_orientedTrajectory.GetSamples()) {
+    trajectory.emplace_back(sample.GetPose());
+  }
+
+  m_autoTrajectoryLogger.Append(trajectory);
   m_startTime = std::chrono::steady_clock::now();
   m_ChoreoCommand.Initialize();
 }
@@ -68,7 +63,8 @@ void DriveChoreo::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void DriveChoreo::Execute() {
   m_ChoreoCommand.Execute();
-  // m_field.SetRobotPose(m_orientedTrajectory.Sample(std::chrono::steady_clock::now() - m_startTime).GetPose());
+  m_desiredAutoPositionLogger.Append(
+      m_orientedTrajectory.Sample(std::chrono::steady_clock::now() - m_startTime).GetPose());
 }
 
 // Called once the command ends or is interrupted.

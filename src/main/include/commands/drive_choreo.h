@@ -5,11 +5,12 @@
 #pragma once
 
 #include <choreo/lib/ChoreoSwerveCommand.h>
-#include <frc/smartdashboard/Field2d.h>
+#include <frc/geometry/Pose2d.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 #include <units/angle.h>
 #include <units/length.h>
+#include <wpi/DataLog.h>
 
 #include <chrono>
 #include <string>
@@ -42,5 +43,6 @@ class DriveChoreo : public frc2::CommandHelper<frc2::Command, DriveChoreo> {
   choreolib::ChoreoSwerveCommand m_ChoreoCommand;
   const bool m_initializeOdometry;
   std::chrono::time_point<std::chrono::steady_clock> m_startTime;
-  // frc::Field2d m_field;
+  wpi::log::StructLogEntry<frc::Pose2d> m_desiredAutoPositionLogger;
+  wpi::log::StructArrayLogEntry<frc::Pose2d> m_autoTrajectoryLogger;
 };
