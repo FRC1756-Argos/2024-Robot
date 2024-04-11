@@ -25,6 +25,7 @@
 #include "networktables/NetworkTableEntry.h"
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/NetworkTableValue.h"
+#include "shooter_subsystem.h"
 #include "swerve_drive_subsystem.h"
 
 enum class whichCamera { PRIMARY_CAMERA = 0, SECONDARY_CAMERA };
@@ -117,7 +118,9 @@ class CameraInterface {
 
 class VisionSubsystem : public frc2::SubsystemBase {
  public:
-  VisionSubsystem(const argos_lib::RobotInstance instance, SwerveDriveSubsystem* pDriveSubsystem);
+  VisionSubsystem(const argos_lib::RobotInstance instance,
+                  SwerveDriveSubsystem* pDriveSubsystem,
+                  ShooterSubsystem* pShooterSubsytem);
 
   enum class InterpolationMode { LinearInterpolation, Polynomial, Trig };
 
@@ -251,6 +254,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
   argos_lib::NTSubscriber
       m_secondaryCameraFrameUpdateSubscriber;  ///< Subscriber to manage all updates from secondary camera
   std::jthread m_yawUpdateThread;
+  ShooterSubsystem* m_pShooterSubsystem;  ///< Pointer to shooter subsystem
 
   void UpdateYaw(std::stop_token stopToken);
 };

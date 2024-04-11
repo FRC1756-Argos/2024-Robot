@@ -24,7 +24,9 @@ void CameraInterface::RequestTargetFilterReset() {
   m_target.ResetOnNextTarget();
 }
 
-VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, SwerveDriveSubsystem* pDriveSubsystem)
+VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
+                                 SwerveDriveSubsystem* pDriveSubsystem,
+                                 ShooterSubsystem* pShooterSubsytem)
     : m_instance(instance)
     , m_pDriveSubsystem(pDriveSubsystem)
     , m_usePolynomial(true)
@@ -36,7 +38,8 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
     , m_feederAngleMap{shooterRange::feederAngle}
     , m_primaryCameraFrameUpdateSubscriber{primaryCameraTableName}
     , m_secondaryCameraFrameUpdateSubscriber{secondaryCameraTableName}
-    , m_yawUpdateThread{} {
+    , m_yawUpdateThread{}
+    , m_pShooterSubsystem(pShooterSubsytem) {
   m_primaryCameraFrameUpdateSubscriber.AddMonitor(
       "hb",
       [this](double) {
@@ -69,6 +72,11 @@ void VisionSubsystem::Periodic() {
   int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
                           field_points::blue_alliance::april_tags::speakerCenter.id :
                           field_points::red_alliance::april_tags::speakerCenter.id;
+  if (m_pShooterSubsystem->IsFeedingShotActive()) {
+    tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                        field_points::blue_alliance::april_tags::stageCenter.id :
+                        field_points::red_alliance::april_tags::stageCenter.id;
+  }
   nt1->PutNumber("priorityid", tagOfInterest);
   nt2->PutNumber("priorityid", tagOfInterest);
 

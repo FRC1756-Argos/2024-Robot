@@ -92,8 +92,8 @@ class RobotContainer {
   argos_lib::SwappableControllersSubsystem m_controllers;
   SwerveDriveSubsystem m_swerveDrive;
   SimpleLedSubsystem m_ledSubSystem;
-  VisionSubsystem m_visionSubSystem;
   ShooterSubsystem m_ShooterSubSystem;
+  VisionSubsystem m_visionSubSystem;
   IntakeSubsystem m_intakeSubsystem;
   ClimberSubsystem m_climberSubsystem;
   ElevatorSubsystem m_elevatorSubsystem;
