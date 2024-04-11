@@ -64,36 +64,38 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, Swerve
 
 // This method will be called once per scheduler run
 void VisionSubsystem::Periodic() {
-  const auto targetValues = GetSeeingCamera();  // Note that this will update the targets object
+  std::shared_ptr<nt::NetworkTable> nt1 = nt::NetworkTableInstance::GetDefault().GetTable(primaryCameraTableName);
+  std::shared_ptr<nt::NetworkTable> nt2 = nt::NetworkTableInstance::GetDefault().GetTable(secondaryCameraTableName);
+  int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                          field_points::blue_alliance::april_tags::speakerCenter.id :
+                          field_points::red_alliance::april_tags::speakerCenter.id;
+  nt1->PutNumber("priorityid", tagOfInterest);
+  nt2->PutNumber("priorityid", tagOfInterest);
 
-  if (targetValues && targetValues.value().hasTargets) {
-    if constexpr (feature_flags::nt_debugging) {
+  if constexpr (feature_flags::nt_debugging) {
+    const auto targetValues = GetSeeingCamera();  // Note that this will update the targets object
+
+    if (targetValues && targetValues.value().hasTargets) {
       frc::SmartDashboard::PutBoolean("(Vision - Periodic) Is Target Present?", targetValues.value().hasTargets);
       frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Pitch", targetValues.value().m_pitch.to<double>());
       frc::SmartDashboard::PutNumber("(Vision - Periodic) Target Yaw", targetValues.value().m_yaw.to<double>());
       frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag ID", targetValues.value().tagID);
-    }
 
-    auto dist = GetDistanceToSpeaker();
-    if (dist != std::nullopt) {
-      if constexpr (feature_flags::nt_debugging) {
+      auto dist = GetDistanceToSpeaker();
+      if (dist != std::nullopt) {
         frc::SmartDashboard::PutNumber("(Vision - Periodic) Tag Distance from Camera", dist.value().to<double>());
       }
     }
 
     auto calcDist = GetCalculatedDistanceToSpeaker();
     if (calcDist = std::nullopt) {
-      if constexpr (feature_flags::nt_debugging) {
-        frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
-                                       calcDist.value().to<double>());
-      }
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Calculated Tag Distance from Camera",
+                                     calcDist.value().to<double>());
     }
 
     auto angle = getShooterAngle();
     if (angle != std::nullopt) {
-      if constexpr (feature_flags::nt_debugging) {
-        frc::SmartDashboard::PutNumber("(Vision - Periodic) Shooter Angle", angle.value().to<double>());
-      }
+      frc::SmartDashboard::PutNumber("(Vision - Periodic) Shooter Angle", angle.value().to<double>());
     }
   }
 }
@@ -484,23 +486,6 @@ std::optional<units::degree_t> VisionSubsystem::GetOrientationToTrap() {
 void VisionSubsystem::SetPipeline(uint16_t tag) {
   std::shared_ptr<nt::NetworkTable> table = nt::NetworkTableInstance::GetDefault().GetTable(primaryCameraTableName);
 
-  // uint16_t pipeline = 0;
-  // switch (tag) {
-  //   case field_points::red_alliance::april_tags::speakerCenter.id:
-  //     pipeline = 0;
-  //     break;
-  //   case field_points::red_alliance::april_tags::amp.id:
-  //     pipeline = 2;
-  //     break;
-  //   case field_points::blue_alliance::april_tags::amp.id:
-  //     pipeline = 3;
-  //     break;
-  //   case field_points::blue_alliance::april_tags::speakerCenter.id:
-  //     pipeline = 1;
-  //     break;
-  //   default:
-  //     break;
-  // }
   if constexpr (feature_flags::nt_debugging) {
     frc::SmartDashboard::PutNumber("(Vision) Setting Pipeline", tag);
   }
@@ -597,20 +582,7 @@ LimelightTarget::tValues LimelightTarget::GetTarget(bool filter, std::string cam
                                              units::make_unit<units::radian_t>(tagPoseCamSpace.at(4)),
                                              units::make_unit<units::radian_t>(tagPoseCamSpace.at(5))));
 
-  auto rawFiducials = table->GetNumberArray("rawfiducials", std::span<const double>());
-  std::vector<double> tagIds(std::floor(rawFiducials.size() / 7));
-  for (size_t i = 0; i < rawFiducials.size(); i += 7) {
-    tagIds.push_back(rawFiducials.at(i));
-  }
   auto tagId = table->GetNumber("tid", 0.0);
-  constexpr std::array<double, 2> tagsOfInterest{field_points::blue_alliance::april_tags::speakerCenter.id,
-                                                 field_points::red_alliance::april_tags::speakerCenter.id};
-
-  const auto speakerTagItr =
-      std::find_first_of(tagIds.begin(), tagIds.end(), tagsOfInterest.begin(), tagsOfInterest.end());
-  if (tagIds.end() != speakerTagItr) {
-    tagId = *speakerTagItr;
-  }
 
   m_tid = tagId;
   m_hasTargets = (table->GetNumber("tv", 0) == 1);
