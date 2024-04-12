@@ -24,9 +24,12 @@ void CameraInterface::RequestTargetFilterReset() {
   m_target.ResetOnNextTarget();
 }
 
-VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance, SwerveDriveSubsystem* pDriveSubsystem)
+VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
+                                 SwerveDriveSubsystem* pDriveSubsystem,
+                                 ShooterSubsystem* pShooterSubsytem)
     : m_instance(instance)
     , m_pDriveSubsystem(pDriveSubsystem)
+    , m_pShooterSubsystem(pShooterSubsytem)
     , m_usePolynomial(true)
     , m_useTrigonometry(false)
     , m_isAimWhileMoveActive(false)
@@ -69,6 +72,11 @@ void VisionSubsystem::Periodic() {
   int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
                           field_points::blue_alliance::april_tags::speakerCenter.id :
                           field_points::red_alliance::april_tags::speakerCenter.id;
+  if (m_pShooterSubsystem->IsFeedingShotActive()) {
+    tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                        field_points::blue_alliance::april_tags::stageCenter.id :
+                        field_points::red_alliance::april_tags::stageCenter.id;
+  }
   nt1->PutNumber("priorityid", tagOfInterest);
   nt2->PutNumber("priorityid", tagOfInterest);
 
