@@ -22,30 +22,25 @@
               "path": "../docs/INDEX.md"
             },
             {
-              "type": 1,
-              "legendHeight": 0.3,
-              "legends": {
-                "left": {
-                  "lockedRange": null,
-                  "unitConversion": {
-                    "type": null,
-                    "factor": 1
-                  },
-                  "fields": []
-                },
-                "discrete": {
-                  "fields": []
-                },
-                "right": {
-                  "lockedRange": null,
-                  "unitConversion": {
-                    "type": null,
-                    "factor": 1
-                  },
-                  "fields": []
-                }
+              "type": 8,
+              "uuid": "0ayhk1rpdxru9l4ie5twm12n203q6oda",
+              "fields": [],
+              "listFields": [],
+              "options": {
+                "ids": [
+                  0,
+                  1,
+                  2
+                ],
+                "layouts": [
+                  "Xbox Controller (White)",
+                  "Xbox Controller (Blue)",
+                  "None"
+                ]
               },
-              "title": "Line Graph"
+              "configHidden": false,
+              "visualizer": null,
+              "title": "Joysticks"
             },
             {
               "type": 9,
@@ -89,7 +84,7 @@
                     "sourceType": "Pose2d"
                   },
                   {
-                    "type": "Ghost",
+                    "type": "Arrow (Center)",
                     "key": "frontCameraMegaTag2Pose",
                     "sourceTypeIndex": 1,
                     "sourceType": "Pose2d"
@@ -115,6 +110,45 @@
               "configHidden": false,
               "visualizer": null,
               "title": "Odometry"
+            },
+            {
+              "type": 6,
+              "uuid": "nw0s4y47f7xjb0rsapc2zbg3uq6i442t",
+              "fields": [],
+              "listFields": [
+                [],
+                [
+                  {
+                    "type": "Robot",
+                    "key": "poseEstimate",
+                    "sourceTypeIndex": 1,
+                    "sourceType": "Pose2d"
+                  }
+                ]
+              ],
+              "options": {
+                "field": "2024 Field",
+                "alliance": "blue",
+                "robot": "2024 KitBot",
+                "unitDistance": "meters",
+                "unitRotation": "radians"
+              },
+              "configHidden": false,
+              "visualizer": {
+                "cameraIndex": -1,
+                "orbitFov": 50,
+                "cameraPosition": [
+                  1.4695761589768238e-15,
+                  5.999999999999999,
+                  -12
+                ],
+                "cameraTarget": [
+                  0,
+                  0.5,
+                  0
+                ]
+              },
+              "title": "3D Field"
             }
           ]
         }
