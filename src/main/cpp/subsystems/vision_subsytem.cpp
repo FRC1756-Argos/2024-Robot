@@ -51,9 +51,6 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
             LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(primaryCameraTableName);
         if (mt2.tagCount > 0 &&
             units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
-          // std::cout << "Rear: count=" << mt2.tagCount << ", yawRate="
-          //           << units::degrees_per_second_t{units::math::abs(m_pDriveSubsystem->GetIMUYawRate())}.to<double>()
-          //           << "\n";
           units::meter_t avgDist{mt2.avgTagDist};
           const auto time =
               units::second_t{ctre::phoenix6::GetCurrentTimeSeconds()} - units::millisecond_t{mt2.latency};
@@ -77,9 +74,6 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
             LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(secondaryCameraTableName);
         if (mt2.tagCount > 0 &&
             units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
-          // std::cout << "Front: count=" << mt2.tagCount << ", yawRate="
-          //           << units::degrees_per_second_t{units::math::abs(m_pDriveSubsystem->GetIMUYawRate())}.to<double>()
-          //           << "\n";
           units::meter_t avgDist{mt2.avgTagDist};
           const auto time =
               units::second_t{ctre::phoenix6::GetCurrentTimeSeconds()} - units::millisecond_t{mt2.latency};

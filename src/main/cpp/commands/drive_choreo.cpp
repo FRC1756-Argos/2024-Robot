@@ -32,16 +32,21 @@ DriveChoreo::DriveChoreo(SwerveDriveSubsystem& drive, const std::string& traject
 
 // Called when the command is initially scheduled.
 void DriveChoreo::Initialize() {
-  if (m_initializeOdometry) {  // Initial odometry changes base on alliance because choreo always uses odometry relative to blue alliance origin
-    const auto alliance = frc::DriverStation::GetAlliance();
-    if (alliance && alliance.value() == frc::DriverStation::Alliance::kRed) {
+  // Initial odometry changes base on alliance because choreo always uses odometry relative to blue alliance origin
+  const auto alliance = frc::DriverStation::GetAlliance();
+  if (alliance && alliance.value() == frc::DriverStation::Alliance::kRed) {
+    if (m_initializeOdometry) {
       m_Drive.InitializeOdometry(m_trajectory.GetFlippedInitialPose());
-      m_orientedTrajectory = m_trajectory.Flipped();
-    } else {
-      m_Drive.InitializeOdometry(m_trajectory.GetInitialPose());
-      m_orientedTrajectory = m_trajectory;
     }
-    // Driver still wants orientation relative to alliance station
+    m_orientedTrajectory = m_trajectory.Flipped();
+  } else {
+    if (m_initializeOdometry) {
+      m_Drive.InitializeOdometry(m_trajectory.GetInitialPose());
+    }
+    m_orientedTrajectory = m_trajectory;
+  }
+  // Driver still wants orientation relative to alliance station
+  if (m_initializeOdometry) {
     if (alliance && alliance.value() == frc::DriverStation::Alliance::kRed) {
       m_Drive.FieldHome(-m_trajectory.GetInitialPose().Rotation().Degrees(), false);
     } else {
@@ -51,11 +56,16 @@ void DriveChoreo::Initialize() {
   std::vector<frc::Pose2d> trajectory;
   trajectory.reserve(m_orientedTrajectory.GetSamples().size());
 
-  for (const auto& sample : m_orientedTrajectory.GetSamples()) {
-    trajectory.emplace_back(sample.GetPose());
+  if (!m_orientedTrajectory.GetSamples().empty()) {
+    for (const auto& sample : m_orientedTrajectory.GetSamples()) {
+      trajectory.emplace_back(sample.GetPose());
+    }
   }
 
-  m_autoTrajectoryLogger.Append(trajectory);
+  if (!trajectory.empty()) {
+    m_autoTrajectoryLogger.Append(trajectory);
+  }
+
   m_startTime = std::chrono::steady_clock::now();
   m_ChoreoCommand.Initialize();
 }
@@ -63,12 +73,15 @@ void DriveChoreo::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void DriveChoreo::Execute() {
   m_ChoreoCommand.Execute();
-  m_desiredAutoPositionLogger.Append(
-      m_orientedTrajectory.Sample(std::chrono::steady_clock::now() - m_startTime).GetPose());
+  if (!m_orientedTrajectory.GetSamples().empty()) {
+    m_desiredAutoPositionLogger.Append(
+        m_orientedTrajectory.Sample(std::chrono::steady_clock::now() - m_startTime).GetPose());
+  }
 }
 
 // Called once the command ends or is interrupted.
 void DriveChoreo::End(bool interrupted) {
+  m_autoTrajectoryLogger.Append(std::vector<frc::Pose2d>{});
   m_ChoreoCommand.End(interrupted);
 }
 

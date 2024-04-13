@@ -382,8 +382,12 @@ void SwerveDriveSubsystem::SwerveDrive(const double fwVelocity, const double sid
       desiredAngle = m_pActiveSwerveSplineProfile->HeadingSetpoint(elapsedTime);
     }
 
-    const auto controllerChassisSpeeds =
-        m_followerController.Calculate(m_poseEstimator.GetEstimatedPosition(), desiredProfileState, desiredAngle);
+    frc::Pose2d currentPose;
+    {
+      std::lock_guard lock{m_poseEstimatorLock};
+      currentPose = m_poseEstimator.GetEstimatedPosition();
+    }
+    const auto controllerChassisSpeeds = m_followerController.Calculate(currentPose, desiredProfileState, desiredAngle);
     moduleStates = m_swerveDriveKinematics.ToSwerveModuleStates(controllerChassisSpeeds);
     if constexpr (feature_flags::nt_debugging) {
       frc::SmartDashboard::PutNumber("SwerveFollower/Desired X",
@@ -624,6 +628,7 @@ void SwerveDriveSubsystem::FieldHome(units::degree_t homeAngle, bool updateOdome
   m_fieldHomeOffset = -GetIMUYaw() - homeAngle;
   if (updateOdometry) {
     // Update odometry as well
+    std::lock_guard lock{m_poseEstimatorLock};
     const auto currentPose = m_poseEstimator.GetEstimatedPosition();
     m_poseEstimator.ResetPosition(
         -GetIMUYaw(), GetCurrentModulePositions(), frc::Pose2d{currentPose.Translation(), frc::Rotation2d(homeAngle)});
@@ -634,15 +639,19 @@ void SwerveDriveSubsystem::FieldHome(units::degree_t homeAngle, bool updateOdome
 
 void SwerveDriveSubsystem::InitializeOdometry(const frc::Pose2d& currentPose) {
   m_odometryResetTime = std::chrono::steady_clock::now();
-  m_poseEstimator.ResetPosition(-GetIMUYaw(), GetCurrentModulePositions(), currentPose);
-  m_prevOdometryAngle = m_poseEstimator.GetEstimatedPosition().Rotation().Degrees();
+  {
+    std::lock_guard lock{m_poseEstimatorLock};
+    m_poseEstimator.ResetPosition(-GetIMUYaw(), GetCurrentModulePositions(), currentPose);
+    m_prevOdometryAngle = m_poseEstimator.GetEstimatedPosition().Rotation().Degrees();
+  }
   m_continuousOdometryOffset = 0_deg;
   // Since we know the position, might as well update the driving orientation as well
   FieldHome(currentPose.Rotation().Degrees(), false);
 }
 
 frc::Rotation2d SwerveDriveSubsystem::GetContinuousOdometryAngle() {
-  const auto latestOdometry = m_poseEstimator.GetEstimatedPosition();
+  frc::Pose2d latestOdometry;
+  { latestOdometry = m_poseEstimator.GetEstimatedPosition(); }
 
   if (m_prevOdometryAngle > 90_deg && latestOdometry.Rotation().Degrees() < -(90_deg)) {
     m_continuousOdometryOffset += 360_deg;
@@ -661,6 +670,7 @@ frc::Rotation2d SwerveDriveSubsystem::GetContinuousOdometryAngle() {
 }
 
 frc::Rotation2d SwerveDriveSubsystem::GetRawOdometryAngle() {
+  std::lock_guard lock{m_poseEstimatorLock};
   return m_poseEstimator.GetEstimatedPosition().Rotation();
 }
 
@@ -670,7 +680,12 @@ frc::Rotation2d SwerveDriveSubsystem::GetNearestSquareAngle() {
 }
 
 frc::Pose2d SwerveDriveSubsystem::GetContinuousOdometry() {
-  const auto discontinuousOdometry = m_poseEstimator.GetEstimatedPosition();
+  frc::Pose2d discontinuousOdometry;
+  {
+    std::lock_guard lock{m_poseEstimatorLock};
+    discontinuousOdometry = m_poseEstimator.GetEstimatedPosition();
+  }
+
   if constexpr (feature_flags::nt_debugging) {
     frc::SmartDashboard::PutNumber("(Odometry) Current X",
                                    units::inch_t{discontinuousOdometry.Translation().X()}.to<double>());
@@ -681,7 +696,11 @@ frc::Pose2d SwerveDriveSubsystem::GetContinuousOdometry() {
 }
 
 frc::Pose2d SwerveDriveSubsystem::GetRawOdometry() {
-  const auto discontinuousOdometry = m_poseEstimator.GetEstimatedPosition();
+  frc::Pose2d discontinuousOdometry;
+  {
+    std::lock_guard lock{m_poseEstimatorLock};
+    discontinuousOdometry = m_poseEstimator.GetEstimatedPosition();
+  }
   if constexpr (feature_flags::nt_debugging) {
     frc::SmartDashboard::PutNumber("(Odometry) Current X",
                                    units::inch_t{discontinuousOdometry.Translation().X()}.to<double>());
@@ -710,6 +729,8 @@ void SwerveDriveSubsystem::UpdateEstimatedPose() {
   auto& backLeftDriveVelocityUpdate = m_backLeft.m_drive.GetVelocity();
   auto& backLeftTurnPositionUpdate = m_backLeft.m_turn.GetPosition();
   auto& backLeftTurnVelocityUpdate = m_backLeft.m_turn.GetVelocity();
+
+  std::chrono::time_point<std::chrono::steady_clock> logTime{};
 
   while (m_stillRunning) {
     if (0 == ctre::phoenix6::BaseStatusSignal::WaitForAll(20_ms,
@@ -774,11 +795,21 @@ void SwerveDriveSubsystem::UpdateEstimatedPose() {
       auto backLeftState = frc::SwerveModuleState{
           sensor_conversions::swerve_drive::drive::ToVelocity(backLeftDriveVelocityUpdate.GetValue()),
           frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(backLeftTurnPosition)}};
-      m_poseEstimateLogger.Append(m_poseEstimator.UpdateWithTime(
-          updateTime, frc::Rotation2d(yaw), {frontLeftModule, frontRightModule, backRightModule, backLeftModule}));
 
-      m_stateLogger.Append(std::span<const frc::SwerveModuleState>(
-          std::array<const frc::SwerveModuleState, 4>{frontLeftState, frontRightState, backRightState, backLeftState}));
+      frc::Pose2d poseEstimate;
+      {
+        std::lock_guard lock{m_poseEstimatorLock};
+        poseEstimate = m_poseEstimator.UpdateWithTime(
+            updateTime, frc::Rotation2d(yaw), {frontLeftModule, frontRightModule, backRightModule, backLeftModule});
+      }
+      auto now = std::chrono::steady_clock::now();
+      if (now - logTime >= std::chrono::milliseconds{50}) {
+        m_poseEstimateLogger.Append(poseEstimate);
+
+        m_stateLogger.Append(std::span<const frc::SwerveModuleState>(std::array<const frc::SwerveModuleState, 4>{
+            frontLeftState, frontRightState, backRightState, backLeftState}));
+        logTime = now;
+      }
     }
   }
 }
@@ -791,6 +822,7 @@ frc::Pose2d SwerveDriveSubsystem::GetPoseEstimate(const frc::Pose2d& robotPose, 
   // Account for Vision Measurement here
   frc::Timer timer;
   const auto timeStamp = timer.GetFPGATimestamp() - latency;
+  std::lock_guard lock{m_poseEstimatorLock};
   m_poseEstimator.AddVisionMeasurement(robotPose, timeStamp);
 
   if constexpr (feature_flags::nt_debugging) {
@@ -813,6 +845,7 @@ void SwerveDriveSubsystem::UpdateVisionMeasurement(const frc::Pose2d& poseEstima
   // Block vision odometry updates right after a position reset since this can cause undesired jumps in robot
   // position estimate while megatag2 position readjusts
   if (std::chrono::steady_clock::now() - m_odometryResetTime > std::chrono::milliseconds{250}) {
+    std::lock_guard lock{m_poseEstimatorLock};
     m_poseEstimator.AddVisionMeasurement(poseEstimate, timestamp, visionMeasurementStdDevs);
   }
 }

@@ -19,6 +19,7 @@
 
 #include <array>
 #include <memory>
+#include <mutex>
 #include <thread>
 
 #include <ctre/phoenix6/CANcoder.hpp>
@@ -301,7 +302,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   units::degree_t m_continuousOdometryOffset;  ///< Offset to convert [-180,180] odometry angle to continuous angle
 
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;  ///< accounts vision-based measurements for odometry
-  std::thread m_odometryThread;                      ///< Updates robot odometry at very high rate
+  std::mutex m_poseEstimatorLock;
+  std::thread m_odometryThread;  ///< Updates robot odometry at very high rate
   std::chrono::time_point<std::chrono::steady_clock>
       m_odometryResetTime;  ///< Time when odometry was last reset to known position
   bool m_stillRunning;      ///< false indicates subsystem is being destroyed
