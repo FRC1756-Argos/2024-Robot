@@ -5,7 +5,9 @@
 #include "commands/drive_choreo.h"
 
 #include <choreo/lib/Choreo.h>
+#include <frc/DataLogManager.h>
 #include <frc/DriverStation.h>
+#include <networktables/StructTopic.h>
 #include <units/math.h>
 
 #include "constants/field_points.h"
@@ -22,7 +24,11 @@ DriveChoreo::DriveChoreo(SwerveDriveSubsystem& drive, const std::string& traject
                         return alliance && alliance.value() == frc::DriverStation::Alliance::kRed;
                       },
                       {&m_Drive}}
-    , m_initializeOdometry{initializeOdometry} {}
+    , m_initializeOdometry{initializeOdometry}
+    , m_desiredAutoPositionLogger{frc::DataLogManager::GetLog(), "desiredAutoPosition"}
+    , m_autoTrajectoryLogger{frc::DataLogManager::GetLog(), "autoTrajectory"} {
+  frc::DataLogManager::GetLog().AddStructSchema<frc::Pose2d>();
+}
 
 // Called when the command is initially scheduled.
 void DriveChoreo::Initialize() {
@@ -30,8 +36,10 @@ void DriveChoreo::Initialize() {
     const auto alliance = frc::DriverStation::GetAlliance();
     if (alliance && alliance.value() == frc::DriverStation::Alliance::kRed) {
       m_Drive.InitializeOdometry(m_trajectory.GetFlippedInitialPose());
+      m_orientedTrajectory = m_trajectory.Flipped();
     } else {
       m_Drive.InitializeOdometry(m_trajectory.GetInitialPose());
+      m_orientedTrajectory = m_trajectory;
     }
     // Driver still wants orientation relative to alliance station
     if (alliance && alliance.value() == frc::DriverStation::Alliance::kRed) {
@@ -40,12 +48,23 @@ void DriveChoreo::Initialize() {
       m_Drive.FieldHome(m_trajectory.GetInitialPose().Rotation().Degrees(), false);
     }
   }
+  std::vector<frc::Pose2d> trajectory;
+  trajectory.reserve(m_orientedTrajectory.GetSamples().size());
+
+  for (const auto& sample : m_orientedTrajectory.GetSamples()) {
+    trajectory.emplace_back(sample.GetPose());
+  }
+
+  m_autoTrajectoryLogger.Append(trajectory);
+  m_startTime = std::chrono::steady_clock::now();
   m_ChoreoCommand.Initialize();
 }
 
 // Called repeatedly when this Command is scheduled to run
 void DriveChoreo::Execute() {
   m_ChoreoCommand.Execute();
+  m_desiredAutoPositionLogger.Append(
+      m_orientedTrajectory.Sample(std::chrono::steady_clock::now() - m_startTime).GetPose());
 }
 
 // Called once the command ends or is interrupted.

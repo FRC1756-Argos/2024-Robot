@@ -7,6 +7,7 @@
 #include <argos_lib/config/cancoder_config.h>
 #include <argos_lib/config/falcon_config.h>
 #include <argos_lib/general/angle_utils.h>
+#include <frc/DataLogManager.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/angle.h>
 #include <units/angular_velocity.h>
@@ -79,6 +80,7 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
     , m_continuousOdometryOffset{0_deg}
     , m_poseEstimator{m_swerveDriveKinematics, frc::Rotation2d(GetIMUYaw()), GetCurrentModulePositions(), frc::Pose2d{}}
     , m_odometryThread{}
+    , m_odometryResetTime{}
     , m_stillRunning{true}
     , m_fsStorage(paths::swerveHomesPath)
     , m_followingProfile(false)
@@ -123,8 +125,9 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
     , m_rotationalFollowerTuner_D{nullptr}
     , m_rotationalFollowerConstraintTuner_vel{nullptr}
     , m_rotationalFollowerConstraintTuner_accel{nullptr}
-
-{
+    , m_poseEstimateLogger{frc::DataLogManager::GetLog(), "poseEstimate"}
+    , m_setpointLogger{frc::DataLogManager::GetLog(), "ModuleSetpoints"}
+    , m_stateLogger{frc::DataLogManager::GetLog(), "ModuleStates"} {
   // TURN MOTORS CONFIG
   argos_lib::falcon_config::FalconConfig<motorConfig::comp_bot::drive::frontLeftTurn,
                                          motorConfig::practice_bot::drive::frontLeftTurn>(
@@ -262,6 +265,9 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(const argos_lib::RobotInstance instan
   }
 
   m_odometryThread = std::thread(&SwerveDriveSubsystem::UpdateEstimatedPose, this);
+
+  frc::DataLogManager::GetLog().AddStructSchema<frc::Pose2d>();
+  frc::DataLogManager::GetLog().AddStructSchema<std::array<frc::SwerveModuleState, 4>>();
 }
 
 SwerveDriveSubsystem::~SwerveDriveSubsystem() {
@@ -627,6 +633,7 @@ void SwerveDriveSubsystem::FieldHome(units::degree_t homeAngle, bool updateOdome
 }
 
 void SwerveDriveSubsystem::InitializeOdometry(const frc::Pose2d& currentPose) {
+  m_odometryResetTime = std::chrono::steady_clock::now();
   m_poseEstimator.ResetPosition(-GetIMUYaw(), GetCurrentModulePositions(), currentPose);
   m_prevOdometryAngle = m_poseEstimator.GetEstimatedPosition().Rotation().Degrees();
   m_continuousOdometryOffset = 0_deg;
@@ -746,17 +753,32 @@ void SwerveDriveSubsystem::UpdateEstimatedPose() {
       auto frontLeftModule = frc::SwerveModulePosition{
           sensor_conversions::swerve_drive::drive::ToDistance(frontLeftDrivePosition),
           frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(frontLeftTurnPosition)}};
+      auto frontLeftState = frc::SwerveModuleState{
+          sensor_conversions::swerve_drive::drive::ToVelocity(frontLeftDriveVelocityUpdate.GetValue()),
+          frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(frontLeftTurnPosition)}};
       auto frontRightModule = frc::SwerveModulePosition{
           sensor_conversions::swerve_drive::drive::ToDistance(frontRightDrivePosition),
+          frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(frontRightTurnPosition)}};
+      auto frontRightState = frc::SwerveModuleState{
+          sensor_conversions::swerve_drive::drive::ToVelocity(frontRightDriveVelocityUpdate.GetValue()),
           frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(frontRightTurnPosition)}};
       auto backRightModule = frc::SwerveModulePosition{
           sensor_conversions::swerve_drive::drive::ToDistance(backRightDrivePosition),
           frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(backRightTurnPosition)}};
+      auto backRightState = frc::SwerveModuleState{
+          sensor_conversions::swerve_drive::drive::ToVelocity(backRightDriveVelocityUpdate.GetValue()),
+          frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(backRightTurnPosition)}};
       auto backLeftModule = frc::SwerveModulePosition{
           sensor_conversions::swerve_drive::drive::ToDistance(backLeftDrivePosition),
           frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(backLeftTurnPosition)}};
-      m_poseEstimator.UpdateWithTime(
-          updateTime, frc::Rotation2d(yaw), {frontLeftModule, frontRightModule, backRightModule, backLeftModule});
+      auto backLeftState = frc::SwerveModuleState{
+          sensor_conversions::swerve_drive::drive::ToVelocity(backLeftDriveVelocityUpdate.GetValue()),
+          frc::Rotation2d{sensor_conversions::swerve_drive::turn::ToAngle(backLeftTurnPosition)}};
+      m_poseEstimateLogger.Append(m_poseEstimator.UpdateWithTime(
+          updateTime, frc::Rotation2d(yaw), {frontLeftModule, frontRightModule, backRightModule, backLeftModule}));
+
+      m_stateLogger.Append(std::span<const frc::SwerveModuleState>(
+          std::array<const frc::SwerveModuleState, 4>{frontLeftState, frontRightState, backRightState, backLeftState}));
     }
   }
 }
@@ -788,7 +810,11 @@ frc::Pose2d SwerveDriveSubsystem::GetPoseEstimate(const frc::Pose2d& robotPose, 
 void SwerveDriveSubsystem::UpdateVisionMeasurement(const frc::Pose2d& poseEstimate,
                                                    units::second_t timestamp,
                                                    const wpi::array<double, 3>& visionMeasurementStdDevs) {
-  m_poseEstimator.AddVisionMeasurement(poseEstimate, timestamp, visionMeasurementStdDevs);
+  // Block vision odometry updates right after a position reset since this can cause undesired jumps in robot
+  // position estimate while megatag2 position readjusts
+  if (std::chrono::steady_clock::now() - m_odometryResetTime > std::chrono::milliseconds{250}) {
+    m_poseEstimator.AddVisionMeasurement(poseEstimate, timestamp, visionMeasurementStdDevs);
+  }
 }
 
 void SwerveDriveSubsystem::SetControlMode(SwerveDriveSubsystem::DriveControlMode controlMode) {
@@ -989,4 +1015,10 @@ void SwerveDriveSubsystem::ClosedLoopDrive(wpi::array<frc::SwerveModuleState, 4>
 
   m_backLeft.m_turn.SetControl(PositionVoltage(sensor_conversions::swerve_drive::turn::ToSensorUnit(
       moduleStates.at(indexes::swerveModules::backLeftIndex).angle.Degrees())));
+
+  m_setpointLogger.Append(std::span<const frc::SwerveModuleState>(
+      std::array<const frc::SwerveModuleState, 4>{moduleStates.at(indexes::swerveModules::frontLeftIndex),
+                                                  moduleStates.at(indexes::swerveModules::frontRightIndex),
+                                                  moduleStates.at(indexes::swerveModules::backRightIndex),
+                                                  moduleStates.at(indexes::swerveModules::backLeftIndex)}));
 }

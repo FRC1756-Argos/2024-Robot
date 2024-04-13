@@ -11,6 +11,7 @@
 #include <units/angle.h>
 #include <units/angular_velocity.h>
 #include <units/length.h>
+#include <wpi/DataLog.h>
 
 #include <stop_token>
 #include <string>
@@ -221,8 +222,8 @@ class VisionSubsystem : public frc2::SubsystemBase {
   [[nodiscard]] std::optional<LimelightTarget::tValues> GetSeeingCamera(bool forFeeder = false);
 
  private:
-  constexpr static char primaryCameraTableName[11]{"limelight"};
-  constexpr static char secondaryCameraTableName[17]{"limelight-front"};
+  constexpr static char primaryCameraTableName[12]{"/limelight"};
+  constexpr static char secondaryCameraTableName[18]{"/limelight-front"};
 
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -255,6 +256,9 @@ class VisionSubsystem : public frc2::SubsystemBase {
   argos_lib::NTSubscriber
       m_secondaryCameraFrameUpdateSubscriber;  ///< Subscriber to manage all updates from secondary camera
   std::jthread m_yawUpdateThread;
+
+  wpi::log::StructLogEntry<frc::Pose2d> m_frontCameraMegaTag2PoseLogger;
+  wpi::log::StructLogEntry<frc::Pose2d> m_rearCameraMegaTag2PoseLogger;
 
   void UpdateYaw(std::stop_token stopToken);
 };

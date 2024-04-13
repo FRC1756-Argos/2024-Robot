@@ -15,7 +15,9 @@
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc2/command/SubsystemBase.h>
+#include <wpi/DataLog.h>
 
+#include <array>
 #include <memory>
 #include <thread>
 
@@ -300,7 +302,9 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
   frc::SwerveDrivePoseEstimator<4> m_poseEstimator;  ///< accounts vision-based measurements for odometry
   std::thread m_odometryThread;                      ///< Updates robot odometry at very high rate
-  bool m_stillRunning;                               ///< false indicates subsystem is being destroyed
+  std::chrono::time_point<std::chrono::steady_clock>
+      m_odometryResetTime;  ///< Time when odometry was last reset to known position
+  bool m_stillRunning;      ///< false indicates subsystem is being destroyed
 
   // std::FILE SYSTEM HOMING STORAGE
   argos_lib::SwerveFSHomingStorage m_fsStorage;  ///< Roborio filesystem access for homes
@@ -367,4 +371,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   wpi::array<frc::SwerveModuleState, 4> OptimizeAllModules(wpi::array<frc::SwerveModuleState, 4> rawStates);
 
   void ClosedLoopDrive(wpi::array<frc::SwerveModuleState, 4> moduleStates);
+
+  wpi::log::StructLogEntry<frc::Pose2d> m_poseEstimateLogger;
+  wpi::log::StructArrayLogEntry<frc::SwerveModuleState> m_setpointLogger;
+  wpi::log::StructArrayLogEntry<frc::SwerveModuleState> m_stateLogger;
 };

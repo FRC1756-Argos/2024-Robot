@@ -185,6 +185,9 @@ RobotContainer::RobotContainer()
         auto rotateSpeed = deadbandRotSpeed;
 
         if (m_visionSubSystem.IsAimWhileMoveActive()) {
+          // simmer down the translation speeds
+          deadbandTranslationSpeeds.forwardSpeedPct *= speeds::drive::generalSpeedReductionPct;
+          deadbandTranslationSpeeds.leftSpeedPct *= speeds::drive::generalSpeedReductionPct;
           auto speed = m_visionSubSystem.getShooterSpeed();
           auto rotationWithInertia =
               m_visionSubSystem.getRotationSpeedWithInertia(deadbandTranslationSpeeds.leftSpeedPct);
@@ -202,7 +205,6 @@ RobotContainer::RobotContainer()
             m_elevatorSubsystem.SetCarriageAngle(shooterAngleWithInertia.value());
             rotateSpeed = rotationWithInertia.value();
 
-            // simmer down the translation speeds
             deadbandTranslationSpeeds.forwardSpeedPct *= speeds::drive::aimSpeedReductionPct;
             deadbandTranslationSpeeds.leftSpeedPct *= speeds::drive::aimSpeedReductionPct;
           } else {
@@ -223,6 +225,9 @@ RobotContainer::RobotContainer()
                 200_ms);
           }
         } else if (m_ShooterSubSystem.IsFeedingShotActive()) {
+          // simmer down the translation speeds
+          deadbandTranslationSpeeds.forwardSpeedPct *= speeds::drive::generalSpeedReductionPct;
+          deadbandTranslationSpeeds.leftSpeedPct *= speeds::drive::generalSpeedReductionPct;
           auto rotationWithInertia = m_visionSubSystem.getFeedOffsetWithInertia(deadbandTranslationSpeeds.leftSpeedPct);
           auto feederAngleWithInertia =
               m_visionSubSystem.getFeederAngleWithInertia(deadbandTranslationSpeeds.forwardSpeedPct);
@@ -231,7 +236,6 @@ RobotContainer::RobotContainer()
             m_elevatorSubsystem.SetCarriageAngle(feederAngleWithInertia.value());
             rotateSpeed = rotationWithInertia.value();
 
-            // simmer down the translation speeds
             deadbandTranslationSpeeds.forwardSpeedPct *= speeds::drive::passSpeedReductionPct;
             deadbandTranslationSpeeds.leftSpeedPct *= speeds::drive::passSpeedReductionPct;
           } else {
