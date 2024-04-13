@@ -61,7 +61,7 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
           } else if (mt2.tagCount > 2 || avgDist < 15_ft) {
             m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.9, .9, 9999999.0});
           } else {
-            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {10, 10, 9999999.0});
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {10.0, 10.0, 9999999.0});
           }
           m_rearCameraMegaTag2PoseLogger.Append(mt2.pose, units::microsecond_t{mt2.timestampSeconds}.to<int64_t>());
         }
@@ -84,7 +84,7 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
           } else if (mt2.tagCount > 2 || avgDist < 15_ft) {
             m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.9, .9, 9999999.0});
           } else {
-            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {10, 10, 9999999.0});
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {10.0, 10.0, 9999999.0});
           }
           m_frontCameraMegaTag2PoseLogger.Append(mt2.pose, units::microsecond_t{mt2.timestampSeconds}.to<int64_t>());
         }
