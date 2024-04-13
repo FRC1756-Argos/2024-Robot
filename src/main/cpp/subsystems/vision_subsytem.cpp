@@ -3,6 +3,7 @@
 ///            the license file in the root directory of this project.
 
 #include <constants/feature_flags.h>
+#include <frc/DataLogManager.h>
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/math.h>
@@ -15,6 +16,7 @@
 #include <Constants.h>
 
 #include "constants/field_points.h"
+#include "ctre/phoenix6/Utils.hpp"
 #include "limelight/LimelightHelpers.h"
 #include "subsystems/vision_subsystem.h"
 
@@ -39,7 +41,9 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
     , m_feederAngleMap{shooterRange::feederAngle}
     , m_primaryCameraFrameUpdateSubscriber{primaryCameraTableName}
     , m_secondaryCameraFrameUpdateSubscriber{secondaryCameraTableName}
-    , m_yawUpdateThread{} {
+    , m_yawUpdateThread{}
+    , m_frontCameraMegaTag2PoseLogger{frc::DataLogManager::GetLog(), "frontCameraMegaTag2Pose"}
+    , m_rearCameraMegaTag2PoseLogger{frc::DataLogManager::GetLog(), "rearCameraMegaTag2Pose"} {
   m_primaryCameraFrameUpdateSubscriber.AddMonitor(
       "hb",
       [this](double) {
@@ -47,7 +51,19 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
             LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(primaryCameraTableName);
         if (mt2.tagCount > 0 &&
             units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
-          m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, mt2.timestampSeconds, {.1, .1, 9999999.0});
+          units::meter_t avgDist{mt2.avgTagDist};
+          const auto time =
+              units::second_t{ctre::phoenix6::GetCurrentTimeSeconds()} - units::millisecond_t{mt2.latency};
+          if (mt2.tagCount > 2 && avgDist < 15_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.2, .2, 9999999.0});
+          } else if (mt2.tagCount > 2 && avgDist < 25_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.6, .6, 9999999.0});
+          } else if (mt2.tagCount > 2 || avgDist < 15_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.9, .9, 9999999.0});
+          } else {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {10.0, 10.0, 9999999.0});
+          }
+          m_rearCameraMegaTag2PoseLogger.Append(mt2.pose, units::microsecond_t{mt2.timestampSeconds}.to<int64_t>());
         }
       },
       -1);
@@ -58,11 +74,24 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
             LimelightHelpers::getBotPoseEstimate_wpiBlue_MegaTag2(secondaryCameraTableName);
         if (mt2.tagCount > 0 &&
             units::math::abs(m_pDriveSubsystem->GetIMUYawRate()) < units::degrees_per_second_t{360}) {
-          m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, mt2.timestampSeconds, {.1, .1, 9999999.0});
+          units::meter_t avgDist{mt2.avgTagDist};
+          const auto time =
+              units::second_t{ctre::phoenix6::GetCurrentTimeSeconds()} - units::millisecond_t{mt2.latency};
+          if (mt2.tagCount > 2 && avgDist < 15_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.2, .2, 9999999.0});
+          } else if (mt2.tagCount > 2 && avgDist < 25_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.6, .6, 9999999.0});
+          } else if (mt2.tagCount > 2 || avgDist < 15_ft) {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.9, .9, 9999999.0});
+          } else {
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {10.0, 10.0, 9999999.0});
+          }
+          m_frontCameraMegaTag2PoseLogger.Append(mt2.pose, units::microsecond_t{mt2.timestampSeconds}.to<int64_t>());
         }
       },
       -1);
   m_yawUpdateThread = std::jthread(std::bind_front(&VisionSubsystem::UpdateYaw, this));
+  frc::DataLogManager::GetLog().AddStructSchema<frc::Pose2d>();
 }
 
 // This method will be called once per scheduler run
@@ -140,9 +169,13 @@ std::optional<units::degree_t> VisionSubsystem::getFeederOffset() {
   int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
                           field_points::blue_alliance::april_tags::stageCenter.id :
                           field_points::red_alliance::april_tags::stageCenter.id;
+  units::degree_t rotationOffset = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                                       measure_up::shooter_targets::passingShotBlueOffset :
+                                       measure_up::shooter_targets::passingShotRedOffset;
+
   if (targetValues && tagOfInterest == targetValues.value().tagID) {
     if (targetValues.value().hasTargets) {
-      return targetValues.value().m_yaw - measure_up::shooter_targets::passingShotRotationOffset;
+      return targetValues.value().m_yaw - rotationOffset;
     }
   }
 
@@ -190,7 +223,7 @@ units::degree_t VisionSubsystem::getShooterAngle(units::inch_t distance, const I
       break;
     case InterpolationMode::Polynomial: {
       const auto d = distance.to<double>();
-      finalAngle = units::degree_t(87.3 - (0.78 * d) + (0.00335 * d * d) - (0.000005125 * d * d * d));
+      finalAngle = units::degree_t(92.0 - (0.86 * d) + (0.00378 * d * d) - (0.00000586 * d * d * d));
       break;
     }
     case InterpolationMode::Trig:
@@ -264,7 +297,7 @@ std::optional<double> VisionSubsystem::getRotationSpeedWithInertia(double latera
     offset -= shooterOffset.value().to<double>();
     double finalOffset = offset - speeds::drive::lateralInertialWeight * lateralSpeedPct;
 
-    return (-finalOffset * 0.016);
+    return (-finalOffset * speeds::drive::rotationalProportionality);
   }
 
   return std::nullopt;
@@ -275,10 +308,9 @@ std::optional<double> VisionSubsystem::getFeedOffsetWithInertia(double lateralSp
 
   if (horzOffset) {
     double offset = horzOffset.value().to<double>();
-    offset -= 0.0;
     double finalOffset = offset - speeds::drive::lateralInertialWeight * lateralSpeedPct;
 
-    return (-finalOffset * 0.016);
+    return (-finalOffset * speeds::drive::rotationalProportionality);
   }
 
   return std::nullopt;
