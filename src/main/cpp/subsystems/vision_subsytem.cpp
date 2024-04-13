@@ -57,9 +57,9 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
           if (mt2.tagCount > 2 && avgDist < 15_ft) {
             m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.2, .2, 9999999.0});
           } else if (mt2.tagCount > 2 && avgDist < 25_ft) {
-            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.4, .4, 9999999.0});
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.6, .6, 9999999.0});
           } else if (mt2.tagCount > 2 || avgDist < 15_ft) {
-            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.7, .7, 9999999.0});
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.9, .9, 9999999.0});
           } else {
             m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {10, 10, 9999999.0});
           }
@@ -80,9 +80,9 @@ VisionSubsystem::VisionSubsystem(const argos_lib::RobotInstance instance,
           if (mt2.tagCount > 2 && avgDist < 15_ft) {
             m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.2, .2, 9999999.0});
           } else if (mt2.tagCount > 2 && avgDist < 25_ft) {
-            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.4, .4, 9999999.0});
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.6, .6, 9999999.0});
           } else if (mt2.tagCount > 2 || avgDist < 15_ft) {
-            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.7, .7, 9999999.0});
+            m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {.9, .9, 9999999.0});
           } else {
             m_pDriveSubsystem->UpdateVisionMeasurement(mt2.pose, time, {10, 10, 9999999.0});
           }
