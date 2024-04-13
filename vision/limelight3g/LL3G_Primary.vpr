@@ -19,8 +19,8 @@ convexity_min:10
 corner_approx:5.000000
 crop_x_max:1.000000
 crop_x_min:-1.000000
-crop_y_max:0.65
-crop_y_min:-0.7
+crop_y_max:0.66
+crop_y_min:-0.8
 cross_a_a:1
 cross_a_x:0
 cross_a_y:0
@@ -40,7 +40,7 @@ exposure:147
 fiducial_backend:umich
 fiducial_decoder_strictness:strict
 fiducial_denoise:0.000000
-fiducial_idfilters:3,4,7,8
+fiducial_idfilters:3,4,7,8,13,14
 fiducial_locfilters:
 fiducial_method:sqpnp
 fiducial_qualitythreshold:2.0
@@ -82,7 +82,7 @@ sat_max:255
 sat_min:70
 send_corners:0
 send_json:0
-send_raw_contours:1
+send_raw_contours:0
 solve3d:0
 solve3d_algo:0
 solve3d_bindtarget:1

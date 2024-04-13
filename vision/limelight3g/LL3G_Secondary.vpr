@@ -19,8 +19,8 @@ convexity_min:10
 corner_approx:5.000000
 crop_x_max:1.000000
 crop_x_min:-1.000000
-crop_y_max:0.71
-crop_y_min:-1
+crop_y_max:1
+crop_y_min:-0.27
 cross_a_a:1
 cross_a_x:0
 cross_a_y:0
