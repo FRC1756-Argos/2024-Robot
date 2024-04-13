@@ -242,9 +242,9 @@ RobotContainer::RobotContainer()
             m_ledSubSystem.TemporaryAnimate(
                 [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kNoteOrange, false); },
                 200_ms);
-          } else if (m_elevatorSubsystem.IsCarriageAtSetPoint() && std::abs(rotationWithInertia.value()) <= 0.1) {
+          } else if (m_elevatorSubsystem.IsCarriageAtSetPoint() && std::abs(rotationWithInertia.value()) <= 0.25) {
             m_ledSubSystem.TemporaryAnimate(
-                [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kPlum, false); },
+                [this]() { m_ledSubSystem.SetAllGroupsColor(argos_lib::gamma_corrected_colors::kCubePurple, false); },
                 200_ms);
           }
         }

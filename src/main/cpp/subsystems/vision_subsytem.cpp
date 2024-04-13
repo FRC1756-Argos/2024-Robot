@@ -140,9 +140,13 @@ std::optional<units::degree_t> VisionSubsystem::getFeederOffset() {
   int tagOfInterest = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
                           field_points::blue_alliance::april_tags::stageCenter.id :
                           field_points::red_alliance::april_tags::stageCenter.id;
+  units::degree_t rotationOffset = frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue ?
+                                       measure_up::shooter_targets::passingShotBlueOffset :
+                                       measure_up::shooter_targets::passingShotRedOffset;
+
   if (targetValues && tagOfInterest == targetValues.value().tagID) {
     if (targetValues.value().hasTargets) {
-      return targetValues.value().m_yaw - measure_up::shooter_targets::passingShotRotationOffset;
+      return targetValues.value().m_yaw - rotationOffset;
     }
   }
 
@@ -264,7 +268,7 @@ std::optional<double> VisionSubsystem::getRotationSpeedWithInertia(double latera
     offset -= shooterOffset.value().to<double>();
     double finalOffset = offset - speeds::drive::lateralInertialWeight * lateralSpeedPct;
 
-    return (-finalOffset * 0.016);
+    return (-finalOffset * speeds::drive::rotationalProportionality);
   }
 
   return std::nullopt;
@@ -275,10 +279,9 @@ std::optional<double> VisionSubsystem::getFeedOffsetWithInertia(double lateralSp
 
   if (horzOffset) {
     double offset = horzOffset.value().to<double>();
-    offset -= 0.0;
     double finalOffset = offset - speeds::drive::lateralInertialWeight * lateralSpeedPct;
 
-    return (-finalOffset * 0.016);
+    return (-finalOffset * speeds::drive::rotationalProportionality);
   }
 
   return std::nullopt;
