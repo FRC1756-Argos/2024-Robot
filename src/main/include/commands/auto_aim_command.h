@@ -42,7 +42,7 @@ class AutoAimCommand : public frc2::CommandHelper<frc2::Command, AutoAimCommand>
   SimpleLedSubsystem* m_pLeds;
   bool m_endWhenAimed;
   argos_lib::Debouncer m_aimedDebouncer;
-  bool m_aimed;
+  std::chrono::time_point<std::chrono::steady_clock> m_startTime;
 
   struct AimParams {
     units::degree_t carriageAngle;

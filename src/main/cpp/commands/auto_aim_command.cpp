@@ -20,8 +20,7 @@ AutoAimCommand::AutoAimCommand(SwerveDriveSubsystem* swerveDrive,
     , m_pControllers{controllers}
     , m_pLeds{leds}
     , m_endWhenAimed{endWhenAimed}
-    , m_aimedDebouncer{{300_ms, 0_ms}}
-    , m_aimed{false} {
+    , m_aimedDebouncer{{300_ms, 0_ms}} {
   AddRequirements({m_pSwerveDrive, m_pShooter, m_pElevator});
 }
 
@@ -39,7 +38,7 @@ void AutoAimCommand::Initialize() {
     m_pShooter->ShooterGoToSpeed(5300_rpm);
     m_aimedDebouncer.Reset(false);
   }
-  m_aimed = m_aimedDebouncer.GetRawStatus();
+  m_startTime = std::chrono::steady_clock::now();
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -47,7 +46,8 @@ void AutoAimCommand::Execute() {
   const auto aimParams = GetAimParams();
 
   SetOperatorFeedback(aimParams);
-  (void)m_aimedDebouncer(Aim(aimParams) || m_aimed);
+  (void)m_aimedDebouncer(Aim(aimParams) ||
+                         std::chrono::steady_clock::now() - m_startTime > std::chrono::milliseconds{1000});
 }
 
 // Called once the command ends or is interrupted.
@@ -103,9 +103,7 @@ bool AutoAimCommand::Aim(const std::optional<AimParams>& params) {
     m_pShooter->ShooterGoToSpeed(params.value().shooterSpeed);
   }
 
-  bool aimedThisCycle = Aimed(params);
-  m_aimed |= aimedThisCycle;
-  return aimedThisCycle;
+  return Aimed(params);
 }
 
 void AutoAimCommand::SetOperatorFeedback(const std::optional<AimParams>& params) {
