@@ -45,7 +45,7 @@ AutonomousAmpSideSubwoofer2PieceChaos::AutonomousAmpSideSubwoofer2PieceChaos(
               IntakeCommand{&m_Intake, &m_Shooter, &m_Elevator, &controllers, &leds, true, 1.5_s}},
           AutoAimCommand{&swerve, &shooter, &elevator, &vision, &controllers, &leds, true},
           ShooterCommand{&m_Shooter, true},
-          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in, 1600_rpm, false},
+          PrimeShooterCommand{m_Shooter, m_Elevator, m_Vision, 43_in, 200_rpm, false},
           frc2::ParallelRaceGroup{
               DriveChoreo{m_Swerve, "Amp_Side_Subwoofer_OP.2", true},
               frc2::SequentialCommandGroup{
