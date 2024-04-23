@@ -38,6 +38,7 @@ void AutoAimCommand::Initialize() {
     m_pShooter->ShooterGoToSpeed(5300_rpm);
     m_aimedDebouncer.Reset(false);
   }
+  m_startTime = std::chrono::steady_clock::now();
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -45,7 +46,8 @@ void AutoAimCommand::Execute() {
   const auto aimParams = GetAimParams();
 
   SetOperatorFeedback(aimParams);
-  (void)m_aimedDebouncer(Aim(aimParams));
+  (void)m_aimedDebouncer(Aim(aimParams) ||
+                         std::chrono::steady_clock::now() - m_startTime > std::chrono::milliseconds{1000});
 }
 
 // Called once the command ends or is interrupted.
