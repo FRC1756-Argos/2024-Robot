@@ -4,7 +4,7 @@ area_similarity:0
 aspect_max:20.000000
 aspect_min:0.000000
 barcode_type:"qrzx"
-black_level:3
+black_level:0
 blue_balance:500
 botfloorsnap:1
 botlength:0.91
@@ -36,7 +36,7 @@ dilation_steps:0
 direction_filter:0
 dual_close_sort_origin:0
 erosion_steps:0
-exposure:35
+exposure:175
 fiducial_backend:umich
 fiducial_decoder_strictness:strict
 fiducial_denoise:0.000000
@@ -60,7 +60,7 @@ image_source:0
 img_to_show:0
 intersection_filter:0
 invert_hue:0
-lcgain:6
+lcgain:1
 multigroup_max:7
 multigroup_min:1
 multigroup_rejector:0
