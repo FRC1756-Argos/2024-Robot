@@ -179,11 +179,7 @@ RobotContainer::RobotContainer()
                       // &m_autoSourceSideSubwoofer3PieceSteal,
                       &m_autoChoreoTest},
                      &m_autoNothing}
-    , m_autoSummer{m_intakeSubsystem,
-                   m_ShooterSubSystem,
-                   m_elevatorSubsystem,
-                   m_climberSubsystem,
-                   m_swerveDrive}
+    , m_autoSummer{m_intakeSubsystem, m_ShooterSubSystem, m_elevatorSubsystem, m_climberSubsystem, m_swerveDrive}
     , m_transitionedFromAuto{false} {
   // Initialize all of your commands and subsystems here
 

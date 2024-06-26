@@ -11,18 +11,17 @@
 
 #include "commands/drive_choreo.h"
 
-AutonomousSummerActivty::AutonomousSummerActivty(
-                                                IntakeSubsystem& intake,
-                                                ShooterSubsystem& shooter,
-                                                ElevatorSubsystem& elevator,
-                                                ClimberSubsystem& climb,
-                                                SwerveDriveSubsystem& swerve)
-    : m_Intake{intake},
-     m_Shooter{shooter},
-     m_Elevator{elevator},
-     m_Climb{climb},
-     m_Swerve{swerve},
-     m_commands{frc2::SequentialCommandGroup{DriveChoreo{m_Swerve, "Any_0Note", true}}} {}
+AutonomousSummerActivty::AutonomousSummerActivty(IntakeSubsystem& intake,
+                                                 ShooterSubsystem& shooter,
+                                                 ElevatorSubsystem& elevator,
+                                                 ClimberSubsystem& climb,
+                                                 SwerveDriveSubsystem& swerve)
+    : m_Intake{intake}
+    , m_Shooter{shooter}
+    , m_Elevator{elevator}
+    , m_Climb{climb}
+    , m_Swerve{swerve}
+    , m_commands{frc2::SequentialCommandGroup{DriveChoreo{m_Swerve, "Any_0Note", true}}} {}
 
 // Called when the command is initially scheduled.
 void AutonomousSummerActivty::Initialize() {
