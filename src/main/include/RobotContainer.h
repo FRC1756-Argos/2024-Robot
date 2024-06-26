@@ -29,6 +29,7 @@
 #include "commands/autonomous/autonomous_source_side_subwoofer_5_piece.h"
 #include "commands/autonomous/autonomous_source_side_subwoofer_steal2.h"
 #include "commands/autonomous/autonomous_zero_note.h"
+#include "commands/autonomous/autonomous_summer_activity.h"
 #include "commands/climber_command.h"
 #include "commands/climber_homing_command.h"
 #include "commands/crossfield_shot_command.h"
@@ -129,6 +130,7 @@ class RobotContainer {
   AutonomousCenterSubwoofer4Piece m_autoCenterSubwoofer4Piece;
   AutonomousCenterSubwoofer6Piece m_autoCenterSubwoofer6Piece;
   AutonomousSourceSideSubwoofer5Piece m_autoSourceSideSubwoofer5Piece;
+  AutonomousSummerActivty m_autoSummer;
 
   AutoSelector m_autoSelector;
 
