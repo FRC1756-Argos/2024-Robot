@@ -53,6 +53,11 @@ When commissioning a new robot, you should set the instance type to either "Comp
 3. Use something flat that is the length of the robot and line the swerve wheels up.
 4. Power on the robot and connect your computer. Open Phoenix Tuner X. Select each drive CANcoder and click the "Zero CANcoder" button.
 
+### Homing Shooter Carriage
+
+1. Rotate carriage so note path is parallel with floor and shooter flywheels are pointed away from intake side of robot.
+2. Power on the robot and connect your computer. Open Phoenix Tuner X. Select carriage CANcoder and click the "Zero CANcoder" button.
+
 
 ### Vision
 
