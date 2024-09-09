@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['cameraangleoffset_0',['cameraAngleOffset',['../struct_auto_aim_command_1_1_aim_params.html#ad57d9b5c111258c27c2049dcb171d007',1,'AutoAimCommand::AimParams']]],
+  ['cameraheight_1',['cameraHeight',['../namespacemeasure__up_1_1camera__front.html#a3771ee1da168eea9d88c4e905ac58241',1,'measure_up::camera_front']]],
+  ['cameraheighttoapriltag_2',['cameraHeightToAprilTag',['../namespacemeasure__up_1_1shooter__targets.html#a397f8585a3d3d150d5db248401ab6d57',1,'measure_up::shooter_targets']]],
+  ['cameramountangle_3',['cameraMountAngle',['../namespacemeasure__up_1_1camera__front.html#a76da63bc50ee7f0af9ad709ad61fdf46',1,'measure_up::camera_front']]],
+  ['cameraoffsetfromshooter_4',['cameraOffsetFromShooter',['../namespacemeasure__up_1_1shooter__targets.html#a4a355101c3be6c19e32e062af93b44cb',1,'measure_up::shooter_targets']]],
+  ['camerax_5',['cameraX',['../namespacemeasure__up_1_1camera__front.html#a5e13ebf0260e97fa1ce1826129ef1160',1,'measure_up::camera_front']]],
+  ['cameraz_6',['cameraZ',['../namespacemeasure__up_1_1camera__front.html#adfcb923859ce4400bafacd59166d6109',1,'measure_up::camera_front']]],
+  ['candle_7',['CANdle',['../structaddress_1_1comp__bot_1_1led.html#a25fc63f947f39e52bb18207434966a6b',1,'address::comp_bot::led']]],
+  ['carriageangle_8',['carriageAngle',['../struct_auto_aim_command_1_1_aim_params.html#a3bdfce905fa72f5d5678004265031d75',1,'AutoAimCommand::AimParams']]],
+  ['carriagerotation_9',['carriageRotation',['../structaddress_1_1comp__bot_1_1elevator.html#ac11f338c0315ececb5f3a1c7b0b57572',1,'address::comp_bot::elevator']]],
+  ['classificationresults_10',['ClassificationResults',['../class_limelight_helpers_1_1_vision_results_class.html#a2e29294fbba12097f8632b70b0789620',1,'LimelightHelpers::VisionResultsClass']]],
+  ['cleartime_11',['clearTime',['../structargos__lib_1_1_debounce_settings.html#a244f36e15164715e4f0c785d7f788689',1,'argos_lib::DebounceSettings']]],
+  ['climberspeed_12',['climberSpeed',['../namespacecontroller_map.html#acf86e2401cfc07817a47598be27db554',1,'controllerMap']]],
+  ['climberstagingheight_13',['climberStagingHeight',['../namespacemeasure__up_1_1climber.html#af82b237f8c02dc7229d6d328ea0d1334',1,'measure_up::climber']]],
+  ['climbloweredheight_14',['climbLoweredHeight',['../namespacemeasure__up_1_1climber.html#adfa6b505211674fb1dca0fd4b7c0e5c9',1,'measure_up::climber']]],
+  ['climbraisedheight_15',['climbRaisedHeight',['../namespacemeasure__up_1_1climber.html#a2cdd4dbbdcb1ca85755f0a9398d56845',1,'measure_up::climber']]],
+  ['color_16',['color',['../structargos__lib_1_1_l_e_d_subsystem_1_1_l_e_d_update_group.html#ada28dea1f136da7e81e04bca74527fd6',1,'argos_lib::LEDSubsystem::LEDUpdateGroup::color'],['../structargos__lib_1_1_l_e_d_state.html#a8e1dd5e60d5a6e2fe7824ebff2ce1ce7',1,'argos_lib::LEDState::color']]],
+  ['colors_17',['colors',['../structargos__lib_1_1led_1_1_sprite.html#a8118d092d262880dc7f3b844fe19fc67',1,'argos_lib::led::Sprite']]],
+  ['continuouscurrentlimit_18',['continuouscurrentlimit',['../structmotor_config_1_1comp__bot_1_1shooter_1_1feed_motor.html#a878608ec6e24b9d519e14509aa7b2fa5',1,'motorConfig::comp_bot::shooter::feedMotor::continuousCurrentLimit'],['../structmotor_config_1_1comp__bot_1_1intake_1_1primary_intake.html#ad88663ca0fa1efabe6951e9f3d4599dc',1,'motorConfig::comp_bot::intake::primaryIntake::continuousCurrentLimit']]],
+  ['crossfieldangle_19',['crossFieldAngle',['../namespacemeasure__up_1_1elevator_1_1carriage.html#a8488fad91abf750909f2f1c8fc8a6759',1,'measure_up::elevator::carriage']]],
+  ['crossfieldspeed_20',['crossFieldSpeed',['../namespacemeasure__up_1_1shooter.html#a5b13fbbe4e81934307a7a60310febf94',1,'measure_up::shooter']]]
+];

@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['r_0',['r',['../structargos__lib_1_1_argos_color.html#a80ee4316bf37003c85c13d077a87f2b2',1,'argos_lib::ArgosColor']]],
+  ['range_1',['range',['../structencoder__conf_1_1comp__bot_1_1drive_1_1generic_turn.html#a8cffcb3fb8ff9a6cbf32d4b71e86ee08',1,'encoder_conf::comp_bot::drive::genericTurn']]],
+  ['rawactive_2',['rawActive',['../structargos__lib_1_1_xbox_controller_1_1_update_status.html#ac5ead71c2f9168bb43650a18606a104f',1,'argos_lib::XboxController::UpdateStatus']]],
+  ['rawfiducials_3',['rawFiducials',['../class_limelight_helpers_1_1_pose_estimate.html#aa5dfdf199f0bb02e2e11a60985736da9',1,'LimelightHelpers::PoseEstimate']]],
+  ['rearleft_4',['RearLeft',['../structargos__lib_1_1swerve_1_1_swerve_module_positions.html#abc547e5a2397cd89b8600f0dbbff5e05',1,'argos_lib::swerve::SwerveModulePositions']]],
+  ['rearright_5',['RearRight',['../structargos__lib_1_1swerve_1_1_swerve_module_positions.html#a4712a8b0b6eabababbf106a80cd579cc',1,'argos_lib::swerve::SwerveModulePositions']]],
+  ['reflectivepipeline_6',['reflectivePipeline',['../namespacecamera.html#a6fa72124bb50b45b22aeea28a1cfff32',1,'camera']]],
+  ['released_7',['released',['../structargos__lib_1_1_xbox_controller_1_1_update_status.html#ad769829e7275b925a9ec9cafc70e198e',1,'argos_lib::XboxController::UpdateStatus']]],
+  ['requestlen_8',['requestLen',['../namespaceleds.html#ae7d3a5595b240b9208b33473b9a65a27',1,'leds']]],
+  ['retroresults_9',['RetroResults',['../class_limelight_helpers_1_1_vision_results_class.html#ad20e431cfab756ba03167d47a216f5fd',1,'LimelightHelpers::VisionResultsClass']]],
+  ['right_10',['right',['../structargos__lib_1_1_xbox_controller_1_1_d_pad_buttons.html#ad10d915cd0e43bf94764df20c1909328',1,'argos_lib::XboxController::DPadButtons']]],
+  ['robotpose_11',['robotPose',['../struct_limelight_target_1_1t_values.html#aa951b959c7be005c9b546e30a73b9f11',1,'LimelightTarget::tValues']]],
+  ['robotposewpi_12',['robotPoseWPI',['../struct_limelight_target_1_1t_values.html#a17ed84633765b11df5065b26aeb4de63',1,'LimelightTarget::tValues']]],
+  ['rotationalproportionality_13',['rotationalProportionality',['../namespacespeeds_1_1drive.html#ae4dee22e1171d7b6c9a4a07c78fc3b66',1,'speeds::drive']]],
+  ['rotortosensorratio_14',['rotortosensorratio',['../structmotor_config_1_1comp__bot_1_1drive_1_1back_right_turn.html#adc632d494f3cece34cc082d0bdd9e822',1,'motorConfig::comp_bot::drive::backRightTurn::rotorToSensorRatio'],['../structmotor_config_1_1comp__bot_1_1drive_1_1back_left_turn.html#a6387f76ca4ca2b3bc04e2783e5619cd5',1,'motorConfig::comp_bot::drive::backLeftTurn::rotorToSensorRatio'],['../structmotor_config_1_1comp__bot_1_1elevator_1_1carriage_rotation.html#a13d2d9a88096c52ba6cb4c1ae915fc5e',1,'motorConfig::comp_bot::elevator::carriageRotation::rotorToSensorRatio'],['../structmotor_config_1_1comp__bot_1_1drive_1_1front_right_turn.html#a8db11788b8f0946e8b6ef690acf262c7',1,'motorConfig::comp_bot::drive::frontRightTurn::rotorToSensorRatio'],['../structmotor_config_1_1comp__bot_1_1drive_1_1front_left_turn.html#a41a9464dfe76ed401bf3906eb3adcac7',1,'motorConfig::comp_bot::drive::frontLeftTurn::rotorToSensorRatio']]],
+  ['rotvelocity_15',['rotVelocity',['../struct_swerve_drive_subsystem_1_1_velocities.html#a7609c8530bca30d8522f9d5ca81e4134',1,'SwerveDriveSubsystem::Velocities']]]
+];

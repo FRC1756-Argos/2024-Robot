@@ -1,0 +1,27 @@
+var class_shooter_subsystem =
+[
+    [ "ShooterSubsystem", "class_shooter_subsystem.html#aca5faec6ba6d9fdfcc275789c4f996de", null ],
+    [ "Disable", "class_shooter_subsystem.html#a5b2c295a9e14a48f87874e1427296b2e", null ],
+    [ "Feed", "class_shooter_subsystem.html#a68ea5bf8c24bdbbc559a8c539d1eb653", null ],
+    [ "IsFeedingShotActive", "class_shooter_subsystem.html#ad621ede82972599212074cc1ae37871c", null ],
+    [ "IsNotePresent", "class_shooter_subsystem.html#ac63f81f612c01b9fdf621dd24fad4047", null ],
+    [ "NoteDetectionOverride", "class_shooter_subsystem.html#a1ba64f8ff729a0b7a2a2cdc7bab3a7eb", null ],
+    [ "Periodic", "class_shooter_subsystem.html#ad8d2e05a252f65c20c489049ae18efd5", null ],
+    [ "ReadyToShoot", "class_shooter_subsystem.html#aba7c809fac26886b04b1830ea3b81a09", null ],
+    [ "SetAmpMode", "class_shooter_subsystem.html#ac0786c2010e0b4637bed1215738c8cb6", null ],
+    [ "SetFeedingShotActive", "class_shooter_subsystem.html#a3e6a268d56da75496cb05c7799692efa", null ],
+    [ "SetTrapMode", "class_shooter_subsystem.html#a8f50b663dfb601b3c63e946b3b9d85f8", null ],
+    [ "Shoot", "class_shooter_subsystem.html#a4af188fe0e5c4c130e8d15a970ed2de0", null ],
+    [ "Shoot", "class_shooter_subsystem.html#a8243d93596d15a9ccf066e2e3adbc58e", null ],
+    [ "ShooterAtSpeed", "class_shooter_subsystem.html#ae095094c7915519b139dbbe35f26f2cb", null ],
+    [ "ShooterGoToSpeed", "class_shooter_subsystem.html#a9ffc62dae60af6ae94eed3d2e6e87d6f", null ],
+    [ "StopShoot", "class_shooter_subsystem.html#afecc7b901b5681a43a07108676d566eb", null ],
+    [ "m_ampMode", "class_shooter_subsystem.html#adb7bdd902bb957c38c14c2eb3c0591fb", null ],
+    [ "m_feedMotor", "class_shooter_subsystem.html#a522b5dc7fc43273291fe7a2c5b80c550", null ],
+    [ "m_isFeederShotActive", "class_shooter_subsystem.html#ab20d98875659a7766fd1aae60bb71c97", null ],
+    [ "m_primaryMotor", "class_shooter_subsystem.html#a3425297220c128207032d590e2c295d9", null ],
+    [ "m_robotInstance", "class_shooter_subsystem.html#aedebba3ea2715e5bb9bd06d599895824", null ],
+    [ "m_secondaryMotor", "class_shooter_subsystem.html#a7f3a2b0c0db8d00f64adb6c012f95f16", null ],
+    [ "m_trapMode", "class_shooter_subsystem.html#addaee2578a0b46fdc7c8d1abe82526b0", null ],
+    [ "m_velocityControl", "class_shooter_subsystem.html#a7074a701494e1067b71f42a66b914a4d", null ]
+];
